@@ -119,8 +119,10 @@ function loadVerovio() {
 }
 
 class ScoreView {
-  constructor(el, { scale = 35, onMeasureClick } = {}) {
-    this.el = el; this.scale = scale; this.onMeasureClick = onMeasureClick;
+  /* scale: número ou função(largura) → escala; vrv: opções extras do Verovio; transform: (xml) → xml */
+  constructor(el, { scale = 35, onMeasureClick, vrv, transform } = {}) {
+    this.el = el; this.scaleOpt = scale; this.scale = typeof scale === "function" ? scale(el.clientWidth) : scale;
+    this.onMeasureClick = onMeasureClick; this.vrv = vrv; this.transform = transform;
     this.measureEls = []; this.cur = -1; this.playing = []; this.muted = null; this.loop = null;
     el.classList.add("score");
     el.innerHTML = '<div class="loading">Carregando partitura…<div class="bar"></div></div>';
@@ -128,7 +130,8 @@ class ScoreView {
   async load(url) {
     const vrv = await loadVerovio();
     this.tk = new vrv.toolkit();
-    const xml = await (await fetch(url)).text();
+    let xml = await (await fetch(url)).text();
+    if (this.transform) xml = this.transform(xml);
     this.tk.setOptions(this.opts());
     this.tk.loadData(xml);
     this.render();
@@ -141,10 +144,12 @@ class ScoreView {
     return this;
   }
   opts() {
-    const w = Math.max(320, this.el.clientWidth - 8);
+    const w = Math.max(300, this.el.clientWidth - 8);
+    if (typeof this.scaleOpt === "function") this.scale = this.scaleOpt(w);
+    const extra = typeof this.vrv === "function" ? this.vrv(w) : (this.vrv || {});
     return { scale: this.scale, pageWidth: Math.round(w * 100 / this.scale), adjustPageHeight: true, breaks: "auto",
       footer: "none", header: "none", pageMarginTop: 40, pageMarginBottom: 40, pageMarginLeft: 30, pageMarginRight: 30,
-      svgHtml5: true, svgViewBox: true, systemMaxPerPage: 24, justifyVertically: false, expandNever: true };
+      svgHtml5: true, svgViewBox: true, systemMaxPerPage: 24, justifyVertically: false, expandNever: true, ...extra };
   }
   relayout() {
     if (!this.tk) return;
@@ -152,7 +157,7 @@ class ScoreView {
     if (o.pageWidth === this._pw && this.scale === this._sc) return;
     this.tk.setOptions(o); this.tk.redoLayout(); this.render();
   }
-  setScale(s) { this.scale = s; this.relayout(); }
+  setScale(s) { this.scaleOpt = s; this.scale = s; this.relayout(); }
   render() {
     const o = this.opts(); this._pw = o.pageWidth; this._sc = this.scale;
     const n = this.tk.getPageCount(); let html = "";

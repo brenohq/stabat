@@ -16,15 +16,19 @@
   <p>Escolha um arranjo, ouça a banda inteira e estude a sua parte em casa.</p>
 </div></div>
 <div class="mine">
-  <div class="card">
+  <div class="card" id="mineCard">
     <div class="ic" data-icon="person"></div>
     <div class="txt"><b>Qual é a sua parte?</b><span>Fica salvo neste aparelho. Cada arranjo ganha um atalho direto para ela.</span></div>
     <select id="mypart" aria-label="Minha parte"><option value="">— escolher —</option></select>
   </div>
 </div>
 <div class="list">
-  <h2>Arranjos publicados</h2>
+  <div class="list-head">
+    <h2>Arranjos publicados</h2>
+    <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar arranjo…" aria-label="Buscar arranjo" autocomplete="off"></label>
+  </div>
   <div class="cards" id="cards"></div>
+  <p class="empty" id="empty" hidden>Nenhum arranjo encontrado.</p>
 </div>
 <p class="foot">Áudio gerado com Muse Sounds no MuseScore Studio.</p>
 <script src="assets/app.js"></script>
@@ -44,9 +48,15 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;",
   const sel = document.getElementById("mypart");
   sel.innerHTML += all.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join("");
   const saved = Stabat.getMyPart(); if (saved && all.some(p => p.id === saved.id)) sel.value = saved.id;
+  const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const q = document.getElementById("q");
   function draw() {
     const my = all.find(p => p.id === sel.value);
-    document.getElementById("cards").innerHTML = idx.map((a, i) => {
+    document.getElementById("mineCard").classList.toggle("attention", !my);
+    const terms = norm(q.value).split(/\s+/).filter(Boolean);
+    const shown = idx.map((a, i) => [a, i]).filter(([a]) => { const h = norm(`${a.title} ${a.subtitle}`); return terms.every(t => h.includes(t)); });
+    document.getElementById("empty").hidden = shown.length > 0;
+    document.getElementById("cards").innerHTML = shown.map(([a, i]) => {
       const has = my && metas[i].parts.some(p => p.id === my.id);
       return `<article class="arr card">
         <div class="cover">${cover(a)}<div class="ttl">${esc(a.title)}</div></div>
@@ -60,6 +70,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;",
       </article>`;
     }).join("");
   }
+  q.oninput = draw;
   sel.onchange = () => { const p = all.find(x => x.id === sel.value); Stabat.setMyPart(p ? { id: p.id, name: p.name } : null); draw(); };
   draw();
 })();
