@@ -1,0 +1,76 @@
+import { expect, test } from "@playwright/test";
+import { clickMeasure, engine, expectSound, openLoaded } from "./helpers";
+
+test.describe("página da parte", () => {
+  test.beforeEach(async ({ page }) => openLoaded(page, "/teste/clarinete-sib-1"));
+
+  test("abre com 85% minha parte / 15% banda e grava a parte escolhida", async ({ page }) => {
+    await expect(page.getByTestId("level-me")).toHaveText("85%");
+    await expect(page.getByTestId("level-band")).toHaveText("15%");
+    await expect.poll(async () => (await engine(page)).gains).toEqual([1.4, 0.176]);
+    expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toContain("clarinete-sib-1");
+  });
+
+  test("atalhos de volume", async ({ page }) => {
+    await page.getByRole("button", { name: "Só banda" }).click();
+    await expect(page.getByTestId("level-me")).toHaveText("0%");
+    await expect.poll(async () => (await engine(page)).gains).toEqual([0, 1]);
+    await page.getByRole("button", { name: "Só minha parte" }).click();
+    await expect.poll(async () => (await engine(page)).gains).toEqual([1.4, 0]);
+  });
+
+  test("play/pause com som", async ({ page }) => {
+    await page.locator("#play").click();
+    await expectSound(page, true);
+    await page.locator("#play").click();
+    await expectSound(page, false);
+    expect((await engine(page)).playing).toBe(false);
+  });
+
+  test("repetir trecho volta ao início do trecho", async ({ page }) => {
+    await page.locator("#loop").click();
+    await expect(page.getByText("Clique no primeiro compasso do trecho")).toBeVisible();
+    await clickMeasure(page, 2);
+    await clickMeasure(page, 3);
+    await expect(page.locator("#loop")).toContainText("c. 3–4");
+    await expect.poll(async () => (await engine(page)).loop).toEqual([4000, 8000]);
+    await page.evaluate(() => (window as any).__stabat.page.engine.seek(7600));
+    await page.waitForTimeout(900);
+    const s = await engine(page);
+    expect(s.playing).toBe(true);
+    expect(s.pos).toBeGreaterThanOrEqual(4000);
+    expect(s.pos).toBeLessThan(5000);
+    await page.locator("#loop").click(); // desliga
+    await expect.poll(async () => (await engine(page)).loop).toBeNull();
+  });
+
+  test("zoom fica salvo", async ({ page }) => {
+    await page.locator("#zin").click();
+    await page.locator("#zin").click();
+    expect(await page.evaluate(() => localStorage.getItem("stabat.zoomParte"))).toBe("1.2");
+    await page.locator("#zout").click();
+    expect(await page.evaluate(() => localStorage.getItem("stabat.zoomParte"))).toBe("1.1");
+  });
+
+  test("trocar a parte navega e grava", async ({ page }) => {
+    await page.locator("#switch").selectOption("tuba-mib-1");
+    await expect(page).toHaveURL(/\/teste\/tuba-mib-1$/);
+    await expect(page.getByRole("heading", { name: "Tuba Mib 1" })).toBeVisible();
+    expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toContain("tuba-mib-1");
+  });
+
+  test("contagem e metrônomo", async ({ page }) => {
+    await expect(page.locator("#metro")).toHaveAttribute("aria-pressed", "true");
+    await page.locator("#count").click();
+    expect((await engine(page)).countIn).toBe(true);
+    await page.locator("#play").click();
+    await page.waitForTimeout(1200); // 4 tempos de contagem = 2 s: ainda não andou
+    expect((await engine(page)).pos).toBe(0);
+    await expect.poll(async () => (await engine(page)).pos, { timeout: 5000 }).toBeGreaterThan(200);
+  });
+
+  test("parte inexistente", async ({ page }) => {
+    await page.goto("/teste/flauta-9");
+    await expect(page.getByText("Esta parte não existe neste arranjo.")).toBeVisible();
+  });
+});

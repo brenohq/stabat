@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/fraunces";
+
+/* Identidade: azul-marinho, dourado de metal, papel de partitura. Cores mudam sozinhas no modo escuro. */
+:root {
+  --bg: #f5f1ea;
+  --surface: #ffffff;
+  --surface-2: #faf7f1;
+  --ink: #1b2130;
+  --muted: #687082;
+  --line: #e3dccf;
+  --accent: #a8761c;
+  --accent-soft: rgb(168 118 28 / 0.14);
+  --accent-ink: #ffffff;
+  --navy: #1f2a44;
+  --paper: #fffdf8;
+  --paper-ink: #151515;
+  --hl: rgb(212 150 30 / 0.22);
+  --hl-strong: #c4861a;
+  --attention: #e8b63a;
+  --wood: #3f7fa8;
+  --brass-hi: #c48a1d;
+  --brass-lo: #a2503a;
+  --shadow: 0 1px 2px rgb(20 20 30 / 0.06), 0 6px 24px rgb(20 20 30 / 0.06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141a;
+    --surface: #1a1f28;
+    --surface-2: #151a22;
+    --ink: #ebe7df;
+    --muted: #9aa1ae;
+    --line: #2b313c;
+    --accent: #e0aa45;
+    --accent-soft: rgb(224 170 69 / 0.16);
+    --accent-ink: #1a1408;
+    --navy: #0c1220;
+    --paper: #f7f3ea;
+    --wood: #6fb0d8;
+    --brass-hi: #e3ad4b;
+    --brass-lo: #d27a62;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 28px rgb(0 0 0 / 0.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141a;
+  --surface: #1a1f28;
+  --surface-2: #151a22;
+  --ink: #ebe7df;
+  --muted: #9aa1ae;
+  --line: #2b313c;
+  --accent: #e0aa45;
+  --accent-soft: rgb(224 170 69 / 0.16);
+  --accent-ink: #1a1408;
+  --navy: #0c1220;
+  --paper: #f7f3ea;
+  --wood: #6fb0d8;
+  --brass-hi: #e3ad4b;
+  --brass-lo: #d27a62;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 28px rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-navy: var(--navy);
+  --color-paper: var(--paper);
+  --color-paper-ink: var(--paper-ink);
+  --color-attention: var(--attention);
+  --color-wood: var(--wood);
+  --color-brass-hi: var(--brass-hi);
+  --color-brass-lo: var(--brass-lo);
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --shadow-card: var(--shadow);
+}
+
+@theme {
+  --animate-attention: attention 1.8s ease-in-out infinite;
+  @keyframes attention {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(232 182 58 / 0.55);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgb(232 182 58 / 0);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-bg font-sans text-[15px] leading-normal text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-semibold tracking-tight;
+  }
+  input[type="range"] {
+    accent-color: var(--accent);
+  }
+}
+
+/* Partitura (SVG do Verovio). Fora de @layer de propósito: o SVG traz CSS próprio sem camada,
+   que venceria qualquer regra em camada do Tailwind. */
+.score svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.score .page + .page {
+  border-top: 1px dashed #ddd5c5;
+}
+.score g.measure {
+  cursor: pointer;
+}
+.score .measure-hl {
+  fill: var(--hl);
+}
+.score .loop-hl {
+  fill: rgb(47 125 85 / 0.14);
+}
+.score g.note.playing,
+.score g.note.playing * {
+  fill: var(--hl-strong) !important;
+  stroke: var(--hl-strong) !important;
+}
+.score g.staff.muted {
+  opacity: 0.16;
+}
+
+@keyframes loading-bar {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}

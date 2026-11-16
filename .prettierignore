@@ -1,0 +1,10 @@
+public/
+dist/
+node_modules/
+mockups/
+tools/.cache/
+test-results/
+playwright-report/
+e2e/fixtures/
+package-lock.json
+*.md

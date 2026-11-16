@@ -1,41 +1,39 @@
 # stabat
 
-Site da banda para estudar os arranjos em casa: ouvir a banda inteira, ligar e desligar instrumentos, clicar num compasso para tocar dali e praticar a própria parte com a banda mais baixa de fundo.
+Site da banda para estudar os arranjos em casa:
+- ouvir a banda inteira;
+- ligar e desligar instrumentos;
+- clicar num compasso para tocar dali;
+- praticar a própria parte com a banda mais baixa de fundo, metrônomo, contagem, trecho repetido e velocidade reduzida.
 
-Publicado com GitHub Pages em **https://stabat.com.br**.
+Feito com Vite, React, TypeScript e Tailwind. Publicado pelo GitHub Pages.
 
-## Como publicar um arranjo novo
+## Desenvolvimento
 
-1. Termine o arranjo no MuseScore Studio. O arquivo deve estar em `~/Documents/MuseScore4/Scores/`, com os sons Muse Sounds configurados no Mixer.
+```sh
+asdf install          # Node e Python nas versões de .tool-versions
+npm ci
+pip install -r tools/requirements.txt
+npm run dev           # http://localhost:5173
+npm run verify        # tudo: tipos, lint, testes, build e testes no navegador
+```
+
+Mais detalhes de arquitetura e testes estão em [CLAUDE.md](CLAUDE.md).
+
+## Publicar um arranjo novo
+
+1. Termine o arranjo no MuseScore Studio, com os sons Muse Sounds configurados no Mixer. O arquivo fica em `~/Documents/MuseScore4/Scores/`.
 2. Acrescente uma linha em `tools/arranjos.json`:
    ```json
    {"id": "nome-curto", "arquivo": "Nome - Banda.mscz", "titulo": "Nome", "subtitulo": "Autor", "cor": [200, 230]}
    ```
-   `id` vira o endereço (`arranjo.html?id=nome-curto`); `cor` são dois matizes (0–360) do degradê do cartão.
-3. Gere os arquivos do site:
-   ```sh
-   python3 tools/publicar.py nome-curto
-   ```
-   O script só refaz o áudio quando o `.mscz` mudou (use `--forcar` para refazer sempre).
-4. Confira localmente (`python3 -m http.server` na pasta e abra http://localhost:8000) e publique:
-   ```sh
-   git add -A && git commit -m "Publica Nome" && git push
-   ```
+3. `npm run publicar -- nome-curto` gera o MusicXML, as posições dos compassos e um MP3 por parte em `public/arranjos/nome-curto/`.
+4. `npm run verify`, depois commit e push. O GitHub Actions testa e publica.
 
-Para tirar um arranjo do site, apague a linha de `tools/arranjos.json` e a pasta `arranjos/<id>/` e rode `python3 tools/publicar.py` de novo para refazer o índice.
+Endereços: `/nome-curto` (arranjo) e `/nome-curto/trompete-sib-1` (parte).
 
-## Como funciona
+## Créditos
 
-- `tools/publicar.py` usa o MuseScore pela linha de comando:
-  - exporta a grade em MusicXML e as posições dos compassos (`.mpos`, já com ritornelos e casas);
-  - gera uma partitura por parte, copia a configuração de som do original e exporta o áudio de cada parte com Muse Sounds;
-  - grava um MP3 por parte (`audio/<parte>.mp3`) e um "banda sem a parte" (`audio/sem-<parte>.mp3`), todos com o mesmo ganho para manter o equilíbrio original;
-  - separa as partes do MusicXML e escreve `meta.json` (partes, letras de ensaio, linha do tempo dos compassos tocados) e `arranjos/index.json`.
-- No navegador (`assets/app.js`):
-  - a partitura é desenhada com [Verovio](https://www.verovio.org);
-  - o áudio é mixado com Web Audio (um volume por parte);
-  - a velocidade muda sem alterar a afinação com [SoundTouchJS](https://github.com/cutterbl/SoundTouchJS) (MPL-2.0, em `assets/vendor/`);
-  - o metrônomo e a contagem são sintetizados a partir da linha do tempo dos compassos.
-- A parte escolhida pelo músico fica salva no navegador (`localStorage`, chave `stabat.myPart`).
-
-Requisitos para publicar: MuseScore Studio 4 (AppImage em `~/.local/opt/musescore/`), Muse Sounds instalados, `ffmpeg`, Python 3 com `numpy`.
+- Partitura desenhada com [Verovio](https://www.verovio.org).
+- Velocidade sem mudar a afinação com [SoundTouchJS](https://github.com/cutterbl/SoundTouchJS) (MPL-2.0).
+- Áudio gerado com Muse Sounds no MuseScore Studio.

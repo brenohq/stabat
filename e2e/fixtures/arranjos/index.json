@@ -1,0 +1,32 @@
+[
+ {
+  "id": "teste",
+  "title": "Arranjo de Teste",
+  "subtitle": "Fixture dos testes",
+  "hue": [
+   200,
+   230
+  ],
+  "tempo": 120,
+  "time": "4/4",
+  "measures": 6,
+  "duration": 16.0,
+  "version": "fixture1",
+  "nparts": 2
+ },
+ {
+  "id": "outro",
+  "title": "Marcha Grave",
+  "subtitle": "Só para testar a busca",
+  "hue": [
+   30,
+   320
+  ],
+  "tempo": 120,
+  "time": "4/4",
+  "measures": 6,
+  "duration": 16.0,
+  "version": "fixture1",
+  "nparts": 1
+ }
+]

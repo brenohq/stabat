@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "arranjos"
+OUT = ROOT / "public" / "arranjos"
 CACHE = ROOT / "tools" / ".cache"
 SCORES = Path.home() / "Documents" / "MuseScore4" / "Scores"
 MSCORE_CANDIDATES = [Path.home() / ".local/opt/musescore/MuseScore-Studio.AppImage", Path("/usr/bin/mscore4portable"), Path("/usr/bin/mscore")]
