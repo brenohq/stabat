@@ -56,7 +56,7 @@
   "time": "3/4",
   "measures": 57,
   "duration": 112.284,
-  "version": "b0c1e1caef",
+  "version": "8bdd8f2a6d",
   "nparts": 18
  },
  {
@@ -72,6 +72,21 @@
   "measures": 60,
   "duration": 123.0,
   "version": "c860d9ad7f",
+  "nparts": 18
+ },
+ {
+  "id": "jingle-bell-rock",
+  "title": "Jingle Bell Rock",
+  "subtitle": "Bobby Helms",
+  "hue": [
+   355,
+   140
+  ],
+  "tempo": 120,
+  "time": "4/4",
+  "measures": 65,
+  "duration": 134.998,
+  "version": "1c5bf50e21",
   "nparts": 18
  }
 ]

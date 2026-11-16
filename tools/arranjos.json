@@ -33,5 +33,12 @@
     "titulo": "Dragon Ball GT",
     "subtitulo": "Tema de abertura",
     "cor": [25, 265]
+  },
+  {
+    "id": "jingle-bell-rock",
+    "arquivo": "Jingle Bell Rock - Banda.mscz",
+    "titulo": "Jingle Bell Rock",
+    "subtitulo": "Bobby Helms",
+    "cor": [355, 140]
   }
 ]

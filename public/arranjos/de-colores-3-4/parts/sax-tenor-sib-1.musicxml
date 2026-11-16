@@ -17,7 +17,7 @@
     <source>https://musescore.com/user/25754671/scores/40523223</source>
     <miscellaneous>
       <miscellaneous-field name="mscVersion">4.70</miscellaneous-field>
-      <miscellaneous-field name="sourceRevisionId">101273205</miscellaneous-field>
+      <miscellaneous-field name="sourceRevisionId">101308710</miscellaneous-field>
       </miscellaneous>
     </identification>
   <defaults>
@@ -99,7 +99,7 @@
         </direction>
       <direction placement="above" system="only-top">
         <direction-type>
-          <metronome parentheses="no" default-x="2.79" default-y="7.75" relative-y="20">
+          <metronome parentheses="no" default-x="2.79" relative-y="20">
             <beat-unit>quarter</beat-unit>
             <per-minute>168</per-minute>
             </metronome>
