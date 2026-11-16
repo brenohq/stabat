@@ -14,7 +14,6 @@
   <div class="phead">
     <a class="back" id="back" title="Voltar ao arranjo" data-icon="back"></a>
     <div class="t"><h1 id="pname">…</h1><div class="sub" id="sub"></div></div>
-    <div class="zoom" role="group" aria-label="Tamanho da partitura"><button id="zout" title="Diminuir">−</button><button id="zin" title="Aumentar">+</button></div>
     <select id="switch" aria-label="Trocar parte"></select>
   </div>
   <div class="paper card"><div id="score"></div></div>
@@ -22,6 +21,7 @@
 <div class="hint" id="hint" hidden></div>
 <div class="sbar"><div class="in">
   <button class="play-btn" id="play" aria-label="Tocar"></button>
+  <div class="zoom" role="group" aria-label="Tamanho da partitura"><button id="zout" title="Diminuir a partitura" aria-label="Diminuir a partitura" data-icon="zoomOut"></button><button id="zin" title="Aumentar a partitura" aria-label="Aumentar a partitura" data-icon="zoomIn"></button></div>
   <div class="clock tabular"><b>c. <span id="mnum">1</span></b> <span id="msec"></span><br><span id="t">0:00</span> / <span id="dur">0:00</span> <span class="status" id="status"></span></div>
   <div class="mix">
     <div class="lv"><b id="lvBand">15%</b>banda</div>
