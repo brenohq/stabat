@@ -11,19 +11,21 @@
 <body>
 <header class="topbar"><span class="brand-slot"></span><span class="crumbs"><a href="./">Repertório</a> / <span id="crumb"></span></span></header>
 <div class="titlebar"><h1 id="title">…</h1><span class="sub" id="sub"></span><span class="spacer"></span><a class="btn primary" id="minha" hidden></a></div>
-<div class="transport"><div class="in">
+<div class="sbar"><div class="in">
   <button class="play-btn" id="play" aria-label="Tocar"></button>
-  <button class="btn ghost" id="stop" title="Voltar ao início" data-icon="rewind"></button>
-  <div class="clock tabular"><b id="t">0:00</b> <span class="muted-txt">/ <span id="dur">0:00</span></span><br><span class="muted-txt">Compasso <span id="mnum">1</span></span></div>
+  <div class="zoom" role="group" aria-label="Tamanho da partitura"><button id="zout" title="Diminuir a partitura" aria-label="Diminuir a partitura" data-icon="zoomOut"></button><button id="zin" title="Aumentar a partitura" aria-label="Aumentar a partitura" data-icon="zoomIn"></button></div>
+  <div class="clock tabular"><b>c. <span id="mnum">1</span></b><br><span id="t">0:00</span> / <span id="dur">0:00</span></div>
   <div class="sections" id="sections"></div>
-  <span class="spacer"></span>
+  <div class="row2">
+  <button class="btn" id="stop" title="Voltar ao início" data-icon="rewind"> Início</button>
   <span class="status" id="status"></span>
+  <span class="spacer"></span>
   <label class="ctl">Velocidade <select id="rate"><option value=".5">50%</option><option value=".6">60%</option><option value=".75">75%</option><option value=".9">90%</option><option value="1" selected>100%</option></select></label>
   <button class="btn on" id="metro" title="Metrônomo" data-icon="metro"> Metrônomo</button>
-  <label class="ctl zoomctl">Zoom <input type="range" id="zoom" min="20" max="50" value="30" style="width:90px"></label>
   <button class="btn mob-btn" id="mob">Instrumentos</button>
+  </div>
 </div></div>
-<div class="layout">
+<div class="layout arranjo-layout">
   <div class="paper card"><div id="score"></div></div>
   <aside class="card mixer" id="aside">
     <div class="hd"><h2>Instrumentos</h2><span class="links"><button id="all">todos</button><button id="none">nenhum</button></span></div>
@@ -65,8 +67,9 @@ const id = Stabat.q.get("id");
   $("mixer").addEventListener("toggle", () => Stabat.save("openFams", [...document.querySelectorAll("details.fam[open]")].map(d => d.dataset.f)), true);
 
   let engine = null;
-  const view = new ScoreView($("score"), { scale: 30, onMeasureClick: i => engine && engine.stems.length && engine.seekMeasure(i) });
-  view.topOffset = 80;
+  const sizing = scoreSizing("zoomArranjo", { phone: 24, tablet: 26, desktop: 30 });
+  const view = new ScoreView($("score"), { scale: sizing.scale, vrv: sizing.vrv, onMeasureClick: i => engine && engine.stems.length && engine.seekMeasure(i) });
+  sizing.bind(view);
   function sync() {
     document.querySelectorAll(".row").forEach(r => {
       const i = +r.dataset.i; r.querySelector("input").checked = on.has(i);
@@ -108,7 +111,6 @@ const id = Stabat.q.get("id");
   $("stop").onclick = () => engine.stop();
   $("rate").onchange = e => engine.setRate(+e.target.value);
   $("metro").onclick = () => { engine.metronome = !engine.metronome; $("metro").classList.toggle("on", engine.metronome); };
-  $("zoom").oninput = e => view.setScale(+e.target.value);
   bindSpace(engine);
   const upd = () => {
     const ms = engine.now(), { m, frac } = tl.at(ms);

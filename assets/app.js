@@ -192,7 +192,7 @@ class ScoreView {
     const m = this.measureEls[i]; if (!m) return;
     const sys = m.closest("g.system") || m;
     const r = sys.getBoundingClientRect();
-    const top = this.topOffset || 0, bottom = this.bottomOffset || 0;
+    const top = this.topOffset || 0, bottom = this.bottomOffset ?? (document.querySelector(".sbar")?.offsetHeight || 0);
     if (r.top < top + 10 || r.bottom > innerHeight - bottom - 10)
       scrollBy({ top: r.top - top - (innerHeight - top - bottom) * 0.18, behavior: "smooth" });
   }
@@ -389,6 +389,29 @@ class Engine {
   }
 }
 function lowerBound(arr, v, key) { let lo = 0, hi = arr.length; while (lo < hi) { const m = (lo + hi) >> 1; key(arr[m]) < v ? lo = m + 1 : hi = m; } return lo; }
+
+/* Tamanho da partitura: escala por largura de tela × zoom do músico (salvo no aparelho).
+ * No celular: espaçamento mais justo e margens estreitas = mais compassos por linha. */
+function scoreSizing(key, { phone, tablet, desktop }) {
+  const s = { zoom: Stabat.load(key, 1) };
+  s.scale = w => Math.round((w < 480 ? phone : w < 700 ? tablet : desktop) * s.zoom);
+  s.vrv = w => w < 700 ? { spacingLinear: 0.18, spacingNonLinear: 0.5, pageMarginLeft: 8, pageMarginRight: 8, pageMarginTop: 24 } : {};
+  s.bind = view => {
+    const set = z => { s.zoom = Math.max(.6, Math.min(1.8, Math.round(z * 10) / 10)); Stabat.save(key, s.zoom); view._sc = null; view.relayout(); };
+    document.getElementById("zin").onclick = () => set(s.zoom + .1);
+    document.getElementById("zout").onclick = () => set(s.zoom - .1);
+  };
+  return s;
+}
+/* No celular, só o 1º sistema mostra o nome do instrumento (tira a abreviação dos seguintes). */
+const noAbbrevOnPhone = xml => innerWidth < 700 ? xml.replace(/<part-abbreviation(-display)?>[\s\S]*?<\/part-abbreviation(-display)?>|<part-abbreviation\s*\/>/g, "") : xml;
+
+/* Barra inferior fixa: publica a altura em --barh (espaço no fim da página e gaveta de instrumentos). */
+(() => {
+  const bar = document.querySelector(".sbar"); if (!bar) return;
+  const upd = () => document.documentElement.style.setProperty("--barh", bar.offsetHeight + "px");
+  new ResizeObserver(upd).observe(bar); upd();
+})();
 
 /* Reproduz/pausa com a barra de espaço (fora de campos de texto). */
 function bindSpace(engine) {

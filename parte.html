@@ -86,14 +86,12 @@ const id = Stabat.q.get("id");
     b.classList.toggle("on", !!loopSel);
     b.innerHTML = Icons.loop + (loopSel && loopSel.b != null ? ` c. ${loopSel.a + 1}–${loopSel.b + 1} ✕` : loopSel ? " Escolhendo… ✕" : " Repetir trecho");
   }
-  const phone = () => innerWidth < 700;
-  let zoom = Stabat.load("zoomParte", 1); // ajuste do músico, salvo no aparelho
+  const sizing = scoreSizing("zoomParte", { phone: 31, tablet: 34, desktop: 42 });
   const view = new ScoreView($("score"), {
     // celular: notas um pouco menores, espaçamento mais justo e margens estreitas = mais compassos por linha
-    scale: w => Math.round((w < 480 ? 31 : w < 700 ? 34 : 42) * zoom),
-    vrv: w => w < 700 ? { spacingLinear: 0.18, spacingNonLinear: 0.5, pageMarginLeft: 8, pageMarginRight: 8, pageMarginTop: 24 } : {},
+    scale: sizing.scale, vrv: sizing.vrv,
     // celular: nome do instrumento só no primeiro sistema (sem a abreviação nos seguintes)
-    transform: xml => phone() ? xml.replace(/<part-abbreviation(-display)?>[\s\S]*?<\/part-abbreviation(-display)?>|<part-abbreviation\s*\/>/g, "") : xml,
+    transform: noAbbrevOnPhone,
     onMeasureClick: i => {
     if (!engine.stems.length) return;
     if (loopSel && loopSel.picking) {
@@ -107,10 +105,7 @@ const id = Stabat.q.get("id");
     engine.seekMeasure(i);
     if (!engine.loop && loopSel) { loopSel = null; view.setLoop(null); loopBtn(); }
   } });
-  view.bottomOffset = 170;
-  const setZoom = z => { zoom = Math.max(.6, Math.min(1.8, Math.round(z * 10) / 10)); Stabat.save("zoomParte", zoom); view._sc = null; view.relayout(); };
-  $("zin").onclick = () => setZoom(zoom + .1);
-  $("zout").onclick = () => setZoom(zoom - .1);
+  sizing.bind(view);
   $("loop").onclick = () => {
     if (loopSel) { loopSel = null; view.setLoop(null); engine.setLoop(null); hint(""); }
     else { loopSel = { picking: true, a: null }; hint("Clique no primeiro compasso do trecho"); }
