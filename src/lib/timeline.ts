@@ -1,6 +1,6 @@
 import type { TimelineEvent } from "./types";
 
-export interface Beat {
+interface Beat {
   t: number;
   accent: boolean;
 }

@@ -1,7 +1,7 @@
 import { expect, type Page } from "@playwright/test";
 
 /** estado do motor de áudio da página (via window.__stabat, exposto com VITE_DEBUG=1) */
-export interface EngineState {
+interface EngineState {
   loaded: boolean;
   playing: boolean;
   pos: number;

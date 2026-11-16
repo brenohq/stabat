@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-export type AsyncState<T> =
-  { status: "loading" } | { status: "ok"; data: T } | { status: "error"; error: Error };
+type AsyncState<T> = { status: "loading" } | { status: "ok"; data: T } | { status: "error"; error: Error };
 
 /** carrega dados assíncronos; recarrega quando as dependências mudam */
 export function useAsync<T>(fn: () => Promise<T>, deps: unknown[]): AsyncState<T> {

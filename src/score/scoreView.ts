@@ -1,6 +1,6 @@
 import { loadVerovio, type Toolkit } from "./verovio";
 
-export interface ScoreViewOptions {
+interface ScoreViewOptions {
   /** escala do Verovio a partir da largura disponível */
   scale: (width: number) => number;
   /** opções extras do Verovio a partir da largura */

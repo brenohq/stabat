@@ -5,7 +5,7 @@ export function fmtTime(sec: number): string {
 }
 
 /** minúsculas e sem acento, para busca */
-export function normalize(s: string): string {
+function normalize(s: string): string {
   return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 

@@ -6,8 +6,8 @@ export interface ScaleSteps {
 }
 export const PART_SCALE: ScaleSteps = { phone: 31, tablet: 34, desktop: 42 };
 export const SCORE_SCALE: ScaleSteps = { phone: 24, tablet: 26, desktop: 30 };
-export const ZOOM_MIN = 0.6;
-export const ZOOM_MAX = 1.8;
+const ZOOM_MIN = 0.6;
+const ZOOM_MAX = 1.8;
 export const PHONE_MAX = 700;
 
 export function scaleFor(width: number, steps: ScaleSteps, zoom = 1): number {
