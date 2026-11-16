@@ -14,7 +14,7 @@ import { useEngineValue, useSpaceToggle, useWakeLock } from "../hooks/useEngine"
 import { usePlayer } from "../hooks/usePlayer";
 import { assetUrl, fetchMeta } from "../lib/data";
 import { fmtTime } from "../lib/format";
-import { DEFAULT_PART_MIX, mixGains, mixLevels } from "../lib/mix";
+import { DEFAULT_PART_MIX, matchGains, mixGains, mixLevels } from "../lib/mix";
 import { sectionAt, shortName } from "../lib/parts";
 import { myPart } from "../lib/storage";
 import { Timeline } from "../lib/timeline";
@@ -77,12 +77,17 @@ function PartStudy({ meta, part }: { meta: ArrangementMeta; part: Part }) {
   useEffect(() => {
     document.title = `stabat · ${part.name} · ${meta.title}`;
   }, [meta, part]);
+  // iguala o volume da parte ao da banda uma vez por carregamento
+  const match = useMemo(
+    () => (engine && loaded ? matchGains(engine.loudness(0), engine.loudness(1)) : undefined),
+    [engine, loaded],
+  );
   useEffect(() => {
     if (!engine || !loaded) return;
-    const g = mixGains(mix);
+    const g = mixGains(mix, match);
     engine.setGain(0, g.me);
     engine.setGain(1, g.band);
-  }, [engine, loaded, mix]);
+  }, [engine, loaded, mix, match]);
   useEffect(() => {
     exposeDebug("page", engine ? { engine, timeline, meta, view, part } : null);
     return () => exposeDebug("page", null);

@@ -8,16 +8,21 @@ test.describe("página da parte", () => {
   test("abre com 85% minha parte / 15% banda e grava a parte escolhida", async ({ page }) => {
     await expect(page.getByTestId("level-me")).toHaveText("85%");
     await expect(page.getByTestId("level-band")).toHaveText("15%");
-    await expect.poll(async () => (await engine(page)).gains).toEqual([1.4, 0.176]);
+    // banda 6 dB abaixo (0,5) × 15/85; a parte vai ao mesmo volume percebido da banda
+    await expect.poll(async () => (await engine(page)).gains[1]).toBeCloseTo(0.088, 2);
+    const [me, band] = (await engine(page)).gains;
+    expect(me).toBeGreaterThan(band!);
     expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toContain("clarinete-sib-1");
   });
 
   test("atalhos de volume", async ({ page }) => {
     await page.getByRole("button", { name: "Só banda" }).click();
     await expect(page.getByTestId("level-me")).toHaveText("0%");
-    await expect.poll(async () => (await engine(page)).gains).toEqual([0, 1]);
+    await expect.poll(async () => (await engine(page)).gains[0]).toBe(0);
+    expect((await engine(page)).gains[1]).toBeCloseTo(0.5, 2);
     await page.getByRole("button", { name: "Só minha parte" }).click();
-    await expect.poll(async () => (await engine(page)).gains).toEqual([1.4, 0]);
+    await expect.poll(async () => (await engine(page)).gains[1]).toBe(0);
+    expect((await engine(page)).gains[0]).toBeGreaterThan(0);
   });
 
   test("play/pause com som", async ({ page }) => {

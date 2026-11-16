@@ -1,4 +1,6 @@
 import { lowerBound, type Timeline } from "../lib/timeline";
+import { measureLoudness, type Loudness } from "../lib/loudness";
+import { ignoreSilentSwitch, releaseSilentSwitch } from "./silentSwitch";
 
 /** Processador do SoundTouch (MPL-2.0), servido de public/vendor. */
 const SOUNDTOUCH_URL = `${import.meta.env.BASE_URL}vendor/soundtouch-processor.js`;
@@ -131,6 +133,14 @@ export class Engine {
     this.stems[i]?.gain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.02);
   }
 
+  /** volume percebido de uma parte já carregada (null se ainda não carregou) */
+  loudness(i: number): Loudness | null {
+    const b = this.stems[i]?.buffer;
+    if (!b) return null;
+    const chans = Array.from({ length: b.numberOfChannels }, (_, c) => b.getChannelData(c));
+    return measureLoudness(chans, b.sampleRate);
+  }
+
   /** volume atual de cada parte (para testes e depuração) */
   gains(): number[] {
     return this.stems.map((s) => Math.round(s.gain.gain.value * 1000) / 1000);
@@ -185,6 +195,7 @@ export class Engine {
   async play({ countIn = this.countIn }: { countIn?: boolean } = {}): Promise<void> {
     if (this.playing || !this.loaded || this.disposed) return;
     this.playing = true; // marca já: evita dois plays seguidos
+    ignoreSilentSwitch(); // iPhone: tocar mesmo com a chave de silencioso (antes de qualquer await)
     if (this.ctx.state !== "running") await this.ctx.resume();
     if (this.rate !== 1) await this.ensureStretch();
     if (!this.playing) return; // pausado enquanto preparava
@@ -283,6 +294,7 @@ export class Engine {
 
   /** para tudo sem emitir */
   private halt(): void {
+    releaseSilentSwitch();
     this.playing = false;
     clearInterval(this.timer);
     cancelAnimationFrame(this.raf);
