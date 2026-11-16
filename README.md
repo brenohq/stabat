@@ -6,7 +6,7 @@ Site da banda para estudar os arranjos em casa:
 - clicar num compasso para tocar dali;
 - praticar a própria parte com a banda mais baixa de fundo, metrônomo, contagem, trecho repetido e velocidade reduzida.
 
-Feito com Vite, React, TypeScript e Tailwind. Publicado pelo GitHub Pages.
+Feito com Vite, React, TypeScript e Tailwind. Publicado pelo Vercel em https://stabat.com.br.
 
 ## Desenvolvimento
 
@@ -28,7 +28,7 @@ Mais detalhes de arquitetura e testes estão em [CLAUDE.md](CLAUDE.md).
    {"id": "nome-curto", "arquivo": "Nome - Banda.mscz", "titulo": "Nome", "subtitulo": "Autor", "cor": [200, 230]}
    ```
 3. `npm run publicar -- nome-curto` gera o MusicXML, as posições dos compassos e um MP3 por parte em `public/arranjos/nome-curto/`.
-4. `npm run verify`, depois commit e push. O GitHub Actions testa e publica.
+4. `npm run verify`, depois commit e push. O Vercel publica e o GitHub Actions testa.
 
 Endereços: `/nome-curto` (arranjo) e `/nome-curto/trompete-sib-1` (parte).
 

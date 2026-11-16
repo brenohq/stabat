@@ -7,7 +7,7 @@ import { PartPage } from "./pages/PartPage";
 /** Endereços: /  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1) */
 export function App() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/:arranjoId" element={<ArrangementPage />} />

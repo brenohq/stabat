@@ -19,8 +19,8 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 ## Arquitetura
 
-- **Vite + React 19 + TypeScript estrito + Tailwind v4 + React Router 7**. Site estático no GitHub Pages.
-- Rotas (`src/App.tsx`): `/` repertório · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). O build copia `index.html` para `404.html` para os endereços limpos funcionarem no Pages.
+- **Vite + React 19 + TypeScript estrito + Tailwind v4 + React Router 7**. Site estático no **Vercel**.
+- Rotas (`src/App.tsx`): `/` repertório · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
 - `src/lib/`: **lógica pura e testada**. Nada de DOM aqui.
   - `timeline.ts`: ritornelos: compasso da partitura ↔ tempo do áudio, ocorrência mais próxima, trecho a..b, tempos do metrônomo.
   - `mix.ts`: volumes (parte: 85% minha parte / 15% banda; arranjo: ligado/solo).
@@ -60,10 +60,12 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 1. `.mscz` em `~/Documents/MuseScore4/Scores/` com Muse Sounds no Mixer.
 2. Linha em `tools/arranjos.json` (`id`, `arquivo`, `titulo`, `subtitulo`, `cor`).
 3. `npm run publicar -- <id>` (precisa de MuseScore AppImage em `~/.local/opt/musescore/`, ffmpeg, numpy). Só refaz o áudio se o `.mscz` mudou (`--forcar` para sempre).
-4. `npm run verify` (o projeto `real` toca cada arranjo publicado), commit e push. O GitHub Actions testa, faz o build e publica.
+4. `npm run verify` (o projeto `real` toca cada arranjo publicado), commit e push. O Vercel publica; o GitHub Actions testa.
 
 ## Deploy
 
-`.github/workflows/ci.yml`: em todo push/PR roda `npm run verify`. Na `main`, faz o build com `STABAT_BASE` (variável do repositório; padrão `/stabat/` enquanto o site está em brenohq.github.io/stabat) e publica no Pages. Com o domínio próprio: arquivo `public/CNAME` com `stabat.com.br`, variável `STABAT_BASE=/` e domínio configurado no Pages.
+- **Vercel** (projeto ligado ao repositório): cada push na `main` publica em produção (https://stabat.com.br, https://stabat-two.vercel.app); cada PR/branch ganha um link de pré-visualização. Configuração em `vercel.json` (build, reescrita para o app, cache).
+- **GitHub Actions** (`.github/workflows/ci.yml`): só verificação (`npm run verify`) em todo push/PR. Não publica nada.
+- O Vercel não espera o CI: rode `npm run verify` antes do push na `main`.
 
 Commits: use o e-mail noreply do GitHub já configurado no repositório (não o e-mail de trabalho global).

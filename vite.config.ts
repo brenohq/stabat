@@ -1,5 +1,5 @@
 /// <reference types="vitest/config" />
-import { createReadStream, copyFileSync, existsSync, statSync } from "node:fs";
+import { createReadStream, existsSync, statSync } from "node:fs";
 import { extname, join, normalize, resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -34,22 +34,11 @@ function fixtures(base: string): Plugin {
   };
 }
 
-/** GitHub Pages: 404.html = index.html, para os endereços limpos abrirem o app. */
-function spaFallback(): Plugin {
-  return {
-    name: "stabat-spa-404",
-    apply: "build",
-    closeBundle() {
-      if (existsSync("dist/index.html")) copyFileSync("dist/index.html", "dist/404.html");
-    },
-  };
-}
-
-const base = process.env.STABAT_BASE ?? "/";
+const base = "/";
 
 export default defineConfig({
   base,
-  plugins: [react(), tailwindcss(), fixtures(base), spaFallback()],
+  plugins: [react(), tailwindcss(), fixtures(base)],
   build: { chunkSizeWarningLimit: 8000 },
   test: { include: ["src/**/*.test.ts"], environment: "node" },
 });
