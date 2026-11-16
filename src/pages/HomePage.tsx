@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { TopBar } from "../components/TopBar";
 import { ArrowIcon, PersonIcon, SearchIcon } from "../components/icons";
-import { Card, Chip, Spinner } from "../components/ui";
+import { Card, Spinner } from "../components/ui";
 import { btnClass } from "../components/btnClass";
 import { useAsync } from "../hooks/useAsync";
 import { fetchIndex, fetchMeta } from "../lib/data";
@@ -17,10 +17,18 @@ async function loadAll(): Promise<{ index: ArrangementSummary[]; metas: Arrangem
   return { index, metas };
 }
 
+function CoverBadge({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center whitespace-nowrap rounded-full bg-black/25 px-2 py-0.5 text-[11px] font-medium text-white/90 ring-1 ring-white/20 backdrop-blur-sm">
+      {children}
+    </span>
+  );
+}
+
 function Cover({ a }: { a: ArrangementSummary }) {
   const [h1, h2] = a.hue ?? [40, 220];
   return (
-    <div className="relative h-24 overflow-hidden">
+    <div className="relative flex h-32 flex-col justify-between gap-2 overflow-hidden p-3 pb-2.5 pl-4">
       <svg viewBox="0 0 400 96" preserveAspectRatio="none" aria-hidden className="absolute inset-0 size-full">
         <defs>
           <linearGradient id={`g-${a.id}`} x1="0" x2="1">
@@ -33,7 +41,13 @@ function Cover({ a }: { a: ArrangementSummary }) {
           <line key={i} x1="0" x2="400" y1={28 + i * 9} y2={28 + i * 9} stroke="rgb(255 255 255 / .18)" />
         ))}
       </svg>
-      <h3 className="absolute bottom-2.5 left-4 text-2xl text-white [text-shadow:0_1px_8px_rgb(0_0_0/.25)]">
+      <div className="relative flex flex-wrap gap-1.5">
+        <CoverBadge>{a.tempo} bpm</CoverBadge>
+        <CoverBadge>{a.time}</CoverBadge>
+        <CoverBadge>{a.measures} compassos</CoverBadge>
+        <CoverBadge>{fmtTime(a.duration)}</CoverBadge>
+      </div>
+      <h3 className="relative text-2xl leading-tight text-white [text-shadow:0_1px_8px_rgb(0_0_0/.25)]">
         {a.title}
       </h3>
     </div>
@@ -64,12 +78,6 @@ function ArrangementCard({
         >
           {a.subtitle}
         </Link>
-        <div className="flex flex-wrap gap-1.5">
-          <Chip>{a.tempo} bpm</Chip>
-          <Chip>{a.time}</Chip>
-          <Chip>{a.measures} compassos</Chip>
-          <Chip>{fmtTime(a.duration)}</Chip>
-        </div>
         <div className="mt-auto flex">
           {has ? (
             <Link

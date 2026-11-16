@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { clickMeasure, engine, expectSound, openLoaded } from "./helpers";
+import { clickMeasure, engine, expectSound, openLoaded, scoreScale } from "./helpers";
 
 test.describe("página da parte", () => {
   test.beforeEach(async ({ page }) => openLoaded(page, "/teste/clarinete-sib-1"));
@@ -50,6 +50,10 @@ test.describe("página da parte", () => {
     expect(await page.evaluate(() => localStorage.getItem("stabat.zoomParte"))).toBe("1.2");
     await page.locator("#zout").click();
     expect(await page.evaluate(() => localStorage.getItem("stabat.zoomParte"))).toBe("1.1");
+    const zoomed = await scoreScale(page);
+    await page.reload();
+    await expect(page.getByTestId("score").locator("g.measure").first()).toBeVisible();
+    await expect.poll(() => scoreScale(page)).toBe(zoomed);
   });
 
   test("trocar a parte navega e grava", async ({ page }) => {

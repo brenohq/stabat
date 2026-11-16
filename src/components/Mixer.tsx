@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { partGain } from "../lib/mix";
-import { FAMILY_LABEL, byFamily, shortName } from "../lib/parts";
+import { FAMILY_LABEL, byFamily, familyOf, shortName } from "../lib/parts";
 import { myPart, prefs } from "../lib/storage";
 import type { Family, Part } from "../lib/types";
 import { CaretIcon } from "./icons";
@@ -52,9 +52,25 @@ interface Props {
   onChange: (on: Set<number>, solo: Set<number>) => void;
 }
 
-/** instrumentos agrupados por família (grupos recolhíveis, fechados por padrão) */
+/** instrumentos agrupados por família (grupos recolhíveis, fechados por padrão,
+ *  menos o da parte do músico, que sempre abre aberto para o "você" aparecer de cara) */
 export function Mixer({ arrangementId, parts, on, solo, myPartId, onChange }: Props) {
-  const [open, setOpen] = useState<string[]>(() => prefs.get<string[]>("openFams", []));
+  const [open, setOpen] = useState<string[]>(() => {
+    const saved = prefs.get<string[]>("openFams", []);
+    const mine = parts.find((p) => p.id === myPartId);
+    const f = mine && familyOf(mine.name);
+    return f && !saved.includes(f) ? [...saved, f] : saved;
+  });
+  // painel com rolagem própria: traz a linha "você" para dentro dele (sem rolar a página)
+  const mineRow = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const row = mineRow.current;
+    const box = row?.closest<HTMLElement>("[data-testid=mixer-panel]");
+    if (!row || !box) return;
+    const r = row.getBoundingClientRect();
+    const b = box.getBoundingClientRect();
+    if (r.bottom > b.bottom) box.scrollTop += r.bottom - b.bottom + 8;
+  }, []);
   const toggleOpen = (f: Family, isOpen: boolean) => {
     const next = isOpen ? [...new Set([...open, f])] : open.filter((x) => x !== f);
     setOpen(next);
@@ -110,6 +126,7 @@ export function Mixer({ arrangementId, parts, on, solo, myPartId, onChange }: Pr
               return (
                 <div
                   key={p.id}
+                  ref={myPartId === p.id ? mineRow : undefined}
                   className="grid grid-cols-[22px_1fr_auto_auto] items-center gap-2 px-3.5 py-1.5 hover:bg-surface-2"
                   data-part={p.id}
                 >

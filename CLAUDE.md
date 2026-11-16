@@ -42,7 +42,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 - Metrônomo **ligado por padrão** em todas as páginas.
 - A parte escolhida ("Trompete Sib 1") fica em `localStorage` (`stabat.myPart`) sempre que o músico escolhe/abre uma parte, e o valor salvo é o padrão nos outros seletores.
-- Mixer: famílias (Madeiras / Metais agudos / Metais graves) em grupos recolhíveis, fechados por padrão.
+- Mixer: famílias (Madeiras / Metais agudos / Metais graves) em grupos recolhíveis, fechados por padrão, menos a família da parte do músico, que sempre abre aberta (o "você" aparece de cara).
 - Página da parte: volume inicial 85% minha parte / 15% banda; no celular o nome do instrumento só no 1º sistema e mais compassos por linha.
 - Barra de controles **fixa no rodapé** nas páginas de arranjo e parte; zoom (lupa −/+) logo à direita do play; sem fresta embaixo.
 - Home: cartões clicáveis por inteiro; busca em largura total; "Qual é a sua parte?" com borda amarela pulsando enquanto não há parte.

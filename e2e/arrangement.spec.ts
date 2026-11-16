@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { clickMeasure, engine, expectSound, openLoaded } from "./helpers";
+import { clickMeasure, engine, expectSound, openLoaded, scoreScale } from "./helpers";
 
 test.describe("página do arranjo", () => {
   test.beforeEach(async ({ page }) => openLoaded(page, "/teste"));
@@ -60,6 +60,26 @@ test.describe("página do arranjo", () => {
     await expect(wood).toHaveAttribute("open");
     await page.reload();
     await expect(page.locator('details[data-family="wood"]')).toHaveAttribute("open");
+  });
+
+  test('a família da minha parte já abre aberta, com o "você" à vista', async ({ page }) => {
+    await page.evaluate(() =>
+      localStorage.setItem("stabat.myPart", JSON.stringify({ id: "tuba-mib-1", name: "Tuba Mib 1" })),
+    );
+    await page.reload();
+    await expect(page.locator('details[data-family="brass-lo"]')).toHaveAttribute("open");
+    await expect(page.locator('details[data-family="wood"]')).not.toHaveAttribute("open");
+    await expect(page.locator('[data-part="tuba-mib-1"]').getByText("você")).toBeVisible();
+  });
+
+  test("zoom fica salvo e volta aplicado", async ({ page }) => {
+    const base = await scoreScale(page);
+    await page.locator("#zin").click();
+    await page.locator("#zin").click();
+    await expect.poll(() => scoreScale(page)).toBe(Math.round(base * 1.2));
+    await page.reload();
+    await expect(page.getByTestId("score").locator("g.measure").first()).toBeVisible();
+    await expect.poll(() => scoreScale(page)).toBe(Math.round(base * 1.2));
   });
 
   test("velocidade 75% sem erros (SoundTouch)", async ({ page }) => {

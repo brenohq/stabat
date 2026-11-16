@@ -18,14 +18,6 @@ export function Button({
   );
 }
 
-export function Chip({ children }: { children: ReactNode }) {
-  return (
-    <span className="inline-flex items-center whitespace-nowrap rounded-full border border-line bg-surface-2 px-2.5 py-0.5 text-xs text-muted">
-      {children}
-    </span>
-  );
-}
-
 export function Card({ className = "", children }: { className?: string; children: ReactNode }) {
   return (
     <div className={`rounded-[14px] border border-line bg-surface shadow-card ${className}`}>{children}</div>

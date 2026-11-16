@@ -57,3 +57,11 @@ export async function expectSound(page: Page, audible: boolean): Promise<void> {
   if (audible) await level.toBeGreaterThan(0.01);
   else await level.toBeLessThan(0.002);
 }
+
+/** escala do Verovio aplicada à partitura agora */
+export async function scoreScale(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    const v = (window as unknown as { __stabat: { page: { view: { lastKey: string } } } }).__stabat.page.view;
+    return Number(v.lastKey.split("/")[1]);
+  });
+}
