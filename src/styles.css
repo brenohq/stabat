@@ -18,6 +18,8 @@
   --paper-ink: #151515;
   --hl: rgb(212 150 30 / 0.22);
   --hl-strong: #c4861a;
+  --mine: rgb(52 96 178 / 0.15);
+  --mine-edge: rgb(52 96 178 / 0.8);
   --attention: #e8b63a;
   --wood: #3f7fa8;
   --brass-hi: #c48a1d;
@@ -128,6 +130,12 @@
 }
 .score .measure-hl {
   fill: var(--hl);
+}
+.score .mine-hl {
+  fill: var(--mine);
+}
+.score .mine-edge {
+  fill: var(--mine-edge);
 }
 .score .loop-hl {
   fill: rgb(47 125 85 / 0.14);

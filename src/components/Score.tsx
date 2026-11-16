@@ -12,6 +12,8 @@ interface Props {
   /** no celular, nome do instrumento só no 1º sistema */
   stripAbbrevOnPhone?: boolean;
   muted?: Set<number>;
+  /** índice da parte do músico: pauta realçada */
+  mine?: number | null;
   loop?: [number, number] | null;
   engine: Engine | null;
   timeline: Timeline;
@@ -25,6 +27,7 @@ export function Score({
   zoom,
   stripAbbrevOnPhone,
   muted,
+  mine,
   loop,
   engine,
   timeline,
@@ -66,6 +69,7 @@ export function Score({
   useEffect(() => view?.relayout(true), [view, zoom]);
   useEffect(() => view?.setMuted(muted ?? new Set()), [view, muted]);
   useEffect(() => view?.setLoop(loop ?? null), [view, loop]);
+  useEffect(() => view?.setMine(mine ?? null), [view, mine]);
 
   // posição de execução → destaque do compasso e das notas, sem re-renderizar o React
   useEffect(() => {

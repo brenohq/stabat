@@ -72,6 +72,29 @@ test.describe("página do arranjo", () => {
     await expect(page.locator('[data-part="tuba-mib-1"]').getByText("você")).toBeVisible();
   });
 
+  test("a pauta da minha parte fica realçada na grade", async ({ page }) => {
+    await expect(page.locator("rect.mine-hl")).toHaveCount(0);
+    await page.evaluate(() =>
+      localStorage.setItem("stabat.myPart", JSON.stringify({ id: "tuba-mib-1", name: "Tuba Mib 1" })),
+    );
+    await page.reload();
+    const band = page.locator("rect.mine-hl").first();
+    await expect(band).toBeAttached();
+    // a faixa cobre a 2ª pauta (tuba), não a 1ª (clarinete)
+    const [b, tuba, clar] = await page.evaluate(() => {
+      const r = (e: Element) => e.getBoundingClientRect();
+      const m = document.querySelector("g.measure")!;
+      const [s0, s1] = m.querySelectorAll(":scope > g.staff");
+      const bb = r(document.querySelector("rect.mine-hl")!);
+      const c = (e: Element) =>
+        (r(e.querySelector("path")!).top + r([...e.querySelectorAll(":scope > path")].at(-1)!).bottom) / 2;
+      return [{ top: bb.top, bottom: bb.bottom }, c(s1!), c(s0!)];
+    });
+    expect(tuba).toBeGreaterThan(b.top);
+    expect(tuba).toBeLessThan(b.bottom);
+    expect(clar < b.top || clar > b.bottom).toBe(true);
+  });
+
   test("zoom fica salvo e volta aplicado", async ({ page }) => {
     const base = await scoreScale(page);
     await page.locator("#zin").click();

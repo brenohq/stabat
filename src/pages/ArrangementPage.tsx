@@ -49,7 +49,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   const [on, setOn] = useState(() => new Set(meta.parts.map((p) => p.index)));
   const [solo, setSolo] = useState(() => new Set<number>());
   const [drawer, setDrawer] = useState(false);
-  const [zoom, zoomIn, zoomOut] = useZoom("zoomArranjo");
+  const [zoom, zoomIn, zoomOut] = useZoom();
   const [view, setView] = useState<ScoreView | null>(null);
   const mine = myPart.get();
   const myInThis = mine && meta.parts.find((p) => p.id === mine.id);
@@ -119,6 +119,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
             steps={SCORE_SCALE}
             zoom={zoom}
             muted={muted}
+            mine={myInThis ? myInThis.index : null}
             engine={engine}
             timeline={timeline}
             onMeasureClick={onMeasureClick}

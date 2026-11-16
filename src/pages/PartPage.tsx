@@ -60,7 +60,7 @@ function PartStudy({ meta, part }: { meta: ArrangementMeta; part: Part }) {
   const [mix, setMix] = useState(DEFAULT_PART_MIX);
   const [speed, setSpeed] = useState(100);
   const [loopSel, setLoopSel] = useState<LoopSel>(null);
-  const [zoom, zoomIn, zoomOut] = useZoom("zoomParte");
+  const [zoom, zoomIn, zoomOut] = useZoom();
   const [view, setView] = useState<ScoreView | null>(null);
 
   const loaded = useEngineValue(engine, (e) => e.loaded, false);

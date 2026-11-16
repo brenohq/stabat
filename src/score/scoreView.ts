@@ -28,6 +28,8 @@ export class ScoreView {
   private playing: Element[] = [];
   private lastEv: number | null = null;
   private muted = new Set<number>();
+  private mine: number | null = null;
+  private mineRects: SVGRectElement[] = [];
   private loop: [number, number] | null = null;
   private lastKey = "";
   private ro: ResizeObserver | null = null;
@@ -145,6 +147,7 @@ export class ScoreView {
     this.lastEv = null;
     if (keep >= 0) this.highlight(keep, false);
     this.applyMuted();
+    this.drawMine();
     this.drawLoop();
   }
 
@@ -228,6 +231,54 @@ export class ScoreView {
       m.querySelectorAll(":scope > g.staff").forEach((s, i) =>
         s.classList.toggle("muted", this.muted.has(i)),
       );
+  }
+
+  /** pauta (índice da parte) do músico: uma faixa colorida atrás dela em cada sistema */
+  setMine(index: number | null): void {
+    this.mine = index;
+    this.drawMine();
+  }
+
+  private drawMine(): void {
+    this.mineRects.forEach((r) => r.remove());
+    this.mineRects = [];
+    if (this.mine === null) return;
+    for (const sys of this.el.querySelectorAll<SVGGElement>("g.system")) {
+      let top = Infinity,
+        bottom = -Infinity,
+        right = -Infinity;
+      for (const m of sys.querySelectorAll<SVGGElement>("g.measure")) {
+        const staff = m.querySelectorAll(":scope > g.staff")[this.mine];
+        if (!staff) continue;
+        // as 5 linhas da pauta: a faixa não muda de altura com linhas suplementares
+        for (const line of staff.querySelectorAll<SVGPathElement>(":scope > path")) {
+          const b = line.getBBox();
+          top = Math.min(top, b.y);
+          bottom = Math.max(bottom, b.y + b.height);
+          right = Math.max(right, b.x + b.width);
+        }
+      }
+      if (!isFinite(top)) continue;
+      const pad = (bottom - top) * 0.45; // ≈ 2 espaços da pauta
+      const left = sys.getBBox().x; // inclui o nome do instrumento
+      const band = this.svgRect("mine-hl", left - 40, top - pad, right - left + 80, bottom - top + 2 * pad);
+      const edge = this.svgRect("mine-edge", left - 40, top - pad, 45, bottom - top + 2 * pad);
+      sys.insertBefore(edge, sys.firstChild);
+      sys.insertBefore(band, sys.firstChild);
+      this.mineRects.push(band, edge);
+    }
+  }
+
+  private svgRect(cls: string, x: number, y: number, w: number, h: number): SVGRectElement {
+    const r = document.createElementNS(SVG_NS, "rect");
+    r.setAttribute("class", cls);
+    r.setAttribute("x", String(x));
+    r.setAttribute("y", String(y));
+    r.setAttribute("width", String(w));
+    r.setAttribute("height", String(h));
+    r.style.stroke = "none"; // o CSS do Verovio (#id rect { stroke }) venceria uma classe
+    r.style.pointerEvents = "none";
+    return r;
   }
 
   setLoop(range: [number, number] | null): void {
