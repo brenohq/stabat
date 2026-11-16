@@ -1,0 +1,77 @@
+[
+ {
+  "id": "apt",
+  "title": "APT.",
+  "subtitle": "Rosé & Bruno Mars",
+  "hue": [
+   340,
+   20
+  ],
+  "tempo": 140,
+  "time": "4/4",
+  "measures": 56,
+  "duration": 119.571,
+  "version": "45ad3c83fb",
+  "nparts": 18
+ },
+ {
+  "id": "chuva-de-arroz",
+  "title": "Chuva de Arroz",
+  "subtitle": "Luan Santana",
+  "hue": [
+   200,
+   230
+  ],
+  "tempo": 120,
+  "time": "4/4",
+  "measures": 51,
+  "duration": 118.998,
+  "version": "dbe99048f4",
+  "nparts": 18
+ },
+ {
+  "id": "de-colores-2-4",
+  "title": "De Colores",
+  "subtitle": "Tradicional · versão 2/4",
+  "hue": [
+   30,
+   320
+  ],
+  "tempo": 120,
+  "time": "2/4",
+  "measures": 57,
+  "duration": 104.998,
+  "version": "e86a19c66e",
+  "nparts": 18
+ },
+ {
+  "id": "de-colores-3-4",
+  "title": "De Colores",
+  "subtitle": "Tradicional · versão 3/4",
+  "hue": [
+   140,
+   40
+  ],
+  "tempo": 168,
+  "time": "3/4",
+  "measures": 57,
+  "duration": 112.284,
+  "version": "b0c1e1caef",
+  "nparts": 18
+ },
+ {
+  "id": "dragon-ball-gt",
+  "title": "Dragon Ball GT",
+  "subtitle": "Tema de abertura",
+  "hue": [
+   25,
+   265
+  ],
+  "tempo": 120,
+  "time": "4/4",
+  "measures": 60,
+  "duration": 123.0,
+  "version": "c860d9ad7f",
+  "nparts": 18
+ }
+]

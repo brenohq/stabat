@@ -1,0 +1,4 @@
+soundtouch-processor.js — SoundTouchJS (@soundtouchjs/audio-worklet 2.1.1)
+Copyright (c) Olli Parviainen, Ryan Berdeen, Jakub Fiala, Steve Blades
+Mozilla Public License 2.0 — https://mozilla.org/MPL/2.0/
+Fonte: https://github.com/cutterbl/SoundTouchJS

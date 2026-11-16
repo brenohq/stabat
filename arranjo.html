@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>stabat · Arranjo</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/stabat.css">
+</head>
+<body>
+<header class="topbar"><span class="brand-slot"></span><span class="crumbs"><a href="./">Repertório</a> / <span id="crumb"></span></span></header>
+<div class="titlebar"><h1 id="title">…</h1><span class="sub" id="sub"></span><span class="spacer"></span><a class="btn primary" id="minha" hidden></a></div>
+<div class="transport"><div class="in">
+  <button class="play-btn" id="play" aria-label="Tocar"></button>
+  <button class="btn ghost" id="stop" title="Voltar ao início" data-icon="rewind"></button>
+  <div class="clock tabular"><b id="t">0:00</b> <span class="muted-txt">/ <span id="dur">0:00</span></span><br><span class="muted-txt">Compasso <span id="mnum">1</span></span></div>
+  <div class="sections" id="sections"></div>
+  <span class="spacer"></span>
+  <span class="status" id="status"></span>
+  <label class="ctl">Velocidade <select id="rate"><option value=".5">50%</option><option value=".6">60%</option><option value=".75">75%</option><option value=".9">90%</option><option value="1" selected>100%</option></select></label>
+  <button class="btn on" id="metro" title="Metrônomo" data-icon="metro"> Metrônomo</button>
+  <label class="ctl zoomctl">Zoom <input type="range" id="zoom" min="20" max="50" value="30" style="width:90px"></label>
+  <button class="btn mob-btn" id="mob">Instrumentos</button>
+</div></div>
+<div class="layout">
+  <div class="paper card"><div id="score"></div></div>
+  <aside class="card mixer" id="aside">
+    <div class="hd"><h2>Instrumentos</h2><span class="links"><button id="all">todos</button><button id="none">nenhum</button></span></div>
+    <div id="mixer"></div>
+    <p class="note-txt" style="padding:10px 14px 4px">Clique num compasso para tocar a partir dele. "S" toca só aquele instrumento. Barra de espaço: tocar/pausar.</p>
+  </aside>
+</div>
+<script src="assets/app.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const id = Stabat.q.get("id");
+(async () => {
+  let meta;
+  try { meta = await Stabat.meta(id); } catch { $("title").textContent = "Arranjo não encontrado"; return; }
+  document.title = `stabat · ${meta.title}`;
+  $("title").textContent = meta.title; $("crumb").textContent = meta.title;
+  $("sub").textContent = `${meta.subtitle} · ${meta.time} · ${meta.tempo} bpm`;
+  $("dur").textContent = Stabat.fmt(meta.duration);
+  const tl = new Timeline(meta);
+  const fam = meta.parts.map(p => Stabat.family(p.name));
+  const on = new Set(meta.parts.map(p => p.index)), solo = new Set();
+  const gain = i => solo.size ? (solo.has(i) ? 1 : 0) : (on.has(i) ? 1 : 0);
+
+  // minha parte
+  const mine = Stabat.getMyPart();
+  const myPart = mine && meta.parts.find(p => p.id === mine.id);
+  if (myPart) { const a = $("minha"); a.hidden = false; a.href = `parte.html?id=${id}&part=${myPart.id}`; a.textContent = `Estudar ${Stabat.shortName(myPart.name)} →`; }
+
+  // mixer: famílias recolhíveis (fechadas por padrão; lembra quais o usuário abriu)
+  const openFams = new Set(Stabat.load("openFams", []));
+  const byFam = {};
+  for (const p of meta.parts) (byFam[fam[p.index]] ||= []).push(p);
+  $("mixer").innerHTML = Object.entries(byFam).map(([f, ps]) => `
+    <details class="fam" data-f="${f}"${openFams.has(f) ? " open" : ""}>
+      <summary>${Icons.caret}<i style="background:var(--${f})"></i><span class="fl">${Stabat.familyLabel[f]}</span><span class="cnt"></span><button class="sw famsw" title="Ligar/desligar a família"></button></summary>
+      ${ps.map(p => `<div class="row" data-i="${p.index}"><input type="checkbox" id="c${p.index}" checked><label for="c${p.index}">${esc(Stabat.shortName(p.name))}${myPart && myPart.id === p.id ? '<span class="you">você</span>' : ""}</label><button class="solo" title="Solo">S</button><a href="parte.html?id=${id}&part=${p.id}" data-mypart="${p.id}" data-mypart-name="${esc(p.name)}">parte →</a></div>`).join("")}
+    </details>`).join("");
+  $("mixer").addEventListener("toggle", () => Stabat.save("openFams", [...document.querySelectorAll("details.fam[open]")].map(d => d.dataset.f)), true);
+
+  let engine = null;
+  const view = new ScoreView($("score"), { scale: 30, onMeasureClick: i => engine && engine.stems.length && engine.seekMeasure(i) });
+  view.topOffset = 80;
+  function sync() {
+    document.querySelectorAll(".row").forEach(r => {
+      const i = +r.dataset.i; r.querySelector("input").checked = on.has(i);
+      r.querySelector(".solo").classList.toggle("on", solo.has(i)); r.classList.toggle("off", gain(i) === 0);
+    });
+    document.querySelectorAll("details.fam").forEach(d => {
+      const ids = byFam[d.dataset.f].map(p => p.index), n = ids.filter(i => gain(i) > 0).length;
+      d.querySelector(".cnt").textContent = `${n}/${ids.length}`;
+      const sw = d.querySelector(".famsw"), allOn = ids.every(i => on.has(i)), anyOn = ids.some(i => on.has(i));
+      sw.classList.toggle("on", allOn); sw.classList.toggle("part", anyOn && !allOn);
+    });
+    view.setMuted(new Set(meta.parts.map(p => p.index).filter(i => gain(i) === 0)));
+    if (engine) meta.parts.forEach(p => engine.setGain(p.index, gain(p.index)));
+  }
+  $("mixer").addEventListener("change", e => { const i = +e.target.closest(".row").dataset.i; e.target.checked ? on.add(i) : on.delete(i); sync(); });
+  $("mixer").addEventListener("click", e => {
+    const sw = e.target.closest(".famsw");
+    if (sw) { e.preventDefault(); const ids = byFam[sw.closest("details").dataset.f].map(p => p.index); const allOn = ids.every(i => on.has(i)); ids.forEach(i => allOn ? on.delete(i) : on.add(i)); sync(); return; }
+    if (e.target.classList.contains("solo")) { const i = +e.target.closest(".row").dataset.i; solo.has(i) ? solo.delete(i) : solo.add(i); sync(); }
+  });
+  $("all").onclick = () => { meta.parts.forEach(p => on.add(p.index)); solo.clear(); sync(); };
+  $("none").onclick = () => { on.clear(); solo.clear(); sync(); };
+  $("mob").onclick = () => $("aside").classList.toggle("open");
+  $("sections").innerHTML = meta.marks.map(m => `<button data-m="${m.m}" title="Ensaio ${esc(m.label)} (c. ${m.m + 1})">${esc(m.label)}</button>`).join("");
+  sync();
+
+  // áudio: um arquivo por parte
+  engine = new Engine(tl, { sampleRate: 32000 });
+  playIcon($("play"), false); loadingRing($("play"), 0);
+  $("status").textContent = "Carregando áudio…";
+  engine.loadStems(meta.parts.map(p => Stabat.url(meta, `audio/${p.id}.mp3`)), f => { loadingRing($("play"), f); $("status").textContent = f < 1 ? `Carregando áudio ${Math.round(f * 100)}%` : ""; })
+    .then(sync)
+    .catch(err => { $("status").textContent = "Erro ao carregar o áudio"; $("status").classList.add("err"); console.error(err); });
+
+  view.load(Stabat.url(meta, "score.musicxml")).then(sync);
+
+  $("sections").onclick = e => { const b = e.target.closest("button"); if (!b || !engine.stems.length) return; const k = tl.first(+b.dataset.m); if (k != null) engine.seek(tl.ev[k].t, { autoplay: true }); };
+  $("play").onclick = () => engine.toggle();
+  $("stop").onclick = () => engine.stop();
+  $("rate").onchange = e => engine.setRate(+e.target.value);
+  $("metro").onclick = () => { engine.metronome = !engine.metronome; $("metro").classList.toggle("on", engine.metronome); };
+  $("zoom").oninput = e => view.setScale(+e.target.value);
+  bindSpace(engine);
+  const upd = () => {
+    const ms = engine.now(), { m, frac } = tl.at(ms);
+    playIcon($("play"), engine.playingNow);
+    $("t").textContent = Stabat.fmt(ms / 1000); $("mnum").textContent = m + 1;
+    view.highlight(m, engine.playingNow);
+    engine.playingNow ? view.markPlaying(m, frac) : view.clearPlaying();
+    let cur = null; for (const mk of meta.marks) if (mk.m <= m) cur = mk.m;
+    document.querySelectorAll("#sections button").forEach(b => b.classList.toggle("cur", +b.dataset.m === cur));
+  };
+  engine.on(upd); upd();
+  window.stabat = { engine, view, tl, meta }; // depuração
+})();
+</script>
+</body>
+</html>

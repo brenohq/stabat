@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>stabat · Parte</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/stabat.css">
+</head>
+<body class="parte">
+<header class="topbar"><span class="brand-slot"></span><span class="crumbs"><a href="./">Repertório</a> / <a id="crumbA"></a> / <span id="crumbP"></span></span></header>
+<main>
+  <div class="phead">
+    <a class="back" id="back" title="Voltar ao arranjo" data-icon="back"></a>
+    <div class="t"><h1 id="pname">…</h1><div class="sub" id="sub"></div></div>
+    <select id="switch" aria-label="Trocar parte"></select>
+  </div>
+  <div class="paper card"><div id="score"></div></div>
+</main>
+<div class="hint" id="hint" hidden></div>
+<div class="sbar"><div class="in">
+  <button class="play-btn" id="play" aria-label="Tocar"></button>
+  <div class="clock tabular"><b>c. <span id="mnum">1</span></b> <span id="msec"></span><br><span id="t">0:00</span> / <span id="dur">0:00</span> <span class="status" id="status"></span></div>
+  <div class="mix">
+    <div class="lv"><b id="lvBand">50%</b>banda</div>
+    <input type="range" id="mix" min="0" max="100" value="75" aria-label="Equilíbrio banda / minha parte">
+    <div class="lv"><b id="lvMe">100%</b>minha parte</div>
+  </div>
+  <div class="row2">
+    <div class="seg" id="presets"><button data-v="75">Com banda</button><button data-v="0">Só banda</button><button data-v="100">Só minha parte</button></div>
+    <span class="spacer"></span>
+    <label class="speed">Velocidade <input type="range" id="rate" min="40" max="100" step="5" value="100"><b id="rateV">100%</b></label>
+    <button class="btn" id="loop"></button>
+    <button class="btn" id="count" title="Conta um compasso antes de começar"></button>
+    <button class="btn on" id="metro" data-icon="metro"> Metrônomo</button>
+  </div>
+</div></div>
+<script src="assets/app.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const id = Stabat.q.get("id");
+(async () => {
+  let meta;
+  try { meta = await Stabat.meta(id); } catch { $("pname").textContent = "Arranjo não encontrado"; return; }
+  // parte: a da URL; sem ela, a salva; senão a primeira
+  const want = Stabat.q.get("part") || Stabat.getMyPart()?.id;
+  const part = meta.parts.find(p => p.id === want) || meta.parts[0];
+  Stabat.setMyPart({ id: part.id, name: part.name });
+  document.title = `stabat · ${part.name} · ${meta.title}`;
+  $("pname").textContent = part.name; $("sub").textContent = `${meta.title} · ${meta.time} · ${meta.tempo} bpm`;
+  $("crumbA").textContent = meta.title; $("crumbA").href = $("back").href = `arranjo.html?id=${id}`; $("crumbP").textContent = Stabat.shortName(part.name);
+  $("switch").innerHTML = meta.parts.map(p => `<option value="${p.id}" ${p.id === part.id ? "selected" : ""}>${p.name}</option>`).join("");
+  $("switch").onchange = e => { const p = meta.parts.find(x => x.id === e.target.value); Stabat.setMyPart({ id: p.id, name: p.name }); location.search = `?id=${id}&part=${p.id}`; };
+  $("dur").textContent = Stabat.fmt(meta.duration);
+  const tl = new Timeline(meta);
+  $("count").textContent = Array.from({ length: tl.ev[0]?.beats || 4 }, (_, i) => i + 1).join(" ");
+
+  // áudio: [0] minha parte, [1] banda sem a minha parte
+  const engine = new Engine(tl);
+  let mix = 75;
+  const levels = () => ({ me: Math.min(1, mix / 50), band: Math.min(1, (100 - mix) / 50) });
+  function applyMix() {
+    const l = levels();
+    $("lvBand").textContent = Math.round(l.band * 100) + "%"; $("lvMe").textContent = Math.round(l.me * 100) + "%";
+    document.querySelectorAll("#presets button").forEach(b => b.classList.toggle("on", +b.dataset.v === mix));
+    engine.setGain(0, l.me * 1.6); // a parte sozinha soa fraca perto da banda: realce de ~4 dB
+    engine.setGain(1, l.band);
+  }
+  $("mix").oninput = e => { mix = +e.target.value; applyMix(); };
+  $("presets").onclick = e => { const b = e.target.closest("button"); if (!b) return; mix = +b.dataset.v; $("mix").value = mix; applyMix(); };
+
+  playIcon($("play"), false); loadingRing($("play"), 0);
+  engine.loadStems([Stabat.url(meta, `audio/${part.id}.mp3`), Stabat.url(meta, `audio/sem-${part.id}.mp3`)], f => loadingRing($("play"), f))
+    .then(applyMix)
+    .catch(err => { $("status").textContent = "· erro ao carregar o áudio"; $("status").classList.add("err"); console.error(err); });
+
+  // trecho para repetir
+  let loopSel = null; // null | {picking, a} | {a, b}
+  const hint = txt => { $("hint").textContent = txt; $("hint").hidden = !txt; };
+  function loopBtn() {
+    const b = $("loop");
+    b.classList.toggle("on", !!loopSel);
+    b.innerHTML = Icons.loop + (loopSel && loopSel.b != null ? ` c. ${loopSel.a + 1}–${loopSel.b + 1} ✕` : loopSel ? " Escolhendo… ✕" : " Repetir trecho");
+  }
+  const view = new ScoreView($("score"), { scale: 42, onMeasureClick: i => {
+    if (!engine.stems.length) return;
+    if (loopSel && loopSel.picking) {
+      if (loopSel.a == null) { loopSel.a = i; view.setLoop(i, i); hint("Agora clique no último compasso do trecho"); return; }
+      const a = Math.min(loopSel.a, i), b = Math.max(loopSel.a, i);
+      loopSel = { a, b }; view.setLoop(a, b); hint(""); loopBtn();
+      engine.setLoop(tl.range(a, b, engine.now()));
+      if (!engine.playingNow) engine.play();
+      return;
+    }
+    engine.seekMeasure(i);
+    if (!engine.loop && loopSel) { loopSel = null; view.setLoop(null); loopBtn(); }
+  } });
+  view.bottomOffset = 170;
+  $("loop").onclick = () => {
+    if (loopSel) { loopSel = null; view.setLoop(null); engine.setLoop(null); hint(""); }
+    else { loopSel = { picking: true, a: null }; hint("Clique no primeiro compasso do trecho"); }
+    loopBtn();
+  };
+  loopBtn();
+  view.load(Stabat.url(meta, `parts/${part.id}.musicxml`));
+
+  $("play").onclick = () => engine.toggle();
+  $("rate").oninput = e => { $("rateV").textContent = e.target.value + "%"; };
+  $("rate").onchange = e => engine.setRate(+e.target.value / 100);
+  $("count").onclick = () => { engine.countIn = !engine.countIn; $("count").classList.toggle("on", engine.countIn); };
+  $("metro").onclick = () => { engine.metronome = !engine.metronome; $("metro").classList.toggle("on", engine.metronome); };
+  bindSpace(engine);
+
+  let wake = null;
+  const upd = () => {
+    const ms = engine.now(), { m, frac } = tl.at(ms);
+    playIcon($("play"), engine.playingNow);
+    $("t").textContent = Stabat.fmt(ms / 1000); $("mnum").textContent = m + 1;
+    const sec = Stabat.sectionAt(meta, m); $("msec").textContent = sec ? `· ensaio ${sec}` : "";
+    view.highlight(m, engine.playingNow);
+    engine.playingNow ? view.markPlaying(m, frac) : view.clearPlaying();
+    // mantém a tela acesa enquanto toca
+    if (engine.playingNow && !wake && navigator.wakeLock) { wake = "pending"; navigator.wakeLock.request("screen").then(w => { wake = w; w.onrelease = () => wake = null; }).catch(() => wake = null); }
+    if (!engine.playingNow && wake && wake !== "pending") { wake.release(); wake = null; }
+  };
+  engine.on(upd); upd(); applyMix();
+  window.stabat = { engine, view, tl, meta }; // depuração
+})();
+</script>
+</body>
+</html>

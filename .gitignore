@@ -1,0 +1,5 @@
+tools/.cache/
+mockups/
+__pycache__/
+*.pyc
+.DS_Store
