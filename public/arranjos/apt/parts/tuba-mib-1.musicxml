@@ -1496,41 +1496,41 @@
         </print>
       <direction placement="below">
         <direction-type>
-          <wedge type="crescendo" default-y="-63.67" spread="11.5" number="1" />
+          <wedge type="crescendo" default-y="-75.91" spread="11.5" number="1" />
           </direction-type>
         </direction>
-      <note default-x="77.79" default-y="-1581.61">
+      <note default-x="77.79" default-y="-1616.61">
         <pitch>
           <step>D</step>
-          <octave>5</octave>
+          <octave>4</octave>
           </pitch>
         <duration>6</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="95.79" default-y="-1576.61" />
-        <stem>down</stem>
+        <dot default-x="95.79" default-y="-1616.61" />
+        <stem>up</stem>
         </note>
-      <note default-x="199.77" default-y="-1581.61">
+      <note default-x="199.77" default-y="-1616.61">
         <pitch>
           <step>D</step>
-          <octave>5</octave>
+          <octave>4</octave>
           </pitch>
         <duration>6</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="217.77" default-y="-1576.61" />
-        <stem>down</stem>
+        <dot default-x="217.77" default-y="-1616.61" />
+        <stem>up</stem>
         </note>
-      <note default-x="321.75" default-y="-1581.61">
+      <note default-x="321.75" default-y="-1616.61">
         <pitch>
           <step>D</step>
-          <octave>5</octave>
+          <octave>4</octave>
           </pitch>
         <duration>4</duration>
         <tie type="start" />
         <voice>1</voice>
         <type>quarter</type>
-        <stem>down</stem>
+        <stem>up</stem>
         <notations>
           <tied type="start" />
           </notations>
@@ -1618,7 +1618,7 @@
         </direction>
       <direction placement="below">
         <direction-type>
-          <dynamics default-x="-1.18" default-y="-48.27" relative-y="-20">
+          <dynamics default-x="-1.18" default-y="-60.51" relative-y="-20">
             <mf />
             </dynamics>
           </direction-type>
