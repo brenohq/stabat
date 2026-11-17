@@ -1,4 +1,5 @@
 """Testes do script de publicação (sem MuseScore): usa o arranjo de teste de e2e/fixtures."""
+import copy
 import sys
 import tempfile
 import unittest
@@ -20,6 +21,24 @@ class TestPublicar(unittest.TestCase):
         self.assertEqual(publicar.slug("Trompete Sib 1"), "trompete-sib-1")
         self.assertEqual(publicar.slug("Saxhorn Mib 2"), "saxhorn-mib-2")
         self.assertEqual(publicar.slug("Bombardino Dó"), "bombardino-do")
+
+    def test_part_hash_muda_com_notas_ou_som(self):
+        tracks = [{"partId": "3", "out": {"volumeDb": 0}}]
+        h = publicar.part_hash(b"<pitch>62</pitch>", tracks)
+        self.assertEqual(h, publicar.part_hash(b"<pitch>62</pitch>", copy.deepcopy(tracks)))
+        self.assertNotEqual(h, publicar.part_hash(b"<pitch>50</pitch>", tracks))
+        self.assertNotEqual(h, publicar.part_hash(b"<pitch>62</pitch>", [{"partId": "3", "out": {"volumeDb": -3}}]))
+
+    def test_changed_parts_so_o_que_mudou(self):
+        hashes = {"clarinete-sib-1": "a", "tuba-mib-1": "b", "trompete-sib-1": "c"}
+        cached = {"clarinete-sib-1": "a", "tuba-mib-1": "velho"}
+        have = {"clarinete-sib-1", "tuba-mib-1"}
+        # tuba mudou; trompete é nova
+        self.assertEqual(publicar.changed_parts(hashes, cached, have), ["tuba-mib-1", "trompete-sib-1"])
+        # nada mudou
+        self.assertEqual(publicar.changed_parts(cached | {"tuba-mib-1": "velho"}, cached, have), [])
+        # sem o FLAC guardado, renderiza de novo
+        self.assertEqual(publicar.changed_parts({"clarinete-sib-1": "a"}, cached, set()), ["clarinete-sib-1"])
 
     def test_split_parts_copia_ensaio_e_andamento(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -4,15 +4,19 @@
 Para cada arranjo listado em tools/arranjos.json:
   1. exporta a grade em MusicXML e as posições dos compassos (.mpos, já com ritornelos);
   2. gera uma partitura por parte (--score-parts), copia para ela a configuração de som
-     (Muse Sounds) do original e exporta o áudio de cada parte em WAV;
-  3. mistura no Python: um MP3 mono por parte (com o mesmo ganho para todos, para manter
-     o equilíbrio original) e um MP3 "banda sem a parte" para a página de estudo;
+     (Muse Sounds) do original e exporta o áudio em WAV, mas **só das partes que mudaram**:
+     cada parte tem uma impressão digital (o .mscx dela + o som dela) e o áudio sem perdas
+     (FLAC) fica guardado em tools/.cache/<id>/partes/;
+  3. mistura no Python, com todas as partes (as novas e as guardadas): um MP3 mono por parte
+     (com o mesmo ganho para todos, para manter o equilíbrio original) e um MP3 "banda sem a
+     parte" para a página de estudo;
   4. separa as partes do MusicXML e grava arranjos/<id>/meta.json e arranjos/index.json.
 
 Uso:
   python3 tools/publicar.py            # todos (pula o áudio se o .mscz não mudou)
   python3 tools/publicar.py apt chuva  # só alguns
-  python3 tools/publicar.py --forcar   # refaz o áudio mesmo sem mudança
+  python3 tools/publicar.py --forcar   # renderiza o áudio de todas as partes de novo
+                                       # (ex.: depois de atualizar o MuseScore ou o Muse Sounds)
 """
 import argparse, base64, copy, hashlib, io, json, os, re, shutil, subprocess, sys, zipfile
 import xml.etree.ElementTree as ET
@@ -28,6 +32,8 @@ MSCORE_CANDIDATES = [Path.home() / ".local/opt/musescore/MuseScore-Studio.AppIma
 SR = 44100
 MP3_PARTE = "80k"
 MP3_BANDA = "96k"
+# mude quando o jeito de renderizar mudar: invalida o áudio guardado de todas as partes
+RENDER_VERSION = 1
 
 
 def log(*a):
@@ -74,19 +80,35 @@ def encode_mp3(signal, path, bitrate):
                     "-codec:a", "libmp3lame", "-b:a", bitrate, str(path)], input=pcm, check=True)
 
 
-def render_parts_audio(mscz, work):
-    """Exporta um WAV por parte usando Muse Sounds. Devolve [(nome, wav_path)] na ordem da grade."""
+def part_hash(mscx: bytes, tracks) -> str:
+    """Impressão digital do áudio de uma parte: as notas (o .mscx da parte, que já traz andamentos
+    e ritornelos) e a configuração de som (Muse Sounds) dela."""
+    h = hashlib.sha256()
+    h.update(f"v{RENDER_VERSION}/{SR}\n".encode())
+    h.update(mscx)
+    h.update(json.dumps(tracks, sort_keys=True).encode())
+    return h.hexdigest()
+
+
+def changed_parts(hashes, cached, have):
+    """Partes a renderizar: as novas, as que mudaram e as sem áudio guardado.
+    hashes/cached: {slug: hash} (atual / da última renderização); have: slugs com FLAC."""
+    return [sl for sl, h in hashes.items() if cached.get(sl) != h or sl not in have]
+
+
+def prepare_parts(mscz, work):
+    """Uma partitura por parte (com o som só daquela parte). Devolve, na ordem da grade,
+    [{"name", "mscz", "hash"}]."""
     raw = run_mscore(["--score-parts", str(mscz)], cwd=work, capture=True)
     data = json.loads(raw[raw.index(b"{"):])
-    names = data["parts"]
     with zipfile.ZipFile(mscz) as z:
         audio = json.loads(z.read("audiosettings.json"))
-    job, out = [], []
-    for i, (name, b64) in enumerate(zip(names, data["partsBin"])):
+    out = []
+    for i, (name, b64) in enumerate(zip(data["parts"], data["partsBin"])):
         src = zipfile.ZipFile(io.BytesIO(base64.b64decode(b64)))
         mscx_name = next(n for n in src.namelist() if n.endswith(".mscx") and "/" not in n)
-        mscx = src.read(mscx_name).decode()
-        part_id = re.search(r'<Part id="(\d+)"', mscx).group(1)
+        mscx = src.read(mscx_name)
+        part_id = re.search(r'<Part id="(\d+)"', mscx.decode()).group(1)
         a = copy.deepcopy(audio)
         a["tracks"] = [t for t in audio["tracks"] if t.get("partId") == part_id]
         if not a["tracks"]:
@@ -97,20 +119,29 @@ def render_parts_audio(mscz, work):
                 if n != "audiosettings.json":
                     dst.writestr(n, src.read(n))
             dst.writestr("audiosettings.json", json.dumps(a, indent=4))
-        wav = work / f"parte{i:02d}.wav"
-        job.append({"in": pm.name, "out": wav.name})
-        out.append((name, wav))
-    (work / "job.json").write_text(json.dumps(job, indent=1))
-    log(f"   renderizando {len(job)} partes com Muse Sounds…")
-    run_mscore(["-j", "job.json"], cwd=work)
-    missing = [w.name for _, w in out if not w.exists()]
-    if missing:
-        sys.exit(f"MuseScore não gerou: {missing}")
+        out.append({"name": name, "mscz": pm, "hash": part_hash(mscx, a["tracks"])})
     return out
 
 
-def build_audio(parts_wav, dest, slugs):
-    sigs = [read_wav_mono(w) for _, w in parts_wav]
+def render_parts(parts, work, store):
+    """Renderiza com Muse Sounds só as partes pedidas ([(slug, mscz)]) e guarda cada uma em
+    store/<slug>.flac (sem perdas, mono, 24 bits)."""
+    job = [{"in": pm.name, "out": f"{sl}.wav"} for sl, pm in parts]
+    (work / "job.json").write_text(json.dumps(job, indent=1))
+    run_mscore(["-j", "job.json"], cwd=work)
+    missing = [j["out"] for j in job if not (work / j["out"]).exists()]
+    if missing:
+        sys.exit(f"MuseScore não gerou: {missing}")
+    store.mkdir(parents=True, exist_ok=True)
+    for sl, _ in parts:
+        wav = work / f"{sl}.wav"
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(wav), "-ac", "1", "-ar", str(SR),
+                        "-sample_fmt", "s32", "-bits_per_raw_sample", "24", str(store / f"{sl}.flac")], check=True)
+        wav.unlink()
+
+
+def build_audio(sources, dest, slugs):
+    sigs = [read_wav_mono(w) for w in sources]
     n = max(len(s) for s in sigs)
     sigs = [np.pad(s, (0, n - len(s))) for s in sigs]
     total = np.sum(sigs, axis=0)
@@ -246,6 +277,48 @@ def time_signatures(part):
 
 # ---------------------------------------------------------------- principal
 
+def update_audio(mscz, digest, work, dest, slugs, force):
+    """Renderiza só as partes que mudaram e refaz a mistura com todas. Devolve a duração (s)."""
+    stamp = work / "audio.sha"
+    meta_old = json.loads((dest / "meta.json").read_text()) if (dest / "meta.json").exists() else {}
+    audio_ok = (dest / "audio").exists() and meta_old.get("duration")
+    if not force and audio_ok and stamp.exists() and stamp.read_text() == digest:
+        log("   áudio em dia (partitura não mudou)")
+        return meta_old["duration"]
+
+    parts = prepare_parts(mscz, work)
+    names = [p["name"] for p in parts]
+    if [slug(n) for n in names] != slugs:
+        sys.exit(f"ordem das partes difere entre MusicXML e MuseScore: {names}")
+    store = work / "partes"
+    index_path = store / "partes.json"
+    cached = {} if force or not index_path.exists() else json.loads(index_path.read_text())
+    hashes = {sl: p["hash"] for sl, p in zip(slugs, parts)}
+    have = {f.stem for f in store.glob("*.flac")}
+    todo = changed_parts(hashes, cached, have)
+
+    if todo:
+        nomes = ", ".join(n for sl, n in zip(slugs, names) if sl in todo)
+        log(f"   renderizando {len(todo)} de {len(slugs)} partes com Muse Sounds: {nomes}")
+        render_parts([(sl, p["mscz"]) for sl, p in zip(slugs, parts) if sl in todo], work, store)
+    else:
+        log("   nenhuma parte mudou de som (só layout/texto)")
+    for p in parts:
+        p["mscz"].unlink()
+    for f in store.glob("*.flac"):  # partes que saíram do arranjo
+        if f.stem not in hashes:
+            f.unlink()
+    index_path.write_text(json.dumps(hashes, indent=1))
+
+    if todo or not audio_ok:
+        log("   mixando a banda inteira (MP3 de cada parte e \"sem a parte\")")
+        duration = build_audio([store / f"{sl}.flac" for sl in slugs], dest / "audio", slugs)
+    else:
+        duration = meta_old["duration"]
+    stamp.write_text(digest)
+    return duration
+
+
 def publish(cfg, force):
     aid = cfg["id"]
     src = SCORES / cfg["arquivo"]
@@ -264,21 +337,7 @@ def publish(cfg, force):
     root, first, parts = split_parts(work / "score.musicxml", dest / "parts")
     slugs = [p["id"] for p in parts]
 
-    stamp = work / "audio.sha"
-    meta_old = json.loads((dest / "meta.json").read_text()) if (dest / "meta.json").exists() else {}
-    if not force and stamp.exists() and stamp.read_text() == digest and (dest / "audio").exists() and meta_old.get("duration"):
-        log("   áudio em dia (partitura não mudou)")
-        duration = meta_old["duration"]
-    else:
-        wavs = render_parts_audio(mscz, work)
-        names = [n for n, _ in wavs]
-        if [slug(n) for n in names] != slugs:
-            sys.exit(f"ordem das partes difere entre MusicXML e MuseScore: {names}")
-        duration = build_audio(wavs, dest / "audio", slugs)
-        for _, w in wavs:
-            w.unlink()
-        stamp.write_text(digest)
-
+    duration = update_audio(mscz, digest, work, dest, slugs, force)
     sigs = time_signatures(first)
     mq = measure_lengths(first)
     timeline = parse_mpos(work / "score.mpos", len(mq), mq, sigs, duration)
