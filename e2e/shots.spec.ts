@@ -7,6 +7,7 @@ const pages: { name: string; path: string; loaded: boolean; mine?: string }[] = 
   { name: "arranjo", path: "/apt", loaded: true },
   { name: "arranjo-minha-parte", path: "/apt", loaded: true, mine: "trompete-sib-1" },
   { name: "parte", path: "/apt/trompete-sib-1", loaded: true },
+  { name: "calendario", path: "/calendario", loaded: false },
 ];
 const sizes = [
   { name: "desktop", width: 1366, height: 900 },
@@ -25,7 +26,10 @@ for (const s of sizes)
       if (p.loaded) await openLoaded(page, p.path);
       else {
         await page.goto(p.path);
-        await page.getByTestId("arrangement-card").first().waitFor();
+        await page
+          .getByTestId(p.path === "/calendario" ? "evento" : "arrangement-card")
+          .first()
+          .waitFor();
       }
       await page.waitForTimeout(300);
       await page.screenshot({ path: `.shots/${p.name}-${s.name}.png` });

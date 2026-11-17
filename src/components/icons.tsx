@@ -79,6 +79,12 @@ export const ZoomOutIcon = (p: P) => (
     <path d="M15.5 15.5L21 21M7.8 10.5h5.4" />
   </svg>
 );
+export const CalendarIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
+    <path d="M3.5 10h17M8 3v4M16 3v4" />
+  </svg>
+);
 export const NoteIcon = (p: P) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...p}>
     <path d="M10 3.5v11.1A3.5 3.5 0 1 0 12 17.7V8.2l7-1.7v6.1a3.5 3.5 0 1 0 2 3.1V2.6z" />

@@ -20,10 +20,11 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 ## Arquitetura
 
 - **Vite + React 19 + TypeScript estrito + Tailwind v4 + React Router 7**. Site estático no **Vercel**.
-- Rotas (`src/App.tsx`): `/` repertório · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
+- Rotas (`src/App.tsx`): `/` repertório · `/calendario` agenda da banda · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
 - `src/lib/`: **lógica pura e testada**. Nada de DOM aqui.
   - `timeline.ts`: ritornelos: compasso da partitura ↔ tempo do áudio, ocorrência mais próxima, trecho a..b, tempos do metrônomo.
   - `mix.ts`: volumes (parte: 85% minha parte / 15% banda; arranjo: ligado/solo).
+  - `agenda.ts`: **compromissos do Calendário da Banda** (lista `AGENDA`, horário de Brasília); para marcar um ensaio/show, acrescente uma linha ali. Passado/próximo e "faltam N dias" são calculados na hora.
   - `parts.ts`, `format.ts`, `storage.ts` (localStorage), `data.ts` (fetch), `types.ts` (formato do `meta.json`).
 - `src/audio/engine.ts`: `Engine`, um motor Web Audio imperativo: uma parte por AudioBuffer, volume por parte, metrônomo/contagem sintetizados, loop sem emenda (segmentos agendados), velocidade sem mudar a afinação via SoundTouch (`public/vendor/soundtouch-processor.js`, MPL-2.0). Tem um `AnalyserNode` e `level()` para os testes saberem se há som.
 - `src/score/`: `scoreView.ts` (Verovio → SVG, destaque do compasso, notas soando, pautas apagadas, trecho) e `sizing.ts` (escala por largura × zoom, espaçamento justo no celular).
