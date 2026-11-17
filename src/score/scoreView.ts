@@ -1,3 +1,4 @@
+import { isSmell, pitchName, type SmellNote, type SmellRange } from "../lib/smells";
 import { loadVerovio, type Toolkit } from "./verovio";
 
 interface ScoreViewOptions {
@@ -31,6 +32,9 @@ export class ScoreView {
   private mine: number | null = null;
   private mineRects: SVGRectElement[] = [];
   private loop: [number, number] | null = null;
+  private smells: SmellRange | null = null;
+  private smellRects: SVGRectElement[] = [];
+  private pitches = new Map<string, number>();
   private lastKey = "";
   private ro: ResizeObserver | null = null;
   private disposed = false;
@@ -149,6 +153,7 @@ export class ScoreView {
     this.applyMuted();
     this.drawMine();
     this.drawLoop();
+    this.drawSmells();
   }
 
   private rectFor(i: number, cls: string): SVGRectElement | null {
@@ -175,7 +180,8 @@ export class ScoreView {
     if (scroll && this.hl) this.scrollTo(i);
   }
 
-  private scrollTo(i: number): void {
+  /** rola até o compasso i (se não estiver à vista) */
+  scrollTo(i: number): void {
     const m = this.measureEls[i];
     if (!m) return;
     const r = (m.closest("g.system") ?? m).getBoundingClientRect();
@@ -294,5 +300,62 @@ export class ScoreView {
       const r = this.rectFor(i, "loop-hl");
       if (r) this.loopRects.push(r);
     }
+  }
+
+  /** altura escrita (MIDI) da nota; o Verovio já devolve a altura escrita dos transpositores */
+  private pitchOf(note: Element): number | null {
+    // com svgHtml5 o Verovio põe o id do MEI em data-id
+    const id = note.getAttribute("data-id") || note.id;
+    if (!id) return null;
+    let p = this.pitches.get(id);
+    if (p === undefined && this.tk) {
+      p = this.tk.getMIDIValuesForElement(id)?.pitch ?? NaN;
+      this.pitches.set(id, p);
+    }
+    return p === undefined || Number.isNaN(p) ? null : p;
+  }
+
+  /** todas as notas (compasso + altura escrita), para o relatório de smells */
+  notes(): SmellNote[] {
+    const out: SmellNote[] = [];
+    this.measureEls.forEach((m, i) => {
+      for (const n of m.querySelectorAll<SVGGElement>("g.note")) {
+        const p = this.pitchOf(n);
+        if (p !== null) out.push({ m: i, pitch: p });
+      }
+    });
+    return out;
+  }
+
+  /** realça em vermelho as notas fora da extensão e os compassos onde estão */
+  setSmells(range: SmellRange | null): void {
+    this.smells = range;
+    this.drawSmells();
+  }
+
+  private drawSmells(): void {
+    this.smellRects.forEach((r) => r.remove());
+    this.smellRects = [];
+    this.el.querySelectorAll("g.note.smell").forEach((n) => n.classList.remove("smell"));
+    const range = this.smells;
+    if (!range) return;
+    this.measureEls.forEach((m, i) => {
+      let any = false;
+      for (const n of m.querySelectorAll<SVGGElement>("g.note")) {
+        const p = this.pitchOf(n);
+        if (p === null || !isSmell(p, range)) continue;
+        any = true;
+        n.classList.add("smell");
+        if (!n.querySelector(":scope > title")) {
+          const t = document.createElementNS(SVG_NS, "title");
+          t.textContent = pitchName(p);
+          n.prepend(t);
+        }
+      }
+      if (any) {
+        const r = this.rectFor(i, "smell-hl");
+        if (r) this.smellRects.push(r);
+      }
+    });
   }
 }

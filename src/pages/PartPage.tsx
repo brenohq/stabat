@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router";
 import { BottomBar, Clock } from "../components/BottomBar";
 import { PlayButton } from "../components/PlayButton";
 import { Score } from "../components/Score";
+import { SmellPanel } from "../components/SmellPanel";
 import { useZoom } from "../hooks/useZoom";
 import { TopBar } from "../components/TopBar";
 import { ZoomControls } from "../components/ZoomControls";
@@ -16,6 +17,7 @@ import { assetUrl, fetchMeta } from "../lib/data";
 import { fmtTime } from "../lib/format";
 import { DEFAULT_PART_MIX, matchGains, mixGains, mixLevels } from "../lib/mix";
 import { sectionAt, shortName } from "../lib/parts";
+import { pitchName, smellRange, smellReport, type SmellRange, type SmellReport } from "../lib/smells";
 import { myPart } from "../lib/storage";
 import { Timeline } from "../lib/timeline";
 import type { ArrangementMeta, Part } from "../lib/types";
@@ -23,7 +25,7 @@ import { PART_SCALE } from "../score/sizing";
 import type { ScoreView } from "../score/scoreView";
 import { NotFound } from "./NotFound";
 
-export function PartPage() {
+export function PartPage({ smells = false }: { smells?: boolean }) {
   const { arranjoId = "", parteId = "" } = useParams();
   const state = useAsync(() => fetchMeta(arranjoId), [arranjoId]);
   if (state.status === "loading")
@@ -36,7 +38,7 @@ export function PartPage() {
   if (state.status === "error") return <NotFound message="Arranjo não encontrado." />;
   const part = state.data.parts.find((p) => p.id === parteId);
   if (!part) return <NotFound message="Esta parte não existe neste arranjo." />;
-  return <PartStudy key={`${arranjoId}/${parteId}`} meta={state.data} part={part} />;
+  return <PartStudy key={`${arranjoId}/${parteId}`} meta={state.data} part={part} smells={smells} />;
 }
 
 const PRESETS = [
@@ -48,7 +50,7 @@ const PRESETS = [
 /** seleção do trecho para repetir: escolhendo o 1º compasso, o último, ou pronto */
 type LoopSel = null | { a: number | null; b?: undefined } | { a: number; b: number };
 
-function PartStudy({ meta, part }: { meta: ArrangementMeta; part: Part }) {
+function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; smells: boolean }) {
   const navigate = useNavigate();
   const timeline = useMemo(() => new Timeline(meta.timeline, meta.duration), [meta]);
   // [0] minha parte, [1] banda sem a minha parte
@@ -72,11 +74,20 @@ function PartStudy({ meta, part }: { meta: ArrangementMeta; part: Part }) {
   useSpaceToggle(engine);
   useWakeLock(playing);
 
-  // escolher (ou abrir) uma parte grava como "minha parte"
-  useEffect(() => myPart.set({ id: part.id, name: part.name }), [part]);
+  // escolher (ou abrir) uma parte grava como "minha parte"; revisar smells não conta
   useEffect(() => {
-    document.title = `stabat · ${part.name} · ${meta.title}`;
-  }, [meta, part]);
+    if (!smells) myPart.set({ id: part.id, name: part.name });
+  }, [part, smells]);
+  useEffect(() => {
+    document.title = `stabat · ${smells ? "smells · " : ""}${part.name} · ${meta.title}`;
+  }, [meta, part, smells]);
+  const goToMeasure = (m: number) => {
+    engine?.seekMeasure(m);
+    view?.highlight(m, false);
+    view?.scrollTo(m);
+  };
+  const range = useMemo(() => (smells ? smellRange(part.name) : null), [smells, part]);
+  const report = useMemo(() => (range && view ? smellReport(view.notes(), range) : null), [range, view]);
   // iguala o volume da parte ao da banda uma vez por carregamento
   const match = useMemo(
     () => (engine && loaded ? matchGains(engine.loudness(0), engine.loudness(1)) : undefined),
@@ -150,53 +161,73 @@ function PartStudy({ meta, part }: { meta: ArrangementMeta; part: Part }) {
           </>
         }
       />
-      <main className="mx-auto max-w-[1060px] px-4 pt-4 pb-[calc(var(--barh,190px)+24px)]">
-        <div className="mb-3.5 flex flex-wrap items-center gap-3.5">
-          <Link
-            to={`/${meta.id}`}
-            title="Voltar ao arranjo"
-            aria-label="Voltar ao arranjo"
-            className="grid size-9 place-items-center rounded-[10px] border border-line bg-surface"
-          >
-            <BackIcon className="size-[18px]" />
-          </Link>
-          <div className="min-w-[200px] flex-1">
-            <h1 className="text-[28px] leading-tight">{part.name}</h1>
-            <div className="text-sm text-muted">
-              {meta.title} · {meta.time} · {meta.tempo} bpm
+      <main
+        className={`mx-auto px-4 pt-4 pb-[calc(var(--barh,190px)+24px)] ${
+          smells
+            ? "grid max-w-[1400px] items-start gap-x-4 min-[1100px]:grid-cols-[minmax(0,1fr)_280px]"
+            : "max-w-[1060px]"
+        }`}
+      >
+        <div className="min-w-0">
+          <div className="mb-3.5 flex flex-wrap items-center gap-3.5">
+            <Link
+              to={`/${meta.id}`}
+              title="Voltar ao arranjo"
+              aria-label="Voltar ao arranjo"
+              className="grid size-9 place-items-center rounded-[10px] border border-line bg-surface"
+            >
+              <BackIcon className="size-[18px]" />
+            </Link>
+            <div className="min-w-[200px] flex-1">
+              <h1 className="text-[28px] leading-tight">{part.name}</h1>
+              <div className="text-sm text-muted">
+                {meta.title} · {meta.time} · {meta.tempo} bpm
+              </div>
             </div>
+            <select
+              id="switch"
+              aria-label="Trocar parte"
+              value={part.id}
+              onChange={(e) => {
+                const p = meta.parts.find((x) => x.id === e.target.value)!;
+                if (smells) return void navigate(`/${meta.id}/${p.id}/smells`);
+                myPart.set({ id: p.id, name: p.name });
+                void navigate(`/${meta.id}/${p.id}`);
+              }}
+              className="rounded-[10px] border border-line bg-surface px-2.5 py-1.5"
+            >
+              {meta.parts.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
           </div>
-          <select
-            id="switch"
-            aria-label="Trocar parte"
-            value={part.id}
-            onChange={(e) => {
-              const p = meta.parts.find((x) => x.id === e.target.value)!;
-              myPart.set({ id: p.id, name: p.name });
-              void navigate(`/${meta.id}/${p.id}`);
-            }}
-            className="rounded-[10px] border border-line bg-surface px-2.5 py-1.5"
-          >
-            {meta.parts.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+          {smells && (
+            <div className="min-[1100px]:hidden">
+              <SmellSummary range={range!} report={report} onMeasure={goToMeasure} />
+            </div>
+          )}
+          <Card className="overflow-hidden p-1.5">
+            <Score
+              url={assetUrl(meta, `parts/${part.id}.musicxml`)}
+              steps={PART_SCALE}
+              zoom={zoom}
+              stripAbbrevOnPhone
+              loop={loopRange}
+              smells={range}
+              engine={engine}
+              timeline={timeline}
+              onMeasureClick={onMeasureClick}
+              onView={setView}
+            />
+          </Card>
         </div>
-        <Card className="overflow-hidden p-1.5">
-          <Score
-            url={assetUrl(meta, `parts/${part.id}.musicxml`)}
-            steps={PART_SCALE}
-            zoom={zoom}
-            stripAbbrevOnPhone
-            loop={loopRange}
-            engine={engine}
-            timeline={timeline}
-            onMeasureClick={onMeasureClick}
-            onView={setView}
-          />
-        </Card>
+        {smells && (
+          <div className="max-[1099px]:hidden">
+            <SmellPanel meta={meta} part={part} range={range!} report={report} onMeasure={goToMeasure} />
+          </div>
+        )}
       </main>
 
       {picking && (
@@ -311,5 +342,53 @@ function PartStudy({ meta, part }: { meta: ArrangementMeta; part: Part }) {
         }
       />
     </>
+  );
+}
+
+/** resumo da página /smells: quantas notas fora da extensão e em quais compassos */
+function SmellSummary({
+  range: r,
+  report,
+  onMeasure,
+}: {
+  range: SmellRange;
+  report: SmellReport | null;
+  onMeasure: (m: number) => void;
+}) {
+  const range = `acima do ${pitchName(r.high)} ou abaixo do ${pitchName(r.low)} (escrito)`;
+  return (
+    <div
+      data-testid="smells"
+      className="mb-3.5 rounded-[14px] border border-[#d62828]/40 bg-[#d62828]/[0.07] px-4 py-3 text-sm"
+    >
+      <b className="text-[#b01f1f]">Smells</b> · notas {range}
+      <div className="mt-1.5">
+        {!report ? (
+          <span className="text-muted">Analisando a partitura…</span>
+        ) : report.measures.length === 0 ? (
+          <span data-testid="smells-count">Nenhuma nota fora da extensão. 👌</span>
+        ) : (
+          <>
+            <span data-testid="smells-count">
+              {report.high + report.low} {report.high + report.low === 1 ? "nota" : "notas"} ({report.high}{" "}
+              {report.high === 1 ? "aguda" : "agudas"}, {report.low} {report.low === 1 ? "grave" : "graves"})
+              em {report.measures.length} {report.measures.length === 1 ? "compasso" : "compassos"}:
+            </span>{" "}
+            <span className="inline-flex flex-wrap gap-1 align-middle">
+              {report.measures.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => onMeasure(m)}
+                  className="cursor-pointer rounded-md border border-[#d62828]/40 bg-surface px-1.5 text-[13px] font-semibold text-[#b01f1f]"
+                >
+                  {m + 1}
+                </button>
+              ))}
+            </span>
+          </>
+        )}
+      </div>
+    </div>
   );
 }

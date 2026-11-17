@@ -140,6 +140,15 @@
 .score .loop-hl {
   fill: rgb(47 125 85 / 0.14);
 }
+.score .smell-hl {
+  fill: rgb(214 40 40 / 0.13);
+}
+.score g.note.smell,
+.score g.note.smell * {
+  fill: #d62828 !important;
+  stroke: #d62828 !important;
+}
+/* depois do .smell: a nota soando vence o vermelho */
 .score g.note.playing,
 .score g.note.playing * {
   fill: var(--hl-strong) !important;

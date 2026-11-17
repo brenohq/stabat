@@ -11,6 +11,8 @@ export interface Toolkit {
   renderToSVG(page: number): string;
   renderToTimemap(o?: Record<string, unknown>): TimemapEntry[];
   redoLayout(): void;
+  /** altura escrita (MIDI) e tempo; precisa de renderToTimemap/renderToMIDI antes */
+  getMIDIValuesForElement(id: string): { pitch: number; time: number; duration: number };
 }
 
 let loading: Promise<() => Toolkit> | null = null;

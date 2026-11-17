@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Engine } from "../audio/engine";
+import type { SmellRange } from "../lib/smells";
 import type { Timeline } from "../lib/timeline";
 import { ScoreView } from "../score/scoreView";
 import { PHONE_MAX, layoutFor, scaleFor, stripAbbreviations, type ScaleSteps } from "../score/sizing";
@@ -15,6 +16,8 @@ interface Props {
   /** índice da parte do músico: pauta realçada */
   mine?: number | null;
   loop?: [number, number] | null;
+  /** realça em vermelho as notas fora desta extensão (página /smells) */
+  smells?: SmellRange | null;
   engine: Engine | null;
   timeline: Timeline;
   onMeasureClick: (m: number) => void;
@@ -29,6 +32,7 @@ export function Score({
   muted,
   mine,
   loop,
+  smells,
   engine,
   timeline,
   onMeasureClick,
@@ -70,6 +74,7 @@ export function Score({
   useEffect(() => view?.setMuted(muted ?? new Set()), [view, muted]);
   useEffect(() => view?.setLoop(loop ?? null), [view, loop]);
   useEffect(() => view?.setMine(mine ?? null), [view, mine]);
+  useEffect(() => view?.setSmells(smells ?? null), [view, smells]);
 
   // posição de execução → destaque do compasso e das notas, sem re-renderizar o React
   useEffect(() => {
