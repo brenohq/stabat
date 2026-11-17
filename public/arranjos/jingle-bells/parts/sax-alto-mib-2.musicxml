@@ -150,10 +150,10 @@
         <direction-type>
           <metronome parentheses="no" default-x="-39.94" default-y="25.28" relative-y="20">
             <beat-unit>quarter</beat-unit>
-            <per-minute>90</per-minute>
+            <per-minute>92</per-minute>
             </metronome>
           </direction-type>
-        <sound tempo="90" />
+        <sound tempo="92" />
         </direction>
       <direction placement="above" system="only-top">
         <direction-type>
