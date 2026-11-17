@@ -2152,7 +2152,8 @@
         </note>
       </measure>
     <measure number="35" width="351.04">
-      <note default-x="168.12" default-y="-1157.72">
+      <barline location="left"><ending number="1" type="start" default-y="32.9">1.</ending>
+        </barline><note default-x="168.12" default-y="-1157.72">
         <rest measure="yes" />
         <duration>16</duration>
         <voice>1</voice>
@@ -2166,6 +2167,7 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="1" type="stop" />
         <repeat direction="backward" />
         </barline>
       </measure>
@@ -2175,7 +2177,8 @@
           <staff-distance>71.24</staff-distance>
           </staff-layout>
         </print>
-      <direction placement="below">
+      <barline location="left"><ending number="2" type="start" default-y="32.9">2.</ending>
+        </barline><direction placement="below">
         <direction-type>
           <wedge type="crescendo" default-y="-66.33" spread="11.5" number="1" />
           </direction-type>
@@ -2260,7 +2263,8 @@
           <wedge type="stop" number="1" />
           </direction-type>
         </direction>
-      </measure>
+      <barline location="right"><ending number="2" type="discontinue" />
+        </barline></measure>
     <measure number="39" width="367.3">
       <direction placement="above" system="only-top">
         <direction-type>
@@ -2985,7 +2989,8 @@
           <staff-distance>73.24</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="75.52" default-y="-1167.08">
+      <barline location="left"><ending number="1" type="start" default-y="37.63">1.</ending>
+        </barline><note default-x="75.52" default-y="-1167.08">
         <rest />
         <duration>8</duration>
         <voice>1</voice>
@@ -3057,11 +3062,13 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="1" type="stop" />
         <repeat direction="backward" />
         </barline>
       </measure>
     <measure number="55" width="264">
-      <note default-x="12.5" default-y="-1167.08">
+      <barline location="left"><ending number="2" type="start" default-y="37.63">2.</ending>
+        </barline><note default-x="12.5" default-y="-1167.08">
         <rest />
         <duration>8</duration>
         <voice>1</voice>
@@ -3073,7 +3080,8 @@
         <voice>1</voice>
         <type>half</type>
         </note>
-      </measure>
+      <barline location="right"><ending number="2" type="discontinue" />
+        </barline></measure>
     <measure number="56" width="264">
       <note default-x="12.5" default-y="-1167.08">
         <rest />

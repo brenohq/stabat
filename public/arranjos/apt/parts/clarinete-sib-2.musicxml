@@ -1683,7 +1683,8 @@
         </note>
       </measure>
     <measure number="35" width="351.04">
-      <note default-x="12.5" default-y="-133.31">
+      <barline location="left"><ending number="1" type="start" default-y="32.9">1.</ending>
+        </barline><note default-x="12.5" default-y="-133.31">
         <rest />
         <duration>4</duration>
         <voice>1</voice>
@@ -1799,6 +1800,7 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="1" type="stop" />
         <repeat direction="backward" />
         </barline>
       </measure>
@@ -1808,7 +1810,8 @@
           <staff-distance>71.24</staff-distance>
           </staff-layout>
         </print>
-      <direction placement="below">
+      <barline location="left"><ending number="2" type="start" default-y="32.9">2.</ending>
+        </barline><direction placement="below">
         <direction-type>
           <wedge type="crescendo" default-y="-63.67" spread="11.5" number="1" />
           </direction-type>
@@ -1932,7 +1935,8 @@
           <wedge type="stop" number="1" />
           </direction-type>
         </direction>
-      </measure>
+      <barline location="right"><ending number="2" type="discontinue" />
+        </barline></measure>
     <measure number="39" width="367.3">
       <direction placement="above" system="only-top">
         <direction-type>
@@ -2706,7 +2710,8 @@
           <staff-distance>73.24</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="75.52" default-y="-123.24">
+      <barline location="left"><ending number="1" type="start" default-y="37.63">1.</ending>
+        </barline><note default-x="75.52" default-y="-123.24">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -2787,11 +2792,13 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="1" type="stop" />
         <repeat direction="backward" />
         </barline>
       </measure>
     <measure number="55" width="264">
-      <note default-x="12.5" default-y="-123.24">
+      <barline location="left"><ending number="2" type="start" default-y="37.63">2.</ending>
+        </barline><note default-x="12.5" default-y="-123.24">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -2863,7 +2870,8 @@
         <voice>1</voice>
         <type>eighth</type>
         </note>
-      </measure>
+      <barline location="right"><ending number="2" type="discontinue" />
+        </barline></measure>
     <measure number="56" width="264">
       <note default-x="12.5" default-y="-123.24">
         <pitch>

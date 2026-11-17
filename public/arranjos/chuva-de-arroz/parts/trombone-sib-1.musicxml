@@ -1259,7 +1259,8 @@
         </note>
       </measure>
     <measure number="39" width="433.78">
-      <note default-x="12" default-y="-1080">
+      <barline location="left"><ending number="1" type="start" default-y="39.7">1.</ending>
+        </barline><note default-x="12" default-y="-1080">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -1513,6 +1514,7 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="1" type="stop" />
         <repeat direction="backward" />
         </barline>
       </measure>
@@ -1522,7 +1524,8 @@
           <staff-distance>77.44</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="78.56" default-y="-1218.31">
+      <barline location="left"><ending number="2" type="start" default-y="63.18">2.</ending>
+        </barline><note default-x="78.56" default-y="-1218.31">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -1608,6 +1611,7 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="2" type="stop" />
         </barline>
       </measure>
     </part>

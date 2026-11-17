@@ -30,6 +30,24 @@ class TestPublicar(unittest.TestCase):
             self.assertIn('tempo="120"', tuba)
             self.assertNotIn("Clarinete", tuba)
 
+    def test_copia_chaves_de_volta(self):
+        ET = publicar.ET
+        m0 = ET.fromstring(
+            '<measure><barline location="left"><ending number="1" type="start">1.</ending></barline>'
+            '<note/><barline location="right"><bar-style>light-heavy</bar-style>'
+            '<ending number="1" type="stop"/><repeat direction="backward"/></barline></measure>'
+        )
+        m2 = ET.fromstring(
+            '<measure><attributes/><note/><barline location="right"><bar-style>light-heavy</bar-style>'
+            '<repeat direction="backward"/></barline></measure>'
+        )
+        publicar.copy_endings(m0, m2)
+        self.assertEqual([el.tag for el in m2], ["attributes", "barline", "note", "barline"])
+        self.assertEqual(m2[1].find("ending").get("type"), "start")
+        self.assertEqual([el.tag for el in m2[3]], ["bar-style", "ending", "repeat"])
+        publicar.copy_endings(m0, m2)  # não duplica
+        self.assertEqual(len(m2.findall(".//ending")), 2)
+
     def test_duracao_dos_compassos_e_formula(self):
         _, first, _ = publicar.split_parts(FIXTURE, Path(tempfile.mkdtemp()))
         self.assertEqual(publicar.measure_lengths(first), [4.0] * 6)

@@ -150,6 +150,34 @@ def measure_lengths(part):
     return out
 
 
+# ordem dos filhos de <barline> no MusicXML
+BARLINE_ORDER = ["bar-style", "footnote", "level", "wavy-line", "segno", "coda", "fermata", "ending", "repeat"]
+
+
+def copy_endings(m0, m2):
+    """Chaves de volta (1ª/2ª) só vêm na 1ª pauta: copia para o compasso m2 de outra parte."""
+    for b0 in m0.findall("barline"):
+        endings = b0.findall("ending")
+        if not endings:
+            continue
+        loc = b0.get("location", "right")
+        b2 = next((b for b in m2.findall("barline") if b.get("location", "right") == loc), None)
+        if b2 is None:
+            b2 = ET.Element("barline", {"location": loc})
+            if loc == "left":  # depois de <print>/<attributes>, antes das notas
+                idx = next((k for k, el in enumerate(m2) if el.tag not in ("print", "attributes")), len(m2))
+                m2.insert(idx, b2)
+            else:
+                m2.append(b2)
+        if b2.find("ending") is not None:
+            continue
+        for e in endings:
+            e2 = copy.deepcopy(e)
+            pos = BARLINE_ORDER.index("ending")
+            idx = next((k for k, el in enumerate(b2) if el.tag in BARLINE_ORDER[pos + 1 :]), len(b2))
+            b2.insert(idx, e2)
+
+
 def split_parts(score_xml, dest):
     tree = ET.parse(score_xml)
     root = tree.getroot()
@@ -175,6 +203,7 @@ def split_parts(score_xml, dest):
                 for dr in m0.findall("direction"):
                     if dr.find(".//rehearsal") is not None or dr.find("sound[@tempo]") is not None:
                         m2.insert(0, copy.deepcopy(dr))
+                copy_endings(m0, m2)
         name = sp.findtext("part-name")
         sl = slug(name)
         ET.ElementTree(r2).write(dest / f"{sl}.musicxml", encoding="UTF-8", xml_declaration=True)

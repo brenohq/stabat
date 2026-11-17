@@ -1895,7 +1895,8 @@
         </note>
       </measure>
     <measure number="55" width="194">
-      <note default-x="12" default-y="-361.22">
+      <barline location="left"><ending number="1" type="start" default-y="54.07">1.</ending>
+        </barline><note default-x="12" default-y="-361.22">
         <pitch>
           <step>F</step>
           <octave>5</octave>
@@ -1939,11 +1940,13 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="1" type="stop" />
         <repeat direction="backward" />
         </barline>
       </measure>
     <measure number="57" width="194">
-      <note default-x="12" default-y="-361.22">
+      <barline location="left"><ending number="2" type="start" default-y="54.07">2.</ending>
+        </barline><note default-x="12" default-y="-361.22">
         <pitch>
           <step>F</step>
           <octave>5</octave>
@@ -1958,6 +1961,7 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="2" type="discontinue" />
         </barline>
       </measure>
     </part>
