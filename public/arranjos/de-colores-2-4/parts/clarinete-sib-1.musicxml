@@ -7,7 +7,7 @@
     <creator type="arranger">Breno Freitas</creator>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-16</encoding-date>
+      <encoding-date>2026-11-17</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -324,7 +324,7 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="6" width="373.45">
+    <measure number="6" width="373.79">
       <print new-page="yes" page-number="2">
         <system-layout>
           <system-margins>
@@ -344,7 +344,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="203.24" default-y="-35">
+      <note default-x="203.38" default-y="-35">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -355,7 +355,7 @@
         <stem>up</stem>
         <beam number="1">begin</beam>
         </note>
-      <note default-x="287.45" default-y="-40">
+      <note default-x="287.69" default-y="-40">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -367,7 +367,7 @@
         <beam number="1">end</beam>
         </note>
       </measure>
-    <measure number="7" width="268.19">
+    <measure number="7" width="268.49">
       <note default-x="12" default-y="-35">
         <pitch>
           <step>F</step>
@@ -383,7 +383,7 @@
           </notations>
         </note>
       </measure>
-    <measure number="8" width="268.19">
+    <measure number="8" width="268.49">
       <note default-x="12" default-y="-35">
         <pitch>
           <step>F</step>
@@ -399,8 +399,8 @@
           </notations>
         </note>
       </measure>
-    <measure number="9" width="268.68">
-      <note default-x="19.56" default-y="0">
+    <measure number="9" width="267.47">
+      <note default-x="18.06" default-y="0">
         <pitch>
           <step>F</step>
           <octave>5</octave>
@@ -416,7 +416,7 @@
           </notations>
         </note>
       </measure>
-    <measure number="10" width="268.19">
+    <measure number="10" width="268.49">
       <note default-x="12" default-y="0">
         <pitch>
           <step>F</step>

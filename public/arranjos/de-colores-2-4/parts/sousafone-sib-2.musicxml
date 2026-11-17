@@ -7,7 +7,7 @@
     <creator type="arranger">Breno Freitas</creator>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-16</encoding-date>
+      <encoding-date>2026-11-17</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -197,13 +197,13 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="6" width="373.45">
+    <measure number="6" width="373.79">
       <print new-page="yes" page-number="2">
         <staff-layout number="1">
           <staff-distance>50</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="76.92" default-y="-1575.43">
+      <note default-x="76.92" default-y="-1570">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -214,8 +214,8 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="7" width="268.19">
-      <note default-x="12" default-y="-1570.43">
+    <measure number="7" width="268.49">
+      <note default-x="12" default-y="-1565">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -226,8 +226,8 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="8" width="268.19">
-      <note default-x="12" default-y="-1560.43">
+    <measure number="8" width="268.49">
+      <note default-x="12" default-y="-1555">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -238,8 +238,8 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="9" width="268.68">
-      <note default-x="19.56" default-y="-1570.43">
+    <measure number="9" width="267.47">
+      <note default-x="18.06" default-y="-1565">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -250,8 +250,8 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="10" width="268.19">
-      <note default-x="12" default-y="-1560.43">
+    <measure number="10" width="268.49">
+      <note default-x="12" default-y="-1555">
         <pitch>
           <step>A</step>
           <octave>4</octave>
