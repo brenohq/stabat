@@ -2378,7 +2378,7 @@
           </staff-layout>
         </print>
       <barline location="left"><ending number="2" type="start" default-y="63.18">2.</ending>
-        </barline><note default-x="78.56" default-y="-953.98">
+        </barline><note default-x="78.56" default-y="-949.54">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -2386,10 +2386,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="95.07" default-y="-948.98" />
+        <dot default-x="95.07" default-y="-944.54" />
         <stem>down</stem>
         </note>
-      <note default-x="188.51" default-y="-948.98">
+      <note default-x="188.51" default-y="-944.54">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -2397,10 +2397,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="205.02" default-y="-948.98" />
+        <dot default-x="205.02" default-y="-944.54" />
         <stem>down</stem>
         </note>
-      <note default-x="298.46" default-y="-943.98">
+      <note default-x="298.46" default-y="-939.54">
         <pitch>
           <step>F</step>
           <alter>1</alter>
@@ -2413,7 +2413,7 @@
         </note>
       </measure>
     <measure number="50" width="307">
-      <note default-x="14.96" default-y="-948.98">
+      <note default-x="14.96" default-y="-944.54">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -2423,7 +2423,7 @@
         <type>half</type>
         <stem>down</stem>
         </note>
-      <note default-x="139.35" default-y="-943.98">
+      <note default-x="139.35" default-y="-939.54">
         <pitch>
           <step>F</step>
           <alter>1</alter>
@@ -2434,7 +2434,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="222.27" default-y="-948.98">
+      <note default-x="222.27" default-y="-944.54">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -2454,7 +2454,7 @@
           </direction-type>
         <sound dynamics="106.67" />
         </direction>
-      <note default-x="12" default-y="-948.98">
+      <note default-x="12" default-y="-944.54">
         <pitch>
           <step>E</step>
           <octave>5</octave>

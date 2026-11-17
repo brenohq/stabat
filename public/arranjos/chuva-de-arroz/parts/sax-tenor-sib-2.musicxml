@@ -1976,7 +1976,7 @@
           </staff-layout>
         </print>
       <barline location="left"><ending number="2" type="start" default-y="63.18">2.</ending>
-        </barline><note default-x="78.56" default-y="-621.65">
+        </barline><note default-x="78.56" default-y="-617.21">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -1984,10 +1984,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="95.07" default-y="-616.65" />
+        <dot default-x="95.07" default-y="-612.21" />
         <stem>up</stem>
         </note>
-      <note default-x="188.51" default-y="-616.65">
+      <note default-x="188.51" default-y="-612.21">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -1995,10 +1995,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="205.02" default-y="-616.65" />
+        <dot default-x="205.02" default-y="-612.21" />
         <stem>up</stem>
         </note>
-      <note default-x="298.46" default-y="-611.65">
+      <note default-x="298.46" default-y="-607.21">
         <pitch>
           <step>B</step>
           <octave>4</octave>
@@ -2010,7 +2010,7 @@
         </note>
       </measure>
     <measure number="50" width="307">
-      <note default-x="14.96" default-y="-626.65">
+      <note default-x="14.96" default-y="-622.21">
         <pitch>
           <step>F</step>
           <alter>1</alter>
@@ -2022,7 +2022,7 @@
         <accidental>sharp</accidental>
         <stem>up</stem>
         </note>
-      <note default-x="139.35" default-y="-621.65">
+      <note default-x="139.35" default-y="-617.21">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -2032,7 +2032,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="222.27" default-y="-626.65">
+      <note default-x="222.27" default-y="-622.21">
         <pitch>
           <step>F</step>
           <alter>1</alter>
@@ -2053,7 +2053,7 @@
           </direction-type>
         <sound dynamics="106.67" />
         </direction>
-      <note default-x="12" default-y="-631.65">
+      <note default-x="12" default-y="-627.21">
         <pitch>
           <step>E</step>
           <octave>4</octave>

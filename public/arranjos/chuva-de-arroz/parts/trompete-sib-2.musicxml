@@ -1661,7 +1661,7 @@
           </staff-layout>
         </print>
       <barline location="left"><ending number="2" type="start" default-y="63.18">2.</ending>
-        </barline><note default-x="78.56" default-y="-831.54">
+        </barline><note default-x="78.56" default-y="-827.1">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -1671,7 +1671,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="151.86" default-y="-831.54">
+      <note default-x="151.86" default-y="-827.1">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -1681,7 +1681,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="225.16" default-y="-831.54">
+      <note default-x="225.16" default-y="-827.1">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -1691,7 +1691,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="298.46" default-y="-831.54">
+      <note default-x="298.46" default-y="-827.1">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -1703,7 +1703,7 @@
         </note>
       </measure>
     <measure number="50" width="307">
-      <note default-x="14.96" default-y="-836.54">
+      <note default-x="14.96" default-y="-832.1">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -1713,7 +1713,7 @@
         <type>half</type>
         <stem>down</stem>
         </note>
-      <note default-x="139.35" default-y="-831.54">
+      <note default-x="139.35" default-y="-827.1">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -1723,7 +1723,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="222.27" default-y="-836.54">
+      <note default-x="222.27" default-y="-832.1">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -1743,7 +1743,7 @@
           </direction-type>
         <sound dynamics="106.67" />
         </direction>
-      <note default-x="12" default-y="-841.54">
+      <note default-x="12" default-y="-837.1">
         <pitch>
           <step>C</step>
           <octave>5</octave>

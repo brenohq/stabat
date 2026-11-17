@@ -2359,7 +2359,7 @@
           </staff-layout>
         </print>
       <barline location="left"><ending number="2" type="start" default-y="63.18">2.</ending>
-        </barline><note default-x="78.56" default-y="-504.21">
+        </barline><note default-x="78.56" default-y="-499.77">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -2367,10 +2367,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="95.07" default-y="-499.21" />
+        <dot default-x="95.07" default-y="-494.77" />
         <stem>up</stem>
         </note>
-      <note default-x="188.51" default-y="-499.21">
+      <note default-x="188.51" default-y="-494.77">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -2378,10 +2378,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="205.02" default-y="-499.21" />
+        <dot default-x="205.02" default-y="-494.77" />
         <stem>up</stem>
         </note>
-      <note default-x="298.46" default-y="-494.21">
+      <note default-x="298.46" default-y="-489.77">
         <pitch>
           <step>B</step>
           <octave>4</octave>
@@ -2393,7 +2393,7 @@
         </note>
       </measure>
     <measure number="50" width="307">
-      <note default-x="14.96" default-y="-499.21">
+      <note default-x="14.96" default-y="-494.77">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -2403,7 +2403,7 @@
         <type>half</type>
         <stem>up</stem>
         </note>
-      <note default-x="139.35" default-y="-494.21">
+      <note default-x="139.35" default-y="-489.77">
         <pitch>
           <step>B</step>
           <octave>4</octave>
@@ -2413,7 +2413,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="222.27" default-y="-499.21">
+      <note default-x="222.27" default-y="-494.77">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -2433,7 +2433,7 @@
           </direction-type>
         <sound dynamics="106.67" />
         </direction>
-      <note default-x="12" default-y="-499.21">
+      <note default-x="12" default-y="-494.77">
         <pitch>
           <step>A</step>
           <octave>4</octave>

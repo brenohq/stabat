@@ -26,7 +26,7 @@
   "time": "4/4",
   "measures": 51,
   "duration": 118.998,
-  "version": "4fb01b9027",
+  "version": "b2fbf1ef34",
   "nparts": 18
  },
  {
@@ -41,22 +41,7 @@
   "time": "2/4",
   "measures": 57,
   "duration": 104.998,
-  "version": "54774b1847",
-  "nparts": 18
- },
- {
-  "id": "de-colores-3-4",
-  "title": "De Colores",
-  "subtitle": "Tradicional · versão 3/4",
-  "hue": [
-   140,
-   40
-  ],
-  "tempo": 168,
-  "time": "3/4",
-  "measures": 57,
-  "duration": 112.284,
-  "version": "8bdd8f2a6d",
+  "version": "a8d03ad4d8",
   "nparts": 18
  },
  {
@@ -71,7 +56,7 @@
   "time": "4/4",
   "measures": 60,
   "duration": 123.0,
-  "version": "c860d9ad7f",
+  "version": "2a3055f478",
   "nparts": 18
  },
  {
@@ -86,7 +71,7 @@
   "time": "4/4",
   "measures": 65,
   "duration": 134.998,
-  "version": "1c5bf50e21",
+  "version": "360786ab37",
   "nparts": 18
  }
 ]

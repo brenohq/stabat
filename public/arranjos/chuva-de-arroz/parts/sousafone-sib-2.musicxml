@@ -947,7 +947,7 @@
           </staff-layout>
         </print>
       <barline location="left"><ending number="2" type="start" default-y="63.18">2.</ending>
-        </barline><note default-x="78.56" default-y="-2040.97">
+        </barline><note default-x="78.56" default-y="-2036.53">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -957,7 +957,7 @@
         <type>half</type>
         <stem>up</stem>
         </note>
-      <note default-x="225.16" default-y="-2005.97">
+      <note default-x="225.16" default-y="-2001.53">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -969,7 +969,7 @@
         </note>
       </measure>
     <measure number="50" width="307">
-      <note default-x="14.96" default-y="-2045.97">
+      <note default-x="14.96" default-y="-2041.53">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -979,7 +979,7 @@
         <type>half</type>
         <stem>up</stem>
         </note>
-      <note default-x="139.35" default-y="-2040.97">
+      <note default-x="139.35" default-y="-2036.53">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -989,7 +989,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="222.27" default-y="-2045.97">
+      <note default-x="222.27" default-y="-2041.53">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1009,7 +1009,7 @@
           </direction-type>
         <sound dynamics="106.67" />
         </direction>
-      <note default-x="12" default-y="-2025.97">
+      <note default-x="12" default-y="-2021.53">
         <pitch>
           <step>A</step>
           <octave>4</octave>

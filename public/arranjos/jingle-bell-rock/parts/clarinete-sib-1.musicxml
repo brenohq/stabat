@@ -7,7 +7,7 @@
     <creator type="arranger">Breno Freitas</creator>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-16</encoding-date>
+      <encoding-date>2026-11-17</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -123,7 +123,7 @@
         </attributes>
       <direction placement="above" system="only-top">
         <direction-type>
-          <words relative-y="20" font-weight="bold" font-size="12">Swing</words>
+          <words relative-x="8" relative-y="25" font-weight="bold" font-size="12">Swing</words>
           </direction-type>
         <sound>
           <swing>
@@ -140,6 +140,11 @@
             </dynamics>
           </direction-type>
         <sound dynamics="88.89" />
+        </direction>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-20" relative-y="30" justify="center" font-weight="bold" font-size="14">A</rehearsal>
+          </direction-type>
         </direction>
       <note default-x="111.91" default-y="-20">
         <pitch>
@@ -338,6 +343,11 @@
           <top-system-distance>70</top-system-distance>
           </system-layout>
         </print>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
+          </direction-type>
+        </direction>
       <note default-x="90.85" default-y="5">
         <pitch>
           <step>G</step>
@@ -1315,6 +1325,11 @@
           <top-system-distance>70</top-system-distance>
           </system-layout>
         </print>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">C</rehearsal>
+          </direction-type>
+        </direction>
       <note default-x="90.85" default-y="10">
         <pitch>
           <step>A</step>
@@ -2121,6 +2136,11 @@
             </dynamics>
           </direction-type>
         <sound dynamics="106.67" />
+        </direction>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">D</rehearsal>
+          </direction-type>
         </direction>
       <note default-x="90.85" default-y="-30">
         <pitch>
@@ -3242,6 +3262,11 @@
           <top-system-distance>70</top-system-distance>
           </system-layout>
         </print>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">E</rehearsal>
+          </direction-type>
+        </direction>
       <note default-x="90.85" default-y="-5">
         <pitch>
           <step>E</step>

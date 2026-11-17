@@ -7,7 +7,7 @@
     <creator type="arranger">Breno Freitas</creator>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-16</encoding-date>
+      <encoding-date>2026-11-17</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -94,6 +94,11 @@
     </part-list>
   <part id="P5">
     <measure number="1" width="475.72">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-20" relative-y="30" justify="center" font-weight="bold" font-size="14">A</rehearsal>
+          </direction-type>
+        </direction>
       <print>
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -313,6 +318,11 @@
         </note>
       </measure>
     <measure number="5" width="438.23">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="2">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -1274,6 +1284,11 @@
         </note>
       </measure>
     <measure number="21" width="411.1">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">C</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="6">
         <staff-layout number="1">
           <staff-distance>68.88</staff-distance>
@@ -2057,6 +2072,11 @@
         </note>
       </measure>
     <measure number="37" width="419.45">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">D</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="10">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -3165,6 +3185,11 @@
         </note>
       </measure>
     <measure number="57" width="417.2">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">E</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="15">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>

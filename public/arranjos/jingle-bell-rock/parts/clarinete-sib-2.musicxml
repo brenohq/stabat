@@ -7,7 +7,7 @@
     <creator type="arranger">Breno Freitas</creator>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-16</encoding-date>
+      <encoding-date>2026-11-17</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -94,6 +94,11 @@
     </part-list>
   <part id="P2">
     <measure number="1" width="475.72">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-20" relative-y="30" justify="center" font-weight="bold" font-size="14">A</rehearsal>
+          </direction-type>
+        </direction>
       <print>
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -314,6 +319,11 @@
         </note>
       </measure>
     <measure number="5" width="438.23">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="2">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -768,6 +778,11 @@
         </note>
       </measure>
     <measure number="21" width="411.1">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">C</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="6">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -1145,6 +1160,11 @@
         </note>
       </measure>
     <measure number="37" width="419.45">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">D</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="10">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -1743,30 +1763,30 @@
         </note>
       </measure>
     <measure number="52" width="356.06">
-      <note default-x="10" default-y="-155">
+      <note default-x="10" default-y="-120">
         <pitch>
           <step>C</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
-      <note default-x="61.03" default-y="-160">
+      <note default-x="61.03" default-y="-125">
         <pitch>
           <step>B</step>
-          <octave>3</octave>
+          <octave>4</octave>
           </pitch>
         <duration>4</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
-      <note default-x="137.2" default-y="-165">
+      <note default-x="137.2" default-y="-130">
         <pitch>
           <step>A</step>
-          <octave>3</octave>
+          <octave>4</octave>
           </pitch>
         <duration>8</duration>
         <voice>1</voice>
@@ -1809,15 +1829,15 @@
         </note>
       </measure>
     <measure number="54" width="346.96">
-      <note default-x="10" default-y="-160">
+      <note default-x="10" default-y="-125">
         <pitch>
           <step>B</step>
-          <octave>3</octave>
+          <octave>4</octave>
           </pitch>
         <duration>8</duration>
         <voice>1</voice>
         <type>half</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
       <note default-x="183.69" default-y="-150">
         <pitch>
@@ -1831,32 +1851,32 @@
         </note>
       </measure>
     <measure number="55" width="346.84">
-      <note default-x="10" default-y="-160">
+      <note default-x="10" default-y="-125">
         <pitch>
           <step>B</step>
-          <octave>3</octave>
+          <octave>4</octave>
           </pitch>
         <duration>8</duration>
         <voice>1</voice>
         <type>half</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
-      <note default-x="190.31" default-y="-160">
+      <note default-x="190.31" default-y="-125">
         <pitch>
           <step>B</step>
-          <octave>3</octave>
+          <octave>4</octave>
           </pitch>
         <duration>8</duration>
         <voice>1</voice>
         <type>half</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
       </measure>
     <measure number="56" width="347">
-      <note default-x="14.16" default-y="-160">
+      <note default-x="14.16" default-y="-125">
         <pitch>
           <step>B</step>
-          <octave>3</octave>
+          <octave>4</octave>
           </pitch>
         <duration>16</duration>
         <voice>1</voice>
@@ -1864,6 +1884,11 @@
         </note>
       </measure>
     <measure number="57" width="417.2">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-36.12" relative-y="30" justify="center" font-weight="bold" font-size="14">E</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="15">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -1877,10 +1902,10 @@
           </direction-type>
         <sound dynamics="71.11" />
         </direction>
-      <note default-x="87.53" default-y="-155">
+      <note default-x="87.53" default-y="-120">
         <pitch>
           <step>C</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>16</duration>
         <voice>1</voice>
@@ -1888,10 +1913,10 @@
         </note>
       </measure>
     <measure number="58" width="352.28">
-      <note default-x="14.16" default-y="-155">
+      <note default-x="14.16" default-y="-120">
         <pitch>
           <step>C</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>16</duration>
         <voice>1</voice>
