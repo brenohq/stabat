@@ -18,5 +18,5 @@ test("parte publicada abre e toca", async ({ page }) => {
   await openLoaded(page, `/${a.id}/trompete-sib-1`);
   await page.locator("#play").click();
   await expectSound(page, true);
-  await expect(page.getByTestId("level-me")).toHaveText("85%");
+  await expect(page.getByTestId("level-me")).toHaveText("90%");
 });

@@ -3,16 +3,16 @@ import { measureLoudness } from "./loudness";
 import { DEFAULT_PART_MIX, PART_BOOST, matchGains, mixGains, mixLevels, partGain } from "./mix";
 
 describe("mixagem da parte", () => {
-  it("padrão é 85% minha parte / 15% banda", () => {
-    expect(DEFAULT_PART_MIX).toBe(85);
+  it("padrão é 90% minha parte / 10% banda", () => {
+    expect(DEFAULT_PART_MIX).toBe(90);
     const l = mixLevels(DEFAULT_PART_MIX);
-    expect(l.me).toBeCloseTo(0.85);
-    expect(l.band).toBeCloseTo(0.15);
+    expect(l.me).toBeCloseTo(0.9);
+    expect(l.band).toBeCloseTo(0.1);
   });
   it("lado mais alto no volume cheio, proporção mantida", () => {
-    const g = mixGains(85);
+    const g = mixGains(90);
     expect(g.me).toBeCloseTo(PART_BOOST);
-    expect(g.band).toBeCloseTo(0.15 / 0.85);
+    expect(g.band).toBeCloseTo(0.1 / 0.9);
   });
   it("extremos: só banda e só minha parte", () => {
     expect(mixGains(0)).toEqual({ me: 0, band: 1 });
@@ -26,11 +26,11 @@ describe("igualar parte e banda", () => {
     const m = matchGains({ db: -40, peak: 0.05 }, { db: -20, peak: 0.8 });
     expect(db(m.band)).toBeCloseTo(-6, 5);
     expect(db(m.me)).toBeCloseTo(14, 5); // -40 + 14 = -20 - 6
-    // em 50% as duas soam iguais; em 85%, parte ~15 dB acima
+    // em 50% as duas soam iguais; em 90%, parte ~19 dB acima
     const g50 = mixGains(50, m);
     expect(db(g50.me) - 40).toBeCloseTo(db(g50.band) - 20, 5);
-    const g85 = mixGains(85, m);
-    expect(db(g85.me) - 40 - (db(g85.band) - 20)).toBeCloseTo(db(85 / 15), 5);
+    const g90 = mixGains(90, m);
+    expect(db(g90.me) - 40 - (db(g90.band) - 20)).toBeCloseTo(db(90 / 10), 5);
   });
   it("não deixa o pico da parte passar de 0,9", () => {
     const m = matchGains({ db: -40, peak: 0.5 }, { db: -20, peak: 0.8 });

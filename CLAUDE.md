@@ -23,7 +23,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 - Rotas (`src/App.tsx`): `/` repertório · `/calendario` agenda da banda · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
 - `src/lib/`: **lógica pura e testada**. Nada de DOM aqui.
   - `timeline.ts`: ritornelos: compasso da partitura ↔ tempo do áudio, ocorrência mais próxima, trecho a..b, tempos do metrônomo.
-  - `mix.ts`: volumes (parte: 85% minha parte / 15% banda; arranjo: ligado/solo).
+  - `mix.ts`: volumes (parte: 90% minha parte / 10% banda; arranjo: ligado/solo).
   - `agenda.ts`: **compromissos do Calendário da Banda** (lista `AGENDA`, horário de Brasília); para marcar um ensaio/show, acrescente uma linha ali. Passado/próximo e "faltam N dias" são calculados na hora.
   - `parts.ts`, `format.ts`, `storage.ts` (localStorage), `data.ts` (fetch), `types.ts` (formato do `meta.json`).
 - `src/audio/engine.ts`: `Engine`, um motor Web Audio imperativo: uma parte por AudioBuffer, volume por parte, metrônomo/contagem sintetizados, loop sem emenda (segmentos agendados), velocidade sem mudar a afinação via SoundTouch (`public/vendor/soundtouch-processor.js`, MPL-2.0). Tem um `AnalyserNode` e `level()` para os testes saberem se há som.
@@ -45,7 +45,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 - A parte escolhida ("Trompete Sib 1") fica em `localStorage` (`stabat.myPart`) sempre que o músico escolhe/abre uma parte, e o valor salvo é o padrão nos outros seletores.
 - Mixer: famílias (Madeiras / Metais agudos / Metais graves) em grupos recolhíveis, fechados por padrão, menos a família da parte do músico, que sempre abre aberta (o "você" aparece de cara).
 - Grade do arranjo: a pauta da parte do músico tem faixa azul suave com borda à esquerda (o dourado é do compasso atual).
-- Página da parte: volume inicial 85% minha parte / 15% banda; no celular o nome do instrumento só no 1º sistema e mais compassos por linha.
+- Página da parte: volume inicial 90% minha parte / 10% banda; no celular o nome do instrumento só no 1º sistema e mais compassos por linha.
 - Barra de controles **fixa no rodapé** nas páginas de arranjo e parte; zoom (lupa −/+) logo à direita do play; sem fresta embaixo.
 - Home: cartões clicáveis por inteiro; busca em largura total; "Qual é a sua parte?" com borda amarela pulsando enquanto não há parte.
 - Identidade visual: azul-marinho `#1f2a44`, dourado `#a8761c`, papel de partitura, Fraunces (títulos) + Inter. Pode evoluir, mas é o norte.

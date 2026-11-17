@@ -5,11 +5,11 @@ import { SCORE_SCALE } from "../src/score/sizing";
 test.describe("página da parte", () => {
   test.beforeEach(async ({ page }) => openLoaded(page, "/teste/clarinete-sib-1"));
 
-  test("abre com 85% minha parte / 15% banda e grava a parte escolhida", async ({ page }) => {
-    await expect(page.getByTestId("level-me")).toHaveText("85%");
-    await expect(page.getByTestId("level-band")).toHaveText("15%");
-    // banda 6 dB abaixo (0,5) × 15/85; a parte vai ao mesmo volume percebido da banda
-    await expect.poll(async () => (await engine(page)).gains[1]).toBeCloseTo(0.088, 2);
+  test("abre com 90% minha parte / 10% banda e grava a parte escolhida", async ({ page }) => {
+    await expect(page.getByTestId("level-me")).toHaveText("90%");
+    await expect(page.getByTestId("level-band")).toHaveText("10%");
+    // banda 6 dB abaixo (0,5) × 10/90; a parte vai ao mesmo volume percebido da banda
+    await expect.poll(async () => (await engine(page)).gains[1]).toBeCloseTo(0.056, 2);
     const [me, band] = (await engine(page)).gains;
     expect(me).toBeGreaterThan(band!);
     expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toContain("clarinete-sib-1");

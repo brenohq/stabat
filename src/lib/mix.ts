@@ -1,7 +1,7 @@
 import type { Loudness } from "./loudness";
 
 /** Página da parte: controle 0–100 (0 = só banda, 100 = só minha parte). */
-export const DEFAULT_PART_MIX = 85;
+export const DEFAULT_PART_MIX = 90;
 /** sem medição: realce fixo da parte do músico (~3 dB) */
 export const PART_BOOST = 1.4;
 /** a banda baixa 6 dB e a parte sobe até esse mesmo nível: sobra margem para os picos */
@@ -38,7 +38,7 @@ export function mixLevels(mix: number): { me: number; band: number } {
 
 /**
  * Volumes reais: com a parte e a banda igualadas, o controle vale como
- * proporção de volume (50% = iguais; 85% = parte ~15 dB acima da banda).
+ * proporção de volume (50% = iguais; 90% = parte ~19 dB acima da banda).
  */
 export function mixGains(
   mix: number,
