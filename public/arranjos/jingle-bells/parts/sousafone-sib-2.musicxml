@@ -535,16 +535,16 @@
           <staff-distance>65</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="76.92" default-y="-1840">
+      <note default-x="76.92" default-y="-1805">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
-          <octave>3</octave>
+          <octave>4</octave>
           </pitch>
         <duration>8</duration>
         <voice>1</voice>
         <type>half</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
       </measure>
     <measure number="26" width="221.87">
