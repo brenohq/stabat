@@ -97,11 +97,26 @@
    50,
    175
   ],
-  "tempo": 92,
+  "tempo": 90,
   "time": "2/4",
   "measures": 79,
   "duration": 109.666,
   "version": "e176a531f2",
+  "nparts": 18
+ },
+ {
+  "id": "noite-feliz",
+  "title": "Noite Feliz",
+  "subtitle": "Franz Xaver Gruber",
+  "hue": [
+   230,
+   50
+  ],
+  "tempo": 92,
+  "time": "3/4",
+  "measures": 30,
+  "duration": 108.652,
+  "version": "9b5128ed46",
   "nparts": 18
  }
 ]

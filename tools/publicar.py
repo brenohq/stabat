@@ -265,6 +265,16 @@ def parse_mpos(path, nmeasures, measure_q, sigs, duration):
     return timeline
 
 
+def initial_tempo(part, default=120.0):
+    """Andamento inicial: no 1º compasso com andamento, vale a última marca (como no MuseScore, em que
+    "Andante" e "♩ = 90" no mesmo ponto tocam a 90)."""
+    for m in part.findall("measure"):
+        tempos = [float(s.get("tempo")) for s in m.iter("sound") if s.get("tempo")]
+        if tempos:
+            return tempos[-1]
+    return default
+
+
 def time_signatures(part):
     sigs, cur = [], (4, 4)
     for m in part.findall("measure"):
@@ -341,7 +351,7 @@ def publish(cfg, force):
     sigs = time_signatures(first)
     mq = measure_lengths(first)
     timeline = parse_mpos(work / "score.mpos", len(mq), mq, sigs, duration)
-    tempo = next((float(s.get("tempo")) for s in root.iter("sound") if s.get("tempo")), 120.0)
+    tempo = initial_tempo(first)
     marks = [{"m": i, "label": r.text} for i, m in enumerate(first.findall("measure")) for r in m.iter("rehearsal")]
     grid = [[1 if any(n.find("rest") is None for n in m.findall("note")) else 0 for m in p.findall("measure")] for p in root.findall("part")]
     num, den = sigs[0]

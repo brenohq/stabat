@@ -49,6 +49,16 @@ class TestPublicar(unittest.TestCase):
             self.assertIn('tempo="120"', tuba)
             self.assertNotIn("Clarinete", tuba)
 
+    def test_initial_tempo_vale_a_ultima_marca_do_ponto(self):
+        ET = publicar.ET
+        part = ET.fromstring(
+            '<part><measure><direction><sound tempo="92"/></direction>'
+            '<direction><sound tempo="90"/></direction></measure>'
+            '<measure><direction><sound tempo="60"/></direction></measure></part>'
+        )
+        self.assertEqual(publicar.initial_tempo(part), 90)
+        self.assertEqual(publicar.initial_tempo(ET.fromstring("<part><measure/></part>")), 120)
+
     def test_copia_chaves_de_volta(self):
         ET = publicar.ET
         m0 = ET.fromstring(

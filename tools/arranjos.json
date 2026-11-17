@@ -47,5 +47,12 @@
     "titulo": "Jingle Bells",
     "subtitulo": "James Lord Pierpont",
     "cor": [50, 175]
+  },
+  {
+    "id": "noite-feliz",
+    "arquivo": "Noite Feliz - Banda.mscz",
+    "titulo": "Noite Feliz",
+    "subtitulo": "Franz Xaver Gruber",
+    "cor": [230, 50]
   }
 ]
