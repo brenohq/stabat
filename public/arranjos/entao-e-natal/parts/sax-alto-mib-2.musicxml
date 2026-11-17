@@ -176,14 +176,6 @@
           <chromatic>-9</chromatic>
           </transpose>
         </attributes>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-y="-40">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
       <note default-x="99.05" default-y="-330">
         <pitch>
           <step>C</step>

@@ -143,14 +143,6 @@
         <dot default-x="117.19" default-y="-225" />
         <stem>down</stem>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-3.62" default-y="-40" relative-y="-40">
-            <ff />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="124.44" />
-        </direction>
       <note default-x="227.09" default-y="-205">
         <pitch>
           <step>G</step>
@@ -2109,11 +2101,11 @@
     <measure number="49" width="373.56">
       <print new-page="yes" page-number="13">
         <staff-layout number="1">
-          <staff-distance>77.44</staff-distance>
+          <staff-distance>65</staff-distance>
           </staff-layout>
         </print>
       <barline location="left"><ending number="2" type="start" default-y="63.18">2.</ending>
-        </barline><note default-x="78.56" default-y="-244.89">
+        </barline><note default-x="78.56" default-y="-220">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -2121,10 +2113,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="95.07" default-y="-239.89" />
+        <dot default-x="95.07" default-y="-215" />
         <stem>down</stem>
         </note>
-      <note default-x="188.51" default-y="-239.89">
+      <note default-x="188.51" default-y="-215">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -2132,10 +2124,10 @@
         <duration>18</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="205.02" default-y="-239.89" />
+        <dot default-x="205.02" default-y="-215" />
         <stem>down</stem>
         </note>
-      <note default-x="298.46" default-y="-234.89">
+      <note default-x="298.46" default-y="-210">
         <pitch>
           <step>F</step>
           <alter>1</alter>
@@ -2148,7 +2140,7 @@
         </note>
       </measure>
     <measure number="50" width="307">
-      <note default-x="14.96" default-y="-249.89">
+      <note default-x="14.96" default-y="-225">
         <pitch>
           <step>C</step>
           <alter>1</alter>
@@ -2160,7 +2152,7 @@
         <accidental>sharp</accidental>
         <stem>down</stem>
         </note>
-      <note default-x="139.35" default-y="-244.89">
+      <note default-x="139.35" default-y="-220">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -2170,7 +2162,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="222.27" default-y="-249.89">
+      <note default-x="222.27" default-y="-225">
         <pitch>
           <step>C</step>
           <alter>1</alter>
@@ -2183,15 +2175,7 @@
         </note>
       </measure>
     <measure number="51" width="307">
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-40" relative-y="-40">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
-      <note default-x="12" default-y="-254.89">
+      <note default-x="12" default-y="-230">
         <pitch>
           <step>B</step>
           <octave>4</octave>

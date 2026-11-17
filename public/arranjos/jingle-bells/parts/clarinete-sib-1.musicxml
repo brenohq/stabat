@@ -179,14 +179,6 @@
           </direction-type>
         <sound tempo="92" />
         </direction>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-42.07" relative-y="-29.78">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <direction placement="above" system="only-top">
         <direction-type>
           <metronome parentheses="no" default-x="-39.94" default-y="25.28" relative-y="20">
@@ -724,14 +716,6 @@
           <top-system-distance>70</top-system-distance>
           </system-layout>
         </print>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-3.4" default-y="-40" relative-y="-25.39">
-            <p />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="54.44" />
-        </direction>
       <note default-x="76.92" default-y="-35">
         <pitch>
           <step>F</step>
@@ -1079,14 +1063,6 @@
         <direction-type>
           <rehearsal default-x="-12" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
           </direction-type>
-        </direction>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-x="-1.46" relative-y="-34.16">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
         </direction>
       <note default-x="12" default-y="-25">
         <pitch>
@@ -2231,14 +2207,6 @@
           <rehearsal default-x="-25" relative-y="30" justify="center" font-weight="bold" font-size="14">D</rehearsal>
           </direction-type>
         </direction>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-3.4" default-y="-40" relative-y="-25.39">
-            <p />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="54.44" />
-        </direction>
       <note default-x="76.92" default-y="-35">
         <pitch>
           <step>F</step>
@@ -2587,14 +2555,6 @@
           <rehearsal default-x="-12" relative-y="30" justify="center" font-weight="bold" font-size="14">E</rehearsal>
           </direction-type>
         </direction>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-x="-1.46" relative-y="-34.16">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
       <note default-x="12" default-y="-25">
         <pitch>
           <step>A</step>
@@ -2829,11 +2789,6 @@
         </note>
       </measure>
     <measure number="63" width="239">
-      <direction placement="below">
-        <direction-type>
-          <wedge type="crescendo" default-y="-75" spread="12" number="1" />
-          </direction-type>
-        </direction>
       <note default-x="14.96" default-y="-25">
         <pitch>
           <step>A</step>
@@ -2900,21 +2855,8 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" number="1" />
-          </direction-type>
-        </direction>
       </measure>
     <measure number="65" width="238.94">
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-49.16" relative-x="-1.59" relative-y="-30.44">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <note default-x="12" default-y="-25">
         <pitch>
           <step>A</step>

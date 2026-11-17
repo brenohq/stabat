@@ -124,19 +124,6 @@
           <octave-change>-2</octave-change>
           </transpose>
         </attributes>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-y="-25">
-            <mp />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="71.11" />
-        </direction>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="diminuendo" default-y="-60.4" number="1" />
-          </direction-type>
-        </direction>
       <note default-x="122.75" default-y="-1860.8">
         <pitch>
           <step>D</step>
@@ -146,11 +133,6 @@
         <voice>1</voice>
         <type>whole</type>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" spread="11.5" number="1" />
-          </direction-type>
-        </direction>
       </measure>
     <measure number="2" width="356.85">
       <note default-x="171.02" default-y="-1860.8">
@@ -160,19 +142,6 @@
         </note>
       </measure>
     <measure number="3" width="356.78">
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-y="-25">
-            <mp />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="71.11" />
-        </direction>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="diminuendo" default-y="-60.4" number="1" />
-          </direction-type>
-        </direction>
       <note default-x="13" default-y="-1860.8">
         <pitch>
           <step>D</step>
@@ -182,11 +151,6 @@
         <voice>1</voice>
         <type>whole</type>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" spread="11.5" number="1" />
-          </direction-type>
-        </direction>
       </measure>
     <measure number="4" width="356.85">
       <note default-x="171.02" default-y="-1860.8">
@@ -576,14 +540,6 @@
           <staff-distance>80.47</staff-distance>
           </staff-layout>
         </print>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-y="-25">
-            <mp />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="71.11" />
-        </direction>
       <note default-x="77.06" default-y="-1978.63">
         <pitch>
           <step>F</step>
@@ -696,14 +652,6 @@
           <fifths>2</fifths>
           </key>
         </attributes>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-y="-25">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
       <note default-x="100.63" default-y="-1954.54">
         <pitch>
           <step>D</step>

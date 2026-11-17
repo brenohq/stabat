@@ -8,7 +8,7 @@
     <creator type="composer">Composer / arranger</creator>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-16</encoding-date>
+      <encoding-date>2026-11-17</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -135,14 +135,6 @@
           <octave-change>-1</octave-change>
           </transpose>
         </attributes>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-52.16" relative-y="-20">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <note default-x="97.65" default-y="-1216.52">
         <pitch>
           <step>D</step>
@@ -312,14 +304,6 @@
           <staff-distance>72.12</staff-distance>
           </staff-layout>
         </print>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-52.16" relative-y="-20">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
       <note default-x="75.52" default-y="-1292.69">
         <pitch>
           <step>D</step>
@@ -634,14 +618,6 @@
           <staff-distance>72.15</staff-distance>
           </staff-layout>
         </print>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-42.39" relative-y="-20">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
       <note default-x="74.56" default-y="-1268.03">
         <pitch>
           <step>B</step>
@@ -695,11 +671,6 @@
           <staff-distance>73.14</staff-distance>
           </staff-layout>
         </print>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="crescendo" default-y="-64.74" spread="11.5" number="1" />
-          </direction-type>
-        </direction>
       <note default-x="74.56" default-y="-1279.17">
         <pitch>
           <step>B</step>
@@ -732,21 +703,8 @@
         <voice>1</voice>
         <type>whole</type>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" number="1" />
-          </direction-type>
-        </direction>
       </measure>
     <measure number="20" width="350.8">
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-49.34" relative-y="-20">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <note default-x="12.5" default-y="-1274.17">
         <pitch>
           <step>C</step>
@@ -818,15 +776,7 @@
           <staff-distance>72.09</staff-distance>
           </staff-layout>
         </print>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-52.16" relative-y="-20">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
-      <note default-x="75.52" default-y="-1292.46">
+      <note default-x="75.52" default-y="-1292.49">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -836,13 +786,13 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="160.67" default-y="-1267.46">
+      <note default-x="160.67" default-y="-1267.49">
         <rest />
         <duration>4</duration>
         <voice>1</voice>
         <type>quarter</type>
         </note>
-      <note default-x="245.81" default-y="-1267.46">
+      <note default-x="245.81" default-y="-1267.49">
         <rest />
         <duration>8</duration>
         <voice>1</voice>
@@ -850,19 +800,19 @@
         </note>
       </measure>
     <measure number="22" width="359.3">
-      <note default-x="12.5" default-y="-1267.46">
+      <note default-x="12.5" default-y="-1267.49">
         <rest />
         <duration>8</duration>
         <voice>1</voice>
         <type>half</type>
         </note>
-      <note default-x="185" default-y="-1267.46">
+      <note default-x="185" default-y="-1267.49">
         <rest />
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
         </note>
-      <note default-x="228.13" default-y="-1297.46">
+      <note default-x="228.13" default-y="-1297.49">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -876,7 +826,7 @@
           <tied type="start" />
           </notations>
         </note>
-      <note default-x="271.25" default-y="-1297.46">
+      <note default-x="271.25" default-y="-1297.49">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -892,7 +842,7 @@
         </note>
       </measure>
     <measure number="23" width="359.3">
-      <note default-x="12.5" default-y="-1292.46">
+      <note default-x="12.5" default-y="-1292.49">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -902,13 +852,13 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="98.75" default-y="-1267.46">
+      <note default-x="98.75" default-y="-1267.49">
         <rest />
         <duration>4</duration>
         <voice>1</voice>
         <type>quarter</type>
         </note>
-      <note default-x="185" default-y="-1267.46">
+      <note default-x="185" default-y="-1267.49">
         <rest />
         <duration>8</duration>
         <voice>1</voice>
@@ -916,19 +866,19 @@
         </note>
       </measure>
     <measure number="24" width="360.2">
-      <note default-x="12.5" default-y="-1267.46">
+      <note default-x="12.5" default-y="-1267.49">
         <rest />
         <duration>4</duration>
         <voice>1</voice>
         <type>quarter</type>
         </note>
-      <note default-x="95.43" default-y="-1267.46">
+      <note default-x="95.43" default-y="-1267.49">
         <rest />
         <duration>2</duration>
         <voice>1</voice>
         <type>eighth</type>
         </note>
-      <note default-x="136.9" default-y="-1297.46">
+      <note default-x="136.9" default-y="-1297.49">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -941,7 +891,7 @@
           <slur type="start" bezier-x="25.904258" bezier-y="-16.833505" number="1" />
           </notations>
         </note>
-      <note default-x="178.36" default-y="-1292.46">
+      <note default-x="178.36" default-y="-1292.49">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -952,7 +902,7 @@
         <stem>up</stem>
         <beam number="1">begin</beam>
         </note>
-      <note default-x="219.83" default-y="-1297.46">
+      <note default-x="219.83" default-y="-1297.49">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -963,7 +913,7 @@
         <stem>up</stem>
         <beam number="1">continue</beam>
         </note>
-      <note default-x="261.29" default-y="-1292.46">
+      <note default-x="261.29" default-y="-1292.49">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -977,7 +927,7 @@
           <slur type="stop" number="1" bezier-x="-24.469651" bezier-y="-18.858252" />
           </notations>
         </note>
-      <note default-x="302.76" default-y="-1267.46">
+      <note default-x="302.76" default-y="-1267.49">
         <rest />
         <duration>2</duration>
         <voice>1</voice>
@@ -1129,22 +1079,14 @@
         </direction>
       <print new-page="yes" page-number="8">
         <staff-layout number="1">
-          <staff-distance>71.84</staff-distance>
+          <staff-distance>72.12</staff-distance>
           </staff-layout>
         </print>
       <barline location="left">
         <bar-style>heavy-light</bar-style>
         <repeat direction="forward" />
         </barline>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-52.16" relative-y="-20">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
-      <note default-x="97.68" default-y="-1289.58">
+      <note default-x="97.68" default-y="-1292.69">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1152,10 +1094,10 @@
         <duration>6</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="115.69" default-y="-1289.58" />
+        <dot default-x="115.69" default-y="-1292.69" />
         <stem>up</stem>
         </note>
-      <note default-x="220.15" default-y="-1289.58">
+      <note default-x="220.15" default-y="-1292.69">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1169,7 +1111,7 @@
           <tied type="start" />
           </notations>
         </note>
-      <note default-x="269.13" default-y="-1289.58">
+      <note default-x="269.13" default-y="-1292.69">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1185,7 +1127,7 @@
         </note>
       </measure>
     <measure number="30" width="360.38">
-      <note default-x="12.5" default-y="-1294.58">
+      <note default-x="12.5" default-y="-1297.69">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -1193,10 +1135,10 @@
         <duration>6</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="30.5" default-y="-1289.58" />
+        <dot default-x="30.5" default-y="-1292.69" />
         <stem>up</stem>
         </note>
-      <note default-x="150.93" default-y="-1294.58">
+      <note default-x="150.93" default-y="-1297.69">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -1210,7 +1152,7 @@
           <tied type="start" />
           </notations>
         </note>
-      <note default-x="197.07" default-y="-1294.58">
+      <note default-x="197.07" default-y="-1297.69">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -1226,7 +1168,7 @@
         </note>
       </measure>
     <measure number="31" width="358.49">
-      <note default-x="12.5" default-y="-1279.58">
+      <note default-x="12.5" default-y="-1282.69">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1234,10 +1176,10 @@
         <duration>6</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="30.5" default-y="-1279.58" />
+        <dot default-x="30.5" default-y="-1282.69" />
         <stem>up</stem>
         </note>
-      <note default-x="144.88" default-y="-1279.58">
+      <note default-x="144.88" default-y="-1282.69">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1251,7 +1193,7 @@
           <tied type="start" />
           </notations>
         </note>
-      <note default-x="197.83" default-y="-1279.58">
+      <note default-x="197.83" default-y="-1282.69">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1267,7 +1209,7 @@
         </note>
       </measure>
     <measure number="32" width="359.96">
-      <note default-x="19.72" default-y="-1289.58">
+      <note default-x="19.72" default-y="-1292.69">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1275,10 +1217,10 @@
         <duration>6</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="37.72" default-y="-1289.58" />
+        <dot default-x="37.72" default-y="-1292.69" />
         <stem>up</stem>
         </note>
-      <note default-x="164.77" default-y="-1289.58">
+      <note default-x="164.77" default-y="-1292.69">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1292,7 +1234,7 @@
           <tied type="start" />
           </notations>
         </note>
-      <note default-x="213.11" default-y="-1289.58">
+      <note default-x="213.11" default-y="-1292.69">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1396,12 +1338,7 @@
       </measure>
     <measure number="35" width="351.04">
       <barline location="left"><ending number="1" type="start" default-y="32.9">1.</ending>
-        </barline><direction placement="below">
-        <direction-type>
-          <wedge type="crescendo" default-y="-73.53" spread="11.5" number="1" />
-          </direction-type>
-        </direction>
-      <note default-x="12.5" default-y="-1296.02">
+        </barline><note default-x="12.5" default-y="-1296.02">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1481,11 +1418,6 @@
           <tied type="stop" />
           </notations>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" number="1" />
-          </direction-type>
-        </direction>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
         <ending number="1" type="stop" />
@@ -1499,12 +1431,7 @@
           </staff-layout>
         </print>
       <barline location="left"><ending number="2" type="start" default-y="32.9">2.</ending>
-        </barline><direction placement="below">
-        <direction-type>
-          <wedge type="crescendo" default-y="-60.91" spread="11.5" number="1" />
-          </direction-type>
-        </direction>
-      <note default-x="77.79" default-y="-1267.89">
+        </barline><note default-x="77.79" default-y="-1267.89">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -1577,11 +1504,6 @@
         <type>half</type>
         <stem>up</stem>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" number="1" />
-          </direction-type>
-        </direction>
       <barline location="right"><ending number="2" type="discontinue" />
         </barline></measure>
     <measure number="39" width="367.3">
@@ -1623,11 +1545,6 @@
         </note>
       </measure>
     <measure number="43" width="352.53">
-      <direction placement="below">
-        <direction-type>
-          <wedge type="crescendo" default-y="-57.5" spread="11.5" number="1" />
-          </direction-type>
-        </direction>
       <note default-x="12.5" default-y="-1281.05">
         <pitch>
           <step>B</step>
@@ -1665,21 +1582,8 @@
         <voice>1</voice>
         <type>whole</type>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" number="1" />
-          </direction-type>
-        </direction>
       </measure>
     <measure number="46" width="357.33">
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-49.34" relative-y="-20">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <note default-x="12.5" default-y="-1262.92">
         <pitch>
           <step>C</step>
@@ -1750,14 +1654,6 @@
         <bar-style>heavy-light</bar-style>
         <repeat direction="forward" />
         </barline>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-52.16" relative-y="-20">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <note default-x="32.32" default-y="-1292.92">
         <pitch>
           <step>D</step>
@@ -2070,19 +1966,6 @@
         </note>
       </measure>
     <measure number="54" width="264">
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-3.1" default-y="-42.39" relative-y="-20">
-            <fp />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="crescendo" default-y="-57.79" spread="11.5" number="1" />
-          </direction-type>
-        </direction>
       <note default-x="12.5" default-y="-1295.33">
         <pitch>
           <step>F</step>
@@ -2092,11 +1975,6 @@
         <voice>1</voice>
         <type>whole</type>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <wedge type="stop" number="1" />
-          </direction-type>
-        </direction>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
         <ending number="1" type="stop" />
@@ -2176,14 +2054,6 @@
         <voice>1</voice>
         <type>eighth</type>
         </note>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-3.62" default-y="-49.86" relative-y="-20">
-            <ff />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="124.44" />
-        </direction>
       <note default-x="102.69" default-y="-1275.33">
         <pitch>
           <step>C</step>

@@ -446,14 +446,6 @@
         <bar-style>heavy-light</bar-style>
         <repeat direction="forward" />
         </barline>
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-1.18" default-y="-40" relative-y="-40">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
       <direction placement="above" system="only-top">
         <direction-type>
           <rehearsal default-x="-30.86" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
@@ -1697,14 +1689,6 @@
         </note>
       </measure>
     <measure number="48" width="293.33">
-      <direction placement="below">
-        <direction-type>
-          <dynamics default-x="-4.18" default-y="-40" relative-y="-40">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <note default-x="13.32" default-y="-20">
         <rest />
         <duration>1</duration>

@@ -220,14 +220,6 @@
           <rehearsal default-x="-12" relative-x="-13.94" relative-y="15.99" justify="center" font-weight="bold" font-size="14">A</rehearsal>
           </direction-type>
         </direction>
-      <direction placement="above">
-        <direction-type>
-          <dynamics default-x="-4.18" relative-x="7.95" relative-y="19.96">
-            <f />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="106.67" />
-        </direction>
       <note default-x="12" default-y="-785">
         <pitch>
           <step>C</step>
@@ -492,7 +484,7 @@
           <staff-distance>65</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="76.92" default-y="-748.11">
+      <note default-x="76.92" default-y="-745">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -502,7 +494,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="202.26" default-y="-758.11">
+      <note default-x="202.26" default-y="-755">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -515,7 +507,7 @@
         </note>
       </measure>
     <measure number="20" width="219.33">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -525,7 +517,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="112.02" default-y="-753.11">
+      <note default-x="112.02" default-y="-750">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -545,15 +537,7 @@
           <rehearsal default-x="-12" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
           </direction-type>
         </direction>
-      <direction placement="above">
-        <direction-type>
-          <dynamics default-x="-1.18" relative-x="7.75" relative-y="16.84">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -563,7 +547,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="138.84" default-y="-773.11">
+      <note default-x="138.84" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -575,7 +559,7 @@
         </note>
       </measure>
     <measure number="22" width="235.77">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -585,7 +569,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="138.84" default-y="-773.11">
+      <note default-x="138.84" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -597,7 +581,7 @@
         </note>
       </measure>
     <measure number="23" width="236.01">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -607,7 +591,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="118.66" default-y="-788.11">
+      <note default-x="118.66" default-y="-785">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -619,7 +603,7 @@
         </note>
       </measure>
     <measure number="24" width="232.63">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1288,7 +1272,7 @@
           <staff-distance>65</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="76.92" default-y="-788.11">
+      <note default-x="76.92" default-y="-785">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -1298,7 +1282,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="202.26" default-y="-783.11">
+      <note default-x="202.26" default-y="-780">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1310,7 +1294,7 @@
         </note>
       </measure>
     <measure number="56" width="219.33">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1320,7 +1304,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="112.02" default-y="-758.11">
+      <note default-x="112.02" default-y="-755">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -1341,15 +1325,7 @@
           <rehearsal default-x="-12" relative-y="30" justify="center" font-weight="bold" font-size="14">E</rehearsal>
           </direction-type>
         </direction>
-      <direction placement="above">
-        <direction-type>
-          <dynamics default-x="-1.18" relative-x="7.75" relative-y="16.84">
-            <mf />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="88.89" />
-        </direction>
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1359,7 +1335,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="138.84" default-y="-773.11">
+      <note default-x="138.84" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1371,7 +1347,7 @@
         </note>
       </measure>
     <measure number="58" width="235.77">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1381,7 +1357,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="138.84" default-y="-773.11">
+      <note default-x="138.84" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1393,7 +1369,7 @@
         </note>
       </measure>
     <measure number="59" width="236.01">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1403,7 +1379,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="118.66" default-y="-788.11">
+      <note default-x="118.66" default-y="-785">
         <pitch>
           <step>C</step>
           <octave>4</octave>
@@ -1415,7 +1391,7 @@
         </note>
       </measure>
     <measure number="60" width="232.63">
-      <note default-x="12" default-y="-773.11">
+      <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1604,11 +1580,6 @@
         </note>
       </measure>
     <measure number="69" width="227.02">
-      <direction placement="above">
-        <direction-type>
-          <wedge type="crescendo" default-y="21.59" relative-x="3.62" spread="12" number="1" />
-          </direction-type>
-        </direction>
       <note default-x="12" default-y="-770">
         <pitch>
           <step>F</step>
@@ -1651,11 +1622,6 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <direction placement="above">
-        <direction-type>
-          <wedge type="stop" number="1" />
-          </direction-type>
-        </direction>
       <barline location="right">
         <bar-style>light-light</bar-style>
         </barline>
@@ -1665,14 +1631,6 @@
         <direction-type>
           <rehearsal default-x="-12" default-y="2.47" relative-y="30" justify="center" font-weight="bold" font-size="14">F</rehearsal>
           </direction-type>
-        </direction>
-      <direction placement="above">
-        <direction-type>
-          <dynamics default-x="-3.62" default-y="2.81" relative-x="8.45" relative-y="14.17">
-            <ff />
-            </dynamics>
-          </direction-type>
-        <sound dynamics="124.44" />
         </direction>
       <note default-x="12" default-y="-785">
         <pitch>
