@@ -4,6 +4,7 @@
     <work-title>Noite Feliz</work-title>
     </work>
   <identification>
+    <rights>Banda de Música Nossa Senhora das Dores</rights>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
       <encoding-date>2026-11-17</encoding-date>
@@ -70,6 +71,34 @@
     <credit-type>title</credit-type>
     <credit-words default-x="875.24" default-y="2391.05" justify="center" valign="top" font-size="24">Noite Feliz</credit-words>
     </credit>
+  <credit page="1">
+    <credit-type>composer</credit-type>
+    <credit-words default-x="1667.15" default-y="2291.05" justify="right" valign="bottom" font-size="12">Arr: Breno Freitas</credit-words>
+    </credit>
+  <credit page="1">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="875.24" default-y="166.67" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="2">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="875.24" default-y="166.67" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="3">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="875.24" default-y="166.67" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="4">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="875.24" default-y="166.67" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="5">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="875.24" default-y="166.67" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="6">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="875.24" default-y="166.67" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
   <part-list>
     <score-part id="P6">
       <part-name>Sax Tenor Sib 2</part-name>
@@ -88,7 +117,7 @@
       </score-part>
     </part-list>
   <part id="P6">
-    <measure number="1" width="391.93">
+    <measure number="1" width="391.21">
       <direction placement="above" system="only-top">
         <direction-type>
           <rehearsal default-x="-20" relative-y="30" justify="center" font-weight="bold" font-size="14">A</rehearsal>
@@ -143,7 +172,7 @@
         <type>quarter</type>
         <stem>down</stem>
         </note>
-      <note default-x="197.14" default-y="-540">
+      <note default-x="196.9" default-y="-540">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -154,7 +183,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="2" width="250.05">
+    <measure number="2" width="249.46">
       <note default-x="10" default-y="-540">
         <pitch>
           <step>C</step>
@@ -165,10 +194,10 @@
         <type>quarter</type>
         <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="18.612834" bezier-y="16.326748" number="1" />
+          <slur type="start" bezier-x="18.561049" bezier-y="16.308867" number="1" />
           </notations>
         </note>
-      <note default-x="89.42" default-y="-535">
+      <note default-x="89.22" default-y="-535">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -178,10 +207,10 @@
         <type>quarter</type>
         <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-21.586455" bezier-y="12.125399" />
+          <slur type="stop" number="1" bezier-x="-21.538331" bezier-y="12.107518" />
           </notations>
         </note>
-      <note default-x="168.83" default-y="-530">
+      <note default-x="168.44" default-y="-530">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -192,7 +221,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="3" width="248.68">
+    <measure number="3" width="248.09">
       <note default-x="10" default-y="-525">
         <pitch>
           <step>F</step>
@@ -205,8 +234,8 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="4" width="248.9">
-      <note default-x="10" default-y="-530">
+    <measure number="4" width="251.35">
+      <note default-x="13.04" default-y="-530">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -214,11 +243,11 @@
         <duration>6</duration>
         <voice>1</voice>
         <type>half</type>
-        <dot default-x="26.5" default-y="-530" />
+        <dot default-x="29.54" default-y="-530" />
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="5" width="250.67">
+    <measure number="5" width="250.12">
       <direction placement="above" system="only-top">
         <direction-type>
           <rehearsal default-x="-28.86" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
@@ -240,51 +269,51 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="6" width="381.48">
+    <measure number="6" width="380.8">
       <print new-page="yes" page-number="2">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="78.52" default-y="-575">
+      <note default-x="78.52" default-y="-540">
         <pitch>
           <step>C</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>3</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="95.03" default-y="-570" />
-        <stem>up</stem>
+        <dot default-x="95.03" default-y="-540" />
+        <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="30.147244" bezier-y="-22.553739" number="1" />
+          <slur type="start" bezier-x="30.079532" bezier-y="22.528397" number="1" />
           </notations>
         </note>
-      <note default-x="208.63" default-y="-570">
+      <note default-x="208.34" default-y="-535">
         <pitch>
           <step>D</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>1</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
-      <note default-x="277.05" default-y="-575">
+      <note default-x="276.6" default-y="-540">
         <pitch>
           <step>C</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <stem>up</stem>
+        <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-30.147244" bezier-y="-22.553739" />
+          <slur type="stop" number="1" bezier-x="-30.079532" bezier-y="22.528397" />
           </notations>
         </note>
       </measure>
-    <measure number="7" width="275.01">
+    <measure number="7" width="274.42">
       <note default-x="10" default-y="-550">
         <pitch>
           <step>A</step>
@@ -297,47 +326,47 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="8" width="275.01">
-      <note default-x="10" default-y="-575">
+    <measure number="8" width="274.42">
+      <note default-x="10" default-y="-540">
         <pitch>
           <step>C</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>3</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <dot default-x="26.5" default-y="-570" />
-        <stem>up</stem>
+        <dot default-x="26.5" default-y="-540" />
+        <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="35.131588" bezier-y="-21.085032" number="1" />
+          <slur type="start" bezier-x="35.052682" bezier-y="21.06134" number="1" />
           </notations>
         </note>
-      <note default-x="123.71" default-y="-570">
+      <note default-x="123.46" default-y="-535">
         <pitch>
           <step>D</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>1</duration>
         <voice>1</voice>
         <type>eighth</type>
-        <stem>up</stem>
+        <stem>down</stem>
         </note>
-      <note default-x="183.51" default-y="-575">
+      <note default-x="183.12" default-y="-540">
         <pitch>
           <step>C</step>
-          <octave>4</octave>
+          <octave>5</octave>
           </pitch>
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <stem>up</stem>
+        <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-35.131588" bezier-y="-21.085032" />
+          <slur type="stop" number="1" bezier-x="-35.052682" bezier-y="21.06134" />
           </notations>
         </note>
       </measure>
-    <measure number="9" width="275.05">
-      <note default-x="10" default-y="-530">
+    <measure number="9" width="277.5">
+      <note default-x="13.04" default-y="-530">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -347,7 +376,7 @@
         <type>half</type>
         <stem>down</stem>
         </note>
-      <note default-x="167.95" default-y="-530">
+      <note default-x="170.64" default-y="-530">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -358,7 +387,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="10" width="274.87">
+    <measure number="10" width="274.28">
       <note default-x="10" default-y="-540">
         <pitch>
           <step>C</step>
@@ -371,7 +400,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="11" width="327.67">
+    <measure number="11" width="335.33">
       <print new-page="yes" page-number="3">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -387,7 +416,7 @@
         <type>half</type>
         <stem>down</stem>
         </note>
-      <note default-x="226.93" default-y="-540">
+      <note default-x="231.53" default-y="-540">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -398,7 +427,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="12" width="287.79">
+    <measure number="12" width="296.33">
       <note default-x="10" default-y="-550">
         <pitch>
           <step>A</step>
@@ -411,7 +440,7 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="13" width="288.43">
+    <measure number="13" width="296.99">
       <note default-x="10" default-y="-545">
         <pitch>
           <step>B</step>
@@ -423,7 +452,7 @@
         <type>half</type>
         <stem>down</stem>
         </note>
-      <note default-x="194.42" default-y="-545">
+      <note default-x="200.13" default-y="-545">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -435,7 +464,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="14" width="288.76">
+    <measure number="14" width="276.39">
       <note default-x="10" default-y="-535">
         <pitch>
           <step>D</step>
@@ -447,10 +476,10 @@
         <dot default-x="26.5" default-y="-530" />
         <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="27.722109" bezier-y="16.635558" number="1" />
+          <slur type="start" bezier-x="24.384802" bezier-y="15.410614" number="1" />
           </notations>
         </note>
-      <note default-x="141.19" default-y="-540">
+      <note default-x="124.3" default-y="-540">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -460,10 +489,10 @@
         <type>eighth</type>
         <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-25.404558" bezier-y="19.996638" />
+          <slur type="stop" number="1" bezier-x="-21.902719" bezier-y="18.771693" />
           </notations>
         </note>
-      <note default-x="199.5" default-y="-545">
+      <note default-x="184.42" default-y="-545">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -475,7 +504,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="15" width="288.76">
+    <measure number="15" width="276.39">
       <note default-x="10" default-y="-550">
         <pitch>
           <step>A</step>
@@ -487,10 +516,10 @@
         <dot default-x="26.5" default-y="-550" />
         <stem>up</stem>
         <notations>
-          <slur type="start" bezier-x="23.695587" bezier-y="18.786021" number="1" />
+          <slur type="start" bezier-x="20.210517" bezier-y="17.509592" number="1" />
           </notations>
         </note>
-      <note default-x="141.19" default-y="-545">
+      <note default-x="124.3" default-y="-545">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -501,10 +530,10 @@
         <type>eighth</type>
         <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-25.381295" bezier-y="16.437314" />
+          <slur type="stop" number="1" bezier-x="-22.027219" bezier-y="15.160886" />
           </notations>
         </note>
-      <note default-x="199.5" default-y="-550">
+      <note default-x="184.42" default-y="-550">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -515,7 +544,7 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="16" width="345.16">
+    <measure number="16" width="353.21">
       <print new-page="yes" page-number="4">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -531,10 +560,10 @@
         <type>quarter</type>
         <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="23.193907" bezier-y="13.762182" number="1" />
+          <slur type="start" bezier-x="23.860662" bezier-y="13.989651" number="1" />
           </notations>
         </note>
-      <note default-x="166.8" default-y="-520">
+      <note default-x="169.49" default-y="-520">
         <pitch>
           <step>G</step>
           <octave>5</octave>
@@ -544,10 +573,10 @@
         <type>quarter</type>
         <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-21.491611" bezier-y="16.293115" />
+          <slur type="stop" number="1" bezier-x="-22.183593" bezier-y="16.520584" />
           </notations>
         </note>
-      <note default-x="255.08" default-y="-525">
+      <note default-x="260.45" default-y="-525">
         <pitch>
           <step>F</step>
           <octave>5</octave>
@@ -558,7 +587,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="17" width="284.05">
+    <measure number="17" width="292.33">
       <note default-x="10" default-y="-545">
         <pitch>
           <step>B</step>
@@ -570,7 +599,7 @@
         <type>half</type>
         <stem>down</stem>
         </note>
-      <note default-x="191.5" default-y="-545">
+      <note default-x="197.02" default-y="-545">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -582,7 +611,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="18" width="284.08">
+    <measure number="18" width="271.78">
       <note default-x="10" default-y="-535">
         <pitch>
           <step>D</step>
@@ -594,10 +623,10 @@
         <dot default-x="26.5" default-y="-530" />
         <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="27.282874" bezier-y="16.479432" number="1" />
+          <slur type="start" bezier-x="23.992498" bezier-y="15.260288" number="1" />
           </notations>
         </note>
-      <note default-x="138.98" default-y="-540">
+      <note default-x="122.31" default-y="-540">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -607,10 +636,10 @@
         <type>eighth</type>
         <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-24.94556" bezier-y="19.840512" />
+          <slur type="stop" number="1" bezier-x="-21.488625" bezier-y="18.621368" />
           </notations>
         </note>
-      <note default-x="196.3" default-y="-545">
+      <note default-x="181.38" default-y="-545">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -622,7 +651,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="19" width="284.08">
+    <measure number="19" width="271.78">
       <note default-x="10" default-y="-550">
         <pitch>
           <step>A</step>
@@ -634,10 +663,10 @@
         <dot default-x="26.5" default-y="-550" />
         <stem>up</stem>
         <notations>
-          <slur type="start" bezier-x="23.238668" bezier-y="18.623732" number="1" />
+          <slur type="start" bezier-x="19.798549" bezier-y="17.352416" number="1" />
           </notations>
         </note>
-      <note default-x="138.98" default-y="-545">
+      <note default-x="122.31" default-y="-545">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -648,10 +677,10 @@
         <type>eighth</type>
         <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-24.939981" bezier-y="16.275025" />
+          <slur type="stop" number="1" bezier-x="-21.63279" bezier-y="15.003709" />
           </notations>
         </note>
-      <note default-x="196.3" default-y="-550">
+      <note default-x="181.38" default-y="-550">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -662,7 +691,7 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="20" width="284.05">
+    <measure number="20" width="292.33">
       <note default-x="10" default-y="-560">
         <pitch>
           <step>F</step>
@@ -675,13 +704,13 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="21" width="344.36">
+    <measure number="21" width="353.25">
       <print new-page="yes" page-number="5">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="77.52" default-y="-530">
+      <note default-x="78.56" default-y="-530">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -691,7 +720,7 @@
         <type>half</type>
         <stem>down</stem>
         </note>
-      <note default-x="254.21" default-y="-530">
+      <note default-x="260.49" default-y="-530">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -702,7 +731,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="22" width="284.28">
+    <measure number="22" width="271.77">
       <note default-x="10" default-y="-520">
         <pitch>
           <step>G</step>
@@ -714,10 +743,10 @@
         <dot default-x="26.5" default-y="-520" />
         <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="27.540354" bezier-y="16.133521" number="1" />
+          <slur type="start" bezier-x="24.247331" bezier-y="14.905451" number="1" />
           </notations>
         </note>
-      <note default-x="139.07" default-y="-530">
+      <note default-x="122.31" default-y="-530">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -727,10 +756,10 @@
         <type>eighth</type>
         <stem>down</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-24.726656" bezier-y="20.183015" />
+          <slur type="stop" number="1" bezier-x="-21.232419" bezier-y="18.954945" />
           </notations>
         </note>
-      <note default-x="196.44" default-y="-540">
+      <note default-x="181.37" default-y="-540">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -741,7 +770,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="23" width="284.25">
+    <measure number="23" width="292.32">
       <note default-x="10" default-y="-540">
         <pitch>
           <step>C</step>
@@ -754,7 +783,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="24" width="284.25">
+    <measure number="24" width="292.32">
       <note default-x="10" default-y="-525">
         <pitch>
           <step>F</step>
@@ -767,7 +796,7 @@
         <stem>down</stem>
         </note>
       </measure>
-    <measure number="25" width="284.28">
+    <measure number="25" width="271.77">
       <note default-x="10" default-y="-540">
         <pitch>
           <step>C</step>
@@ -779,10 +808,10 @@
         <dot default-x="26.5" default-y="-540" />
         <stem>down</stem>
         <notations>
-          <slur type="start" bezier-x="26.373017" bezier-y="17.840461" number="1" />
+          <slur type="start" bezier-x="22.996634" bezier-y="16.618476" number="1" />
           </notations>
         </note>
-      <note default-x="139.07" default-y="-550">
+      <note default-x="122.31" default-y="-550">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -792,10 +821,10 @@
         <type>eighth</type>
         <stem>up</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-25.893993" bezier-y="18.528875" />
+          <slur type="stop" number="1" bezier-x="-22.483116" bezier-y="17.30689" />
           </notations>
         </note>
-      <note default-x="196.44" default-y="-560">
+      <note default-x="181.37" default-y="-560">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -806,7 +835,7 @@
         <stem>up</stem>
         </note>
       </measure>
-    <measure number="26" width="268.52">
+    <measure number="26" width="265.02">
       <print new-page="yes" page-number="6">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -822,7 +851,7 @@
         <type>half</type>
         <stem>up</stem>
         </note>
-      <note default-x="210.26" default-y="-565">
+      <note default-x="200.28" default-y="-565">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -847,7 +876,7 @@
         </note>
       </measure>
     <measure number="28" width="200">
-      <note default-x="10" default-y="-565">
+      <note default-x="13.04" default-y="-565">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -857,10 +886,10 @@
         <type>quarter</type>
         <stem>up</stem>
         <notations>
-          <slur type="start" bezier-x="24.104123" bezier-y="-15.726508" number="1" />
+          <slur type="start" bezier-x="23.702655" bezier-y="-15.573526" number="1" />
           </notations>
         </note>
-      <note default-x="67.05" default-y="-560">
+      <note default-x="69.07" default-y="-560">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -870,7 +899,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="124.09" default-y="-555">
+      <note default-x="125.11" default-y="-555">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -880,7 +909,7 @@
         <type>quarter</type>
         <stem>up</stem>
         <notations>
-          <slur type="stop" number="1" bezier-x="-22.097747" bezier-y="-18.439669" />
+          <slur type="stop" number="1" bezier-x="-21.678276" bezier-y="-18.286687" />
           </notations>
         </note>
       <barline location="right">
