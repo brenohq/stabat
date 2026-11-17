@@ -2,11 +2,25 @@ import { test } from "@playwright/test";
 import { openLoaded } from "./helpers";
 
 /** capturas para revisão visual: npm run shots → .shots/*.png */
-const pages: { name: string; path: string; loaded: boolean; mine?: string; open?: string }[] = [
+const pages: {
+  name: string;
+  path: string;
+  loaded: boolean;
+  mine?: string;
+  open?: string;
+  desktopOnly?: boolean;
+}[] = [
   { name: "home", path: "/", loaded: false },
   { name: "home-seletor", path: "/", loaded: false, mine: "trompete-sib-1", open: "#mypart" },
   { name: "arranjo", path: "/apt", loaded: true },
   { name: "arranjo-minha-parte", path: "/apt", loaded: true, mine: "trompete-sib-1" },
+  {
+    name: "arranjo-imprimir",
+    path: "/apt",
+    loaded: true,
+    open: "[data-testid=print-open]",
+    desktopOnly: true,
+  },
   { name: "parte", path: "/apt/trompete-sib-1", loaded: true },
   { name: "parte-seletor", path: "/apt/trompete-sib-1", loaded: true, open: "#switch" },
   { name: "calendario", path: "/calendario", loaded: false },
@@ -17,7 +31,7 @@ const sizes = [
 ];
 
 for (const s of sizes)
-  for (const p of pages)
+  for (const p of pages.filter((p) => !(p.desktopOnly && s.name === "celular")))
     test(`${p.name} ${s.name}`, async ({ page }) => {
       await page.setViewportSize({ width: s.width, height: s.height });
       if (p.mine)

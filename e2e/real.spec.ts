@@ -20,3 +20,15 @@ test("parte publicada abre e toca", async ({ page }) => {
   await expectSound(page, true);
   await expect(page.getByTestId("level-me")).toHaveText("90%");
 });
+
+/** cada parte publicada tem o PDF do MuseScore (botão "Imprimir partes") */
+test("partes publicadas têm PDF", async ({ request }) => {
+  for (const a of index) {
+    const meta = await (await request.get(`/arranjos/${a.id}/meta.json`)).json();
+    for (const p of meta.parts as { id: string }[]) {
+      const r = await request.get(`/arranjos/${a.id}/pdf/${p.id}.pdf`);
+      expect(r.ok(), `${a.id}/pdf/${p.id}.pdf`).toBe(true);
+      expect((await r.body()).subarray(0, 5).toString()).toBe("%PDF-");
+    }
+  }
+});

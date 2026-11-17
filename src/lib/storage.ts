@@ -28,3 +28,9 @@ export const prefs = {
   get: read,
   set: write,
 };
+
+/** cópias por parte na impressão (por id da parte; a formação da banda muda pouco entre arranjos) */
+export const printCopies = {
+  get: (): Record<string, number> => read<Record<string, number>>("printCopies", {}),
+  set: (v: Record<string, number>): void => write("printCopies", v),
+};

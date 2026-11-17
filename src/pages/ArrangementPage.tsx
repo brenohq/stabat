@@ -3,11 +3,12 @@ import { Link, useParams } from "react-router";
 import { BottomBar, Clock } from "../components/BottomBar";
 import { Mixer } from "../components/Mixer";
 import { PlayButton } from "../components/PlayButton";
+import { PrintDialog } from "../components/PrintDialog";
 import { Score } from "../components/Score";
 import { useZoom } from "../hooks/useZoom";
 import { TopBar } from "../components/TopBar";
 import { ZoomControls } from "../components/ZoomControls";
-import { MetronomeIcon, RewindIcon } from "../components/icons";
+import { MetronomeIcon, PrinterIcon, RewindIcon } from "../components/icons";
 import { Button, Card, Spinner } from "../components/ui";
 import { btnClass } from "../components/btnClass";
 import { exposeDebug } from "../debug";
@@ -49,6 +50,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   const [on, setOn] = useState(() => new Set(meta.parts.map((p) => p.index)));
   const [solo, setSolo] = useState(() => new Set<number>());
   const [drawer, setDrawer] = useState(false);
+  const [printing, setPrinting] = useState(false);
   const [zoom, zoomIn, zoomOut] = useZoom();
   const [view, setView] = useState<ScoreView | null>(null);
   const mine = myPart.get();
@@ -101,6 +103,9 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
           {meta.subtitle} · {meta.time} · {meta.tempo} bpm
         </span>
         <span className="flex-1" />
+        <Button className="max-[900px]:hidden" onClick={() => setPrinting(true)} data-testid="print-open">
+          <PrinterIcon /> Imprimir partes
+        </Button>
         {myInThis && (
           <Link
             to={`/${meta.id}/${myInThis.id}`}
@@ -166,6 +171,8 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
           </p>
         </aside>
       </div>
+
+      <PrintDialog meta={meta} open={printing} onClose={() => setPrinting(false)} />
 
       <BottomBar
         wide

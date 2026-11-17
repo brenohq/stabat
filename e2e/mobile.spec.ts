@@ -15,6 +15,7 @@ test.describe("celular", () => {
     await expect(panel).toBeHidden();
     await page.getByRole("button", { name: "Instrumentos", exact: true }).click();
     await expect(panel).toBeVisible();
+    await expect(page.getByTestId("print-open")).toBeHidden(); // imprimir é só no computador
     const p = (await panel.boundingBox())!;
     const bar = (await page.getByTestId("bottom-bar").boundingBox())!;
     expect(p.y + p.height).toBeLessThanOrEqual(bar.y + 2);

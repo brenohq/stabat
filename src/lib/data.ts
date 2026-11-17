@@ -18,3 +18,9 @@ export async function fetchMeta(id: string): Promise<ArrangementMeta> {
   if (!r.ok) throw new Error("Arranjo não encontrado");
   return r.json();
 }
+
+export async function fetchBytes(url: string): Promise<ArrayBuffer> {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Não foi possível baixar ${url}`);
+  return r.arrayBuffer();
+}

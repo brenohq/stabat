@@ -25,11 +25,12 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
   - `timeline.ts`: ritornelos: compasso da partitura ↔ tempo do áudio, ocorrência mais próxima, trecho a..b, tempos do metrônomo.
   - `mix.ts`: volumes (parte: 90% minha parte / 10% banda; arranjo: ligado/solo).
   - `agenda.ts`: **compromissos do Calendário da Banda** (lista `AGENDA`, horário de Brasília); para marcar um ensaio/show, acrescente uma linha ali. Passado/próximo e "faltam N dias" são calculados na hora.
+  - `print.ts` (partes e cópias da impressão) e `pdf.ts` (junta os PDFs com pdf-lib, carregada só ao imprimir).
   - `parts.ts`, `format.ts`, `storage.ts` (localStorage), `data.ts` (fetch), `types.ts` (formato do `meta.json`).
 - `src/audio/engine.ts`: `Engine`, um motor Web Audio imperativo: uma parte por AudioBuffer, volume por parte, metrônomo/contagem sintetizados, loop sem emenda (segmentos agendados), velocidade sem mudar a afinação via SoundTouch (`public/vendor/soundtouch-processor.js`, MPL-2.0). Tem um `AnalyserNode` e `level()` para os testes saberem se há som.
 - `src/score/`: `scoreView.ts` (Verovio → SVG, destaque do compasso, notas soando, pautas apagadas, trecho) e `sizing.ts` (escala por largura × zoom, espaçamento justo no celular).
 - `src/components/`, `src/pages/`, `src/hooks/`: React. A posição de execução muda a cada quadro e **não** passa pelo estado do React: o `Score` assina o motor e mexe no SVG direto; os componentes leem valores primitivos com `useEngineValue`.
-- Dados publicados em `public/arranjos/<id>/`: `meta.json`, `score.musicxml`, `parts/<parte>.musicxml`, `audio/<parte>.mp3`, `audio/sem-<parte>.mp3` (banda sem a parte). Índice: `public/arranjos/index.json`.
+- Dados publicados em `public/arranjos/<id>/`: `meta.json`, `score.musicxml`, `parts/<parte>.musicxml`, `audio/<parte>.mp3`, `audio/sem-<parte>.mp3` (banda sem a parte), `pdf/<parte>.pdf` (PDF da parte gerado pelo MuseScore, para imprimir). Índice: `public/arranjos/index.json`.
 
 ## Testes e validação autônoma
 
@@ -48,6 +49,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 - Página da parte: volume inicial 90% minha parte / 10% banda; no celular o nome do instrumento só no 1º sistema e mais compassos por linha.
 - Barra de controles **fixa no rodapé** nas páginas de arranjo e parte; zoom (lupa −/+) logo à direita do play; sem fresta embaixo.
 - Home: cartões clicáveis por inteiro; busca em largura total; "Qual é a sua parte?" com borda amarela pulsando enquanto não há parte.
+- Imprimir partes (só no computador, página do arranjo): modal com todas as partes marcadas; cópias por parte lembradas em `stabat.printCopies` (1 na primeira vez); só frente (sem página em branco entre partes); sem a grade. O PDF é o do MuseScore, sem relayout.
 - Identidade visual: azul-marinho `#1f2a44`, dourado `#a8761c`, papel de partitura, Fraunces (títulos) + Inter. Pode evoluir, mas é o norte.
 
 ## Armadilhas conhecidas
@@ -61,7 +63,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 1. `.mscz` em `~/Documents/MuseScore4/Scores/` com Muse Sounds no Mixer.
 2. Linha em `tools/arranjos.json` (`id`, `arquivo`, `titulo`, `subtitulo`, `cor`).
-3. `npm run publicar -- <id>` (precisa de MuseScore AppImage em `~/.local/opt/musescore/`, ffmpeg, numpy). Se o `.mscz` não mudou, não mexe no áudio. Se mudou, renderiza no Muse Sounds **só as partes que mudaram** (impressão digital = `.mscx` da parte + som dela; áudio sem perdas guardado em `tools/.cache/<id>/partes/*.flac`, ~140 MB por arranjo) e refaz a mistura com todas (MP3 de cada parte e "sem a parte"). `--forcar` renderiza todas de novo (ex.: depois de atualizar o MuseScore ou o Muse Sounds).
+3. `npm run publicar -- <id>` (precisa de MuseScore AppImage em `~/.local/opt/musescore/`, ffmpeg, numpy). Se o `.mscz` não mudou, não mexe no áudio. Se mudou, renderiza no Muse Sounds **só as partes que mudaram** (impressão digital = `.mscx` da parte + som dela; áudio sem perdas guardado em `tools/.cache/<id>/partes/*.flac`, ~140 MB por arranjo) e refaz a mistura com todas (MP3 de cada parte e "sem a parte"). Também exporta o PDF de cada parte (`pdf/`), refeito só quando o `.mscz` muda. `--forcar` renderiza todas de novo (ex.: depois de atualizar o MuseScore ou o Muse Sounds).
 4. `npm run verify` (o projeto `real` toca cada arranjo publicado), commit e push. O Vercel publica; o GitHub Actions testa.
 
 ## Deploy

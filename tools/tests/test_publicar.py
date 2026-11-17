@@ -40,6 +40,13 @@ class TestPublicar(unittest.TestCase):
         # sem o FLAC guardado, renderiza de novo
         self.assertEqual(publicar.changed_parts({"clarinete-sib-1": "a"}, cached, set()), ["clarinete-sib-1"])
 
+    def test_pdf_targets_na_ordem_da_grade(self):
+        files = ["Tuba Mib 1.pdf", "Clarinete Sib 1.pdf"]
+        self.assertEqual(publicar.pdf_targets(files, ["clarinete-sib-1", "tuba-mib-1"]),
+                         {"clarinete-sib-1": "Clarinete Sib 1.pdf", "tuba-mib-1": "Tuba Mib 1.pdf"})
+        with self.assertRaises(SystemExit):
+            publicar.pdf_targets(files, ["clarinete-sib-1"])
+
     def test_split_parts_copia_ensaio_e_andamento(self):
         with tempfile.TemporaryDirectory() as tmp:
             root, first, parts = publicar.split_parts(FIXTURE, Path(tmp))

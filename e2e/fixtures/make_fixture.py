@@ -3,6 +3,7 @@
 
 2 partes (Clarinete Sib 1 = madeira, Tuba Mib 1 = metal grave), 6 compassos 4/4 a 120 bpm,
 ritornelo nos compassos 3–4: tocados 1 2 3 4 3 4 5 6 = 8 compassos = 16 s.
+PDFs: um texto por página (clarinete 2 páginas, tuba 1), no lugar do PDF do MuseScore.
 Áudio: tons puros (clarinete 880 Hz, tuba 110 Hz), um por tempo, gerados com numpy + ffmpeg.
 Os arquivos gerados ficam no git; rode de novo só se mudar este script:
   python3 e2e/fixtures/make_fixture.py
@@ -70,6 +71,35 @@ def mp3(sig, path):
                     "-codec:a", "libmp3lame", "-b:a", "64k", str(path)], input=pcm, check=True)
 
 
+def pdf(pages, path):
+    """PDF mínimo (A4, uma linha de texto por página) no lugar do PDF do MuseScore."""
+    objs = ["<< /Type /Catalog /Pages 2 0 R >>", None, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"]
+    kids = []
+    for text in pages:
+        stream = f"BT /F1 24 Tf 72 760 Td ({text}) Tj ET".encode()
+        objs.append(f"<< /Length {len(stream)} >>\nstream\n{stream.decode()}\nendstream")
+        objs.append(f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents {len(objs)} 0 R "
+                    "/Resources << /Font << /F1 3 0 R >> >> >>")
+        kids.append(f"{len(objs)} 0 R")
+    objs[1] = f"<< /Type /Pages /Kids [{' '.join(kids)}] /Count {len(kids)} >>"
+    out, offs = b"%PDF-1.4\n", []
+    for i, o in enumerate(objs, 1):
+        offs.append(len(out))
+        out += f"{i} 0 obj\n{o}\nendobj\n".encode()
+    xref = len(out)
+    out += f"xref\n0 {len(objs) + 1}\n0000000000 65535 f \n".encode()
+    out += "".join(f"{o:010d} 00000 n \n" for o in offs).encode()
+    out += f"trailer\n<< /Size {len(objs) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n".encode()
+    path.write_bytes(out)
+
+
+def make_pdfs(d):
+    """clarinete com 2 páginas, tuba com 1 (para conferir a conta de páginas e cópias)"""
+    (d / "pdf").mkdir(exist_ok=True)
+    pdf(["Clarinete Sib 1 - pagina 1", "Clarinete Sib 1 - pagina 2"], d / "pdf" / "clarinete-sib-1.pdf")
+    pdf(["Tuba Mib 1 - pagina 1"], d / "pdf" / "tuba-mib-1.pdf")
+
+
 def main():
     d = ROOT / "teste"
     (d / "audio").mkdir(parents=True, exist_ok=True)
@@ -80,6 +110,7 @@ def main():
     for p, s, other in zip(parts, sigs, reversed(sigs)):
         mp3(s, d / "audio" / f"{p['id']}.mp3")
         mp3(other, d / "audio" / f"sem-{p['id']}.mp3")
+    make_pdfs(d)
     mq = measure_lengths(first)
     sigs_ts = time_signatures(first)
     timeline = [{"m": m, "t": int(k * 2000), "end": int((k + 1) * 2000), "beats": 4} for k, m in enumerate(PLAYED)]

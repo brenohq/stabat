@@ -10,7 +10,9 @@ Para cada arranjo listado em tools/arranjos.json:
   3. mistura no Python, com todas as partes (as novas e as guardadas): um MP3 mono por parte
      (com o mesmo ganho para todos, para manter o equilíbrio original) e um MP3 "banda sem a
      parte" para a página de estudo;
-  4. separa as partes do MusicXML e grava arranjos/<id>/meta.json e arranjos/index.json.
+  4. separa as partes do MusicXML e grava arranjos/<id>/meta.json e arranjos/index.json;
+  5. exporta o PDF de cada parte (o mesmo de "Exportar → Partes" do MuseScore) em
+     arranjos/<id>/pdf/<parte>.pdf, para o botão "Imprimir partes".
 
 Uso:
   python3 tools/publicar.py            # todos (pula o áudio se o .mscz não mudou)
@@ -285,6 +287,41 @@ def time_signatures(part):
     return sigs
 
 
+# ---------------------------------------------------------------- PDF
+
+def pdf_targets(files, slugs):
+    """Arquivos que o MuseScore gerou ("Trompete Sib 1.pdf") → {slug: arquivo}, na ordem da grade.
+    Falha se faltar ou sobrar parte."""
+    by_slug = {slug(Path(f).stem): f for f in files}
+    if sorted(by_slug) != sorted(slugs):
+        sys.exit(f"PDFs das partes não batem com a grade: {sorted(by_slug)} ≠ {sorted(slugs)}")
+    return {sl: by_slug[sl] for sl in slugs}
+
+
+def export_pdfs(digest, work, dest, slugs, force):
+    """PDF de cada parte, com o layout das partes do MuseScore. Só refaz se o .mscz mudou
+    (o PDF leva a data de criação: refazer sempre mudaria os arquivos a cada publicação)."""
+    stamp = work / "pdf.sha"
+    out = dest / "pdf"
+    have = {f.stem for f in out.glob("*.pdf")}
+    if not force and stamp.exists() and stamp.read_text() == digest and have == set(slugs):
+        log("   PDFs em dia")
+        return
+    tmp = work / "pdf"
+    shutil.rmtree(tmp, ignore_errors=True)
+    tmp.mkdir()
+    (work / "pdf-job.json").write_text(json.dumps([{"in": "fonte.mscz", "out": [["pdf/", ".pdf"]]}]))
+    run_mscore(["-j", "pdf-job.json"], cwd=work)
+    targets = pdf_targets([f.name for f in tmp.glob("*.pdf")], slugs)
+    shutil.rmtree(out, ignore_errors=True)
+    out.mkdir(parents=True)
+    for sl, f in targets.items():
+        shutil.move(tmp / f, out / f"{sl}.pdf")
+    tmp.rmdir()
+    stamp.write_text(digest)
+    log(f"   PDFs: {len(targets)} partes")
+
+
 # ---------------------------------------------------------------- principal
 
 def update_audio(mscz, digest, work, dest, slugs, force):
@@ -348,6 +385,7 @@ def publish(cfg, force):
     slugs = [p["id"] for p in parts]
 
     duration = update_audio(mscz, digest, work, dest, slugs, force)
+    export_pdfs(digest, work, dest, slugs, force)
     sigs = time_signatures(first)
     mq = measure_lengths(first)
     timeline = parse_mpos(work / "score.mpos", len(mq), mq, sigs, duration)

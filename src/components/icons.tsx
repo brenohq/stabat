@@ -100,3 +100,20 @@ export const ChevronDownIcon = (p: P) => (
     <path d="M6 9l6 6 6-6" />
   </svg>
 );
+export const PrinterIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M7 9V3h10v6" />
+    <rect x="3" y="9" width="18" height="8" rx="2" />
+    <path d="M7 14h10v7H7z" />
+  </svg>
+);
+export const DownloadIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+  </svg>
+);
+export const CloseIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M6 6l12 12M18 6L6 18" />
+  </svg>
+);

@@ -9,6 +9,7 @@ const MIME: Record<string, string> = {
   ".json": "application/json",
   ".mp3": "audio/mpeg",
   ".musicxml": "application/xml",
+  ".pdf": "application/pdf",
   ".xml": "application/xml",
 };
 
