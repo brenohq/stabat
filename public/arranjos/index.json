@@ -88,5 +88,20 @@
   "duration": 134.998,
   "version": "cf458099d1",
   "nparts": 18
+ },
+ {
+  "id": "jingle-bells",
+  "title": "Jingle Bells",
+  "subtitle": "James Lord Pierpont",
+  "hue": [
+   50,
+   175
+  ],
+  "tempo": 92,
+  "time": "2/4",
+  "measures": 79,
+  "duration": 109.666,
+  "version": "758963df66",
+  "nparts": 18
  }
 ]

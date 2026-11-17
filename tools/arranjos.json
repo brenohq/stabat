@@ -40,5 +40,12 @@
     "titulo": "Jingle Bell Rock",
     "subtitulo": "Bobby Helms",
     "cor": [355, 140]
+  },
+  {
+    "id": "jingle-bells",
+    "arquivo": "Jingle Bells - Banda.mscz",
+    "titulo": "Jingle Bells",
+    "subtitulo": "James Lord Pierpont",
+    "cor": [50, 175]
   }
 ]
