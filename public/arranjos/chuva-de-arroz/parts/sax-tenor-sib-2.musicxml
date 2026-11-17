@@ -4,8 +4,9 @@
     <work-title>Chuva de Arroz</work-title>
     </work>
   <identification>
-    <creator type="arranger">Adapt. para a banda municipal</creator>
+    <creator type="arranger">Breno Freitas</creator>
     <creator type="composer">Luan Santana</creator>
+    <rights>Banda de Música Nossa Senhora das Dores</rights>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
       <encoding-date>2026-11-17</encoding-date>
@@ -75,6 +76,62 @@
   <credit page="1">
     <credit-type>subtitle</credit-type>
     <credit-words default-x="1050.29" default-y="2769.26" justify="center" valign="top" font-size="14">Luan Santana</credit-words>
+    </credit>
+  <credit page="1">
+    <credit-type>composer</credit-type>
+    <credit-words default-x="2000.58" default-y="2769.26" justify="right" valign="bottom" font-size="12">Arr: Breno Freitas</credit-words>
+    </credit>
+  <credit page="1">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="2">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="3">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="4">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="5">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="6">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="7">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="8">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="9">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="10">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="11">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="12">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
+    </credit>
+  <credit page="13">
+    <credit-type>rights</credit-type>
+    <credit-words default-x="1050.29" default-y="200" justify="center" valign="bottom" font-size="8">Banda de Música Nossa Senhora das Dores</credit-words>
     </credit>
   <part-list>
     <score-part id="P6">
