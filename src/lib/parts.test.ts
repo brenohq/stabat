@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { byFamily, familyOf, sectionAt, shortName } from "./parts";
+import { byFamily, familyOf, partNumber, sectionAt, shortName } from "./parts";
 import { matches } from "./format";
 
 describe("partes", () => {
@@ -36,5 +36,13 @@ describe("partes", () => {
     expect(matches("arroz luan", "Chuva de Arroz Luan Santana")).toBe(true);
     expect(matches("mae", "Mãe")).toBe(true);
     expect(matches("xyz", "APT.")).toBe(false);
+  });
+});
+
+describe("partNumber", () => {
+  it("pega o número do fim do nome", () => {
+    expect(partNumber("Trompete Sib 1")).toBe("1");
+    expect(partNumber("Sax Alto Mib 2")).toBe("2");
+    expect(partNumber("Bombardino Dó")).toBe("");
   });
 });

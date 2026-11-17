@@ -4,13 +4,8 @@ import { partGain } from "../lib/mix";
 import { FAMILY_LABEL, byFamily, familyOf, shortName } from "../lib/parts";
 import { myPart, prefs } from "../lib/storage";
 import type { Family, Part } from "../lib/types";
+import { FAMILY_COLOR } from "./familyColor";
 import { CaretIcon } from "./icons";
-
-const FAMILY_COLOR: Record<Family, string> = {
-  wood: "bg-wood",
-  "brass-hi": "bg-brass-hi",
-  "brass-lo": "bg-brass-lo",
-};
 
 function Switch({
   state,

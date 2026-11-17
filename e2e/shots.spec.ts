@@ -2,11 +2,13 @@ import { test } from "@playwright/test";
 import { openLoaded } from "./helpers";
 
 /** capturas para revisão visual: npm run shots → .shots/*.png */
-const pages: { name: string; path: string; loaded: boolean; mine?: string }[] = [
+const pages: { name: string; path: string; loaded: boolean; mine?: string; open?: string }[] = [
   { name: "home", path: "/", loaded: false },
+  { name: "home-seletor", path: "/", loaded: false, mine: "trompete-sib-1", open: "#mypart" },
   { name: "arranjo", path: "/apt", loaded: true },
   { name: "arranjo-minha-parte", path: "/apt", loaded: true, mine: "trompete-sib-1" },
   { name: "parte", path: "/apt/trompete-sib-1", loaded: true },
+  { name: "parte-seletor", path: "/apt/trompete-sib-1", loaded: true, open: "#switch" },
   { name: "calendario", path: "/calendario", loaded: false },
 ];
 const sizes = [
@@ -31,6 +33,7 @@ for (const s of sizes)
           .first()
           .waitFor();
       }
+      if (p.open) await page.locator(p.open).click();
       await page.waitForTimeout(300);
       await page.screenshot({ path: `.shots/${p.name}-${s.name}.png` });
     });

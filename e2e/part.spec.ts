@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { clickMeasure, engine, expectSound, openLoaded, scoreScale } from "./helpers";
+import { clickMeasure, engine, expectSound, openLoaded, pickPart, scoreScale } from "./helpers";
 import { SCORE_SCALE } from "../src/score/sizing";
 
 test.describe("página da parte", () => {
@@ -70,7 +70,7 @@ test.describe("página da parte", () => {
   });
 
   test("trocar a parte navega e grava", async ({ page }) => {
-    await page.locator("#switch").selectOption("tuba-mib-1");
+    await pickPart(page, "#switch", "tuba-mib-1");
     await expect(page).toHaveURL(/\/teste\/tuba-mib-1$/);
     await expect(page.getByRole("heading", { name: "Tuba Mib 1" })).toBeVisible();
     expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toContain("tuba-mib-1");

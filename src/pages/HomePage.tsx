@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router";
+import { PartPicker } from "../components/PartPicker";
 import { TopBar } from "../components/TopBar";
 import { ArrowIcon, PersonIcon, SearchIcon } from "../components/icons";
 import { Card, Spinner } from "../components/ui";
@@ -148,20 +149,16 @@ export function HomePage() {
               Fica salvo neste aparelho. Cada arranjo ganha um atalho direto para ela.
             </span>
           </div>
-          <select
+          <PartPicker
             id="mypart"
-            aria-label="Minha parte"
-            value={mineId}
-            onChange={(e) => choose(e.target.value)}
-            className="w-full min-w-[200px] rounded-[10px] border border-line bg-surface px-2.5 py-2 sm:w-auto"
-          >
-            <option value="">— escolher —</option>
-            {allParts.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+            label="Minha parte"
+            parts={allParts}
+            value={mineId || null}
+            onChange={(id) => choose(id ?? "")}
+            placeholder="Escolher minha parte"
+            clearable
+            className="w-full sm:w-[260px]"
+          />
         </Card>
       </div>
 

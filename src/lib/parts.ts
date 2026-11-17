@@ -18,6 +18,11 @@ export function shortName(name: string): string {
   return name.replace(/ (Sib|Mib|Fá|Dó)\b/, "");
 }
 
+/** "Trompete Sib 1" → "1"; sem número → "" */
+export function partNumber(name: string): string {
+  return / (\d+)$/.exec(name)?.[1] ?? "";
+}
+
 /** partes agrupadas por família, na ordem da grade */
 export function byFamily(parts: Part[]): [Family, Part[]][] {
   const out = new Map<Family, Part[]>();

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { PartPicker } from "../components/PartPicker";
 import { BottomBar, Clock } from "../components/BottomBar";
 import { PlayButton } from "../components/PlayButton";
 import { Score } from "../components/Score";
@@ -184,24 +185,20 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
                 {meta.title} · {meta.time} · {meta.tempo} bpm
               </div>
             </div>
-            <select
+            <PartPicker
               id="switch"
-              aria-label="Trocar parte"
+              label="Trocar parte"
+              parts={meta.parts}
               value={part.id}
-              onChange={(e) => {
-                const p = meta.parts.find((x) => x.id === e.target.value)!;
+              onChange={(id) => {
+                const p = meta.parts.find((x) => x.id === id);
+                if (!p) return;
                 if (smells) return void navigate(`/${meta.id}/${p.id}/smells`);
                 myPart.set({ id: p.id, name: p.name });
                 void navigate(`/${meta.id}/${p.id}`);
               }}
-              className="rounded-[10px] border border-line bg-surface px-2.5 py-1.5"
-            >
-              {meta.parts.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
+              className="w-full sm:w-[240px]"
+            />
           </div>
           {smells && (
             <div className="min-[1100px]:hidden">

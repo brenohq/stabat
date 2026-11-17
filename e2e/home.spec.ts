@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { pickPart } from "./helpers";
 
 test.describe("página inicial", () => {
   test("lista os arranjos e filtra pela busca (sem acento)", async ({ page }) => {
@@ -26,13 +27,37 @@ test.describe("página inicial", () => {
     const picker = page.locator("#mypart");
     const card = page.locator(".animate-attention");
     await expect(card).toHaveCount(1);
-    await picker.selectOption("tuba-mib-1");
+    await pickPart(page, "#mypart", "tuba-mib-1");
     await expect(card).toHaveCount(0);
     expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toContain("tuba-mib-1");
     // atalho direto para a parte nos dois arranjos que têm tuba
     await expect(page.getByRole("link", { name: "Estudar Tuba 1" })).toHaveCount(2);
     await page.reload();
-    await expect(picker).toHaveValue("tuba-mib-1");
+    await expect(picker).toHaveAttribute("data-value", "tuba-mib-1");
+    await expect(picker).toContainText("Tuba Mib 1");
+  });
+
+  test("seletor de parte: agrupa por família e funciona pelo teclado", async ({ page }) => {
+    await page.goto("/");
+    const picker = page.locator("#mypart");
+    await picker.focus();
+    await page.keyboard.press("ArrowDown");
+    const list = page.getByRole("listbox", { name: "Minha parte" });
+    await expect(list).toBeVisible();
+    await expect(list.getByRole("group", { name: "Metais graves" })).toBeVisible();
+    await page.keyboard.type("tu");
+    await page.keyboard.press("Enter");
+    await expect(list).toHaveCount(0);
+    await expect(picker).toHaveAttribute("data-value", "tuba-mib-1");
+    await expect(picker).toBeFocused();
+    // Esc fecha sem trocar; "Limpar escolha" volta ao vazio
+    await picker.click();
+    await page.keyboard.press("Escape");
+    await expect(picker).toHaveAttribute("data-value", "tuba-mib-1");
+    await picker.click();
+    await page.getByRole("option", { name: "Limpar escolha" }).click();
+    await expect(picker).toHaveAttribute("data-value", "");
+    expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toBeNull();
   });
 
   test("cartão inteiro é clicável e leva ao arranjo", async ({ page }) => {

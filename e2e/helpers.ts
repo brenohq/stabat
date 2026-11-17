@@ -65,3 +65,9 @@ export async function scoreScale(page: Page): Promise<number> {
     return Number(v.lastKey.split("/")[1]);
   });
 }
+
+/** escolhe uma parte no seletor (PartPicker): abre a lista e clica na opção */
+export async function pickPart(page: Page, trigger: string, partId: string) {
+  await page.locator(trigger).click();
+  await page.locator(`[role=option][data-part="${partId}"]`).click();
+}

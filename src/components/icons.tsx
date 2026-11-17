@@ -90,3 +90,13 @@ export const NoteIcon = (p: P) => (
     <path d="M10 3.5v11.1A3.5 3.5 0 1 0 12 17.7V8.2l7-1.7v6.1a3.5 3.5 0 1 0 2 3.1V2.6z" />
   </svg>
 );
+export const CheckIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2.5} aria-hidden {...p}>
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
+  </svg>
+);
+export const ChevronDownIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} strokeWidth={2.5} aria-hidden {...p}>
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+);

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { engine, openLoaded } from "./helpers";
+import { engine, openLoaded, pickPart } from "./helpers";
 
 test.describe("página /smells (escondida)", () => {
   test("a fixture não tem notas fora da extensão (Dó4 ainda vale)", async ({ page }) => {
@@ -46,7 +46,7 @@ test.describe("página /smells (escondida)", () => {
 
     // revisar smells não troca a "minha parte"; o seletor continua em /smells
     expect(await page.evaluate(() => localStorage.getItem("stabat.myPart"))).toBeNull();
-    await page.locator("#switch").selectOption("tuba-mib-1");
+    await pickPart(page, "#switch", "tuba-mib-1");
     await expect(page).toHaveURL(/\/teste\/tuba-mib-1\/smells$/);
     await page.unrouteAll({ behavior: "ignoreErrors" });
   });
