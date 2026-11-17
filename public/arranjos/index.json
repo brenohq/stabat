@@ -60,6 +60,21 @@
   "nparts": 18
  },
  {
+  "id": "entao-e-natal",
+  "title": "Então é Natal",
+  "subtitle": "Simone",
+  "hue": [
+   150,
+   45
+  ],
+  "tempo": 140,
+  "time": "3/4",
+  "measures": 65,
+  "duration": 144.428,
+  "version": "a170560a6c",
+  "nparts": 18
+ },
+ {
   "id": "jingle-bell-rock",
   "title": "Jingle Bell Rock",
   "subtitle": "Bobby Helms",
