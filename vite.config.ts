@@ -4,6 +4,7 @@ import { extname, join, normalize, resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, type Connect, type Plugin } from "vite";
+import { injectMeta, SHARE_PAGES } from "./src/lib/share";
 
 const MIME: Record<string, string> = {
   ".json": "application/json",
@@ -35,11 +36,26 @@ function fixtures(base: string): Plugin {
   };
 }
 
+/** cópias do index.html com as tags de compartilhamento de cada página (ver src/lib/share.ts) */
+function sharePages(): Plugin {
+  return {
+    name: "stabat-share-pages",
+    apply: "build",
+    enforce: "post",
+    generateBundle(_, bundle) {
+      const index = bundle["index.html"];
+      if (!index || index.type !== "asset") return;
+      for (const page of SHARE_PAGES)
+        this.emitFile({ type: "asset", fileName: page.file, source: injectMeta(String(index.source), page) });
+    },
+  };
+}
+
 const base = "/";
 
 export default defineConfig({
   base,
-  plugins: [react(), tailwindcss(), fixtures(base)],
+  plugins: [react(), tailwindcss(), fixtures(base), sharePages()],
   build: { chunkSizeWarningLimit: 8000 },
   test: { include: ["src/**/*.test.ts"], environment: "node" },
 });

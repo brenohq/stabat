@@ -71,6 +71,12 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 3. `npm run publicar -- <id>` (precisa de MuseScore AppImage em `~/.local/opt/musescore/`, ffmpeg, numpy). Se o `.mscz` não mudou, não mexe no áudio. Se mudou, renderiza no Muse Sounds **só as partes que mudaram** (impressão digital = `.mscx` da parte + som dela; áudio sem perdas guardado em `tools/.cache/<id>/partes/*.flac`, ~140 MB por arranjo) e refaz a mistura com todas (MP3 de cada parte e "sem a parte"). Também exporta o PDF de cada parte (`pdf/`), refeito só quando o `.mscz` muda. `--forcar` renderiza todas de novo (ex.: depois de atualizar o MuseScore ou o Muse Sounds).
 4. `npm run verify` (o projeto `real` toca cada arranjo publicado), commit e push. O Vercel publica; o GitHub Actions testa.
 
+## Links compartilhados (WhatsApp etc.)
+
+- Os robôs de pré-visualização não rodam JavaScript. Para uma página ter miniatura própria: imagem 1200×630 em `public/og/`, uma entrada em `SHARE_PAGES` (`src/lib/share.ts`) e uma reescrita no `vercel.json` (antes da genérica) para o HTML que o build gera (`dist/<file>`).
+- A imagem do jogo sai de `npm run og` (`tools/og/render.mjs`, usa a clave e a semibreve do `NoteStaff`).
+- O WhatsApp guarda a miniatura de cada link por um tempo: para testar uma imagem nova, mande o link com `?v=2` no fim.
+
 ## Deploy
 
 - **Vercel** (projeto ligado ao repositório): cada push na `main` publica em produção (https://stabat.com.br, https://stabat-two.vercel.app); cada PR/branch ganha um link de pré-visualização. Configuração em `vercel.json` (build, reescrita para o app, cache).

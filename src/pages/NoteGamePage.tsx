@@ -299,6 +299,7 @@ export function NoteGamePage() {
 
   return (
     <>
+      <title>Que nota é essa? · stabat</title>
       <TopBar crumbs={<span>Jogos / Que nota é essa?</span>} />
       <main className="mx-auto max-w-[680px] px-3 pt-4 pb-10 sm:px-4 sm:pt-8">
         <div className="mb-3 flex items-baseline justify-between gap-3 px-1">
