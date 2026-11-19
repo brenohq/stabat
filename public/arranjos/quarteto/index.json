@@ -1,1 +1,47 @@
-[]
+[
+ {
+  "id": "de-colores-2-4",
+  "title": "De Colores",
+  "subtitle": "Tradicional · versão 2/4",
+  "hue": [
+   30,
+   320
+  ],
+  "tempo": 120,
+  "time": "2/4",
+  "measures": 57,
+  "duration": 106.998,
+  "version": "8bd17cede4",
+  "nparts": 4
+ },
+ {
+  "id": "entao-e-natal",
+  "title": "Então é Natal",
+  "subtitle": "Simone",
+  "hue": [
+   150,
+   45
+  ],
+  "tempo": 120,
+  "time": "3/4",
+  "measures": 65,
+  "duration": 168.0,
+  "version": "f9a2e35b2b",
+  "nparts": 4
+ },
+ {
+  "id": "jingle-bell-rock",
+  "title": "Jingle Bell Rock",
+  "subtitle": "Bobby Helms",
+  "hue": [
+   355,
+   140
+  ],
+  "tempo": 120,
+  "time": "4/4",
+  "measures": 65,
+  "duration": 134.998,
+  "version": "2b7099870f",
+  "nparts": 4
+ }
+]
