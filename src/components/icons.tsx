@@ -117,3 +117,26 @@ export const CloseIcon = (p: P) => (
     <path d="M6 6l12 12M18 6L6 18" />
   </svg>
 );
+export const MenuIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </svg>
+);
+export const GameIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M7 8h10a4 4 0 0 1 4 4v1.5a3.5 3.5 0 0 1-6.3 2.1L14 14.5h-4l-.7 1.1A3.5 3.5 0 0 1 3 13.5V12a4 4 0 0 1 4-4z" />
+    <path d="M8 10.5v3M6.5 12h3M15.5 11.5h.01M17.5 13h.01" />
+  </svg>
+);
+export const SoundIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+    <path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" />
+  </svg>
+);
+export const MuteIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+    <path d="M16 9.5l5 5M21 9.5l-5 5" />
+  </svg>
+);

@@ -4,6 +4,7 @@ test.describe("calendário", () => {
   test("link no topo leva à agenda, em ordem, com dia e hora", async ({ page }) => {
     await page.clock.setFixedTime(new Date("2026-11-17T10:00:00-03:00"));
     await page.goto("/");
+    await page.getByRole("button", { name: "Menu" }).click();
     await page.getByRole("link", { name: "Calendário da Banda" }).click();
     await expect(page).toHaveURL(/\/calendario$/);
     await expect(page.getByRole("heading", { name: "Calendário da Banda" })).toBeVisible();
@@ -25,8 +26,9 @@ test.describe("calendário", () => {
     await expect(page.getByTestId("evento").last()).toContainText("Ensaio na Praça");
   });
 
-  test("o link aparece também na página do arranjo", async ({ page }) => {
+  test("o menu aparece também na página do arranjo", async ({ page }) => {
     await page.goto("/teste");
+    await page.getByRole("button", { name: "Menu" }).click();
     await expect(page.getByRole("link", { name: "Calendário da Banda" })).toBeVisible();
   });
 });

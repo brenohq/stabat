@@ -24,7 +24,13 @@ const pages: {
   { name: "parte", path: "/apt/trompete-sib-1", loaded: true },
   { name: "parte-seletor", path: "/apt/trompete-sib-1", loaded: true, open: "#switch" },
   { name: "calendario", path: "/calendario", loaded: false },
+  { name: "menu", path: "/jogos/que-nota", loaded: false, open: "[aria-label=Menu]" },
+  { name: "jogo-inicio", path: "/jogos/que-nota", loaded: false },
+  { name: "jogo", path: "/jogos/que-nota", loaded: false, open: "text=Começar" },
 ];
+/** o que esperar antes da captura, nas páginas sem partitura */
+const ready = (path: string) =>
+  path === "/calendario" ? "evento" : path.startsWith("/jogos") ? "game-stage" : "arrangement-card";
 const sizes = [
   { name: "desktop", width: 1366, height: 900 },
   { name: "celular", width: 390, height: 844 },
@@ -42,10 +48,7 @@ for (const s of sizes)
       if (p.loaded) await openLoaded(page, p.path);
       else {
         await page.goto(p.path);
-        await page
-          .getByTestId(p.path === "/calendario" ? "evento" : "arrangement-card")
-          .first()
-          .waitFor();
+        await page.getByTestId(ready(p.path)).first().waitFor();
       }
       if (p.open) await page.locator(p.open).click();
       await page.waitForTimeout(300);

@@ -34,3 +34,15 @@ export const printCopies = {
   get: (): Record<string, number> => read<Record<string, number>>("printCopies", {}),
   set: (v: Record<string, number>): void => write("printCopies", v),
 };
+
+/** memória do jogo "Que nota é essa?" (caixas de cada nota); lida com scheduler.normalize */
+export const noteGame = {
+  get: (): unknown => read<unknown>("games.queNota", null),
+  set: (v: unknown): void => write("games.queNota", v),
+};
+
+/** som dos jogos (ligado por padrão) */
+export const gameSound = {
+  get: (): boolean => read<boolean>("games.sound", true),
+  set: (on: boolean): void => write("games.sound", on),
+};

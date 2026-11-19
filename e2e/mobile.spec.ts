@@ -29,8 +29,9 @@ test.describe("celular", () => {
     );
   });
 
-  test("calendário: link no topo cabe e a página não rola para o lado", async ({ page }) => {
+  test("calendário: menu no topo leva à agenda e a página não rola para o lado", async ({ page }) => {
     await page.goto("/");
+    await page.getByRole("button", { name: "Menu" }).click();
     await page.getByRole("link", { name: "Calendário da Banda" }).click();
     await expect(page.getByTestId("evento").first()).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(

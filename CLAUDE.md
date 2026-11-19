@@ -20,14 +20,17 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 ## Arquitetura
 
 - **Vite + React 19 + TypeScript estrito + Tailwind v4 + React Router 7**. Site estático no **Vercel**.
-- Rotas (`src/App.tsx`): `/` repertório · `/calendario` agenda da banda · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
+- Rotas (`src/App.tsx`): `/` repertório · `/calendario` agenda da banda · `/jogos/que-nota` jogo de leitura (`/jogos` redireciona) · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
 - `src/lib/`: **lógica pura e testada**. Nada de DOM aqui.
   - `timeline.ts`: ritornelos: compasso da partitura ↔ tempo do áudio, ocorrência mais próxima, trecho a..b, tempos do metrônomo.
   - `mix.ts`: volumes (parte: 90% minha parte / 10% banda; arranjo: ligado/solo).
   - `agenda.ts`: **compromissos do Calendário da Banda** (lista `AGENDA`, horário de Brasília); para marcar um ensaio/show, acrescente uma linha ali. Passado/próximo e "faltam N dias" são calculados na hora.
   - `print.ts` (partes e cópias da impressão) e `pdf.ts` (junta os PDFs com pdf-lib, carregada só ao imprimir).
+  - `games/notes.ts` (as 22 notas do "Que nota é essa?", Fá3–Fá6, 3 níveis, na ordem de apresentação) e `games/scheduler.ts` (repetição espaçada: caixas 0–5 por nota, sorteio com peso, nota nova só com todas firmes e 8 das últimas 10, aquecimento depois de 7 dias, modo calmo). Puro, com o sorteio injetado.
   - `parts.ts`, `format.ts`, `storage.ts` (localStorage), `data.ts` (fetch), `types.ts` (formato do `meta.json`).
 - `src/audio/engine.ts`: `Engine`, um motor Web Audio imperativo: uma parte por AudioBuffer, volume por parte, metrônomo/contagem sintetizados, loop sem emenda (segmentos agendados), velocidade sem mudar a afinação via SoundTouch (`public/vendor/soundtouch-processor.js`, MPL-2.0). Tem um `AnalyserNode` e `level()` para os testes saberem se há som.
+- `src/audio/sfx.ts`: sons curtos dos jogos (tom da nota, arpejo, toque de erro), sintetizados no Web Audio.
+- `src/components/games/NoteStaff.tsx`: pauta em SVG próprio (sem Verovio) com os glifos da Bravura (clave E050, semibreve E0A2) copiados do SVG do Verovio; o furo da semibreve é vazado, então `fill` colore só a parte preta.
 - `src/score/`: `scoreView.ts` (Verovio → SVG, destaque do compasso, notas soando, pautas apagadas, trecho) e `sizing.ts` (escala por largura × zoom, espaçamento justo no celular).
 - `src/components/`, `src/pages/`, `src/hooks/`: React. A posição de execução muda a cada quadro e **não** passa pelo estado do React: o `Score` assina o motor e mexe no SVG direto; os componentes leem valores primitivos com `useEngineValue`.
 - Dados publicados em `public/arranjos/<id>/`: `meta.json`, `score.musicxml`, `parts/<parte>.musicxml`, `audio/<parte>.mp3`, `audio/sem-<parte>.mp3` (banda sem a parte), `pdf/<parte>.pdf` (PDF da parte gerado pelo MuseScore, para imprimir). Índice: `public/arranjos/index.json`.
@@ -36,7 +39,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 - **Arranjo de teste** em `e2e/fixtures/arranjos/teste`: 2 partes, 6 compassos, ritornelo em 3–4, tons puros, gerado por `e2e/fixtures/make_fixture.py`. Os testes usam ele: são rápidos e dão sempre o mesmo resultado. O `vite --mode e2e` (`.env.e2e`) serve esses dados em `/__fixtures__/`.
 - Projetos do Playwright: `fixture` (desktop), `mobile` (Pixel 7), `real` (fumaça com os arranjos publicados), `shots` (só com `SHOTS=1`).
-- Com `VITE_DEBUG=1` (dev e testes) a página expõe `window.__stabat.page = { engine, timeline, meta, view }`. `e2e/helpers.ts` lê dali: posição, tocando, volumes (`gains()`), nível de som (`level()`), loop.
+- Com `VITE_DEBUG=1` (dev e testes) a página expõe `window.__stabat.page = { engine, timeline, meta, view }` (e o jogo, `window.__stabat.game.state()`: fase, nota da vez, respostas). `e2e/helpers.ts` lê dali: posição, tocando, volumes (`gains()`), nível de som (`level()`), loop.
 - Local usa o Chrome do sistema (`channel: "chrome"`); o CI usa o Chromium do Playwright.
 - Testes do script Python: `tools/tests/` (unittest, sem MuseScore).
 
@@ -50,6 +53,8 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 - Barra de controles **fixa no rodapé** nas páginas de arranjo e parte; zoom (lupa −/+) logo à direita do play; sem fresta embaixo.
 - Home: cartões clicáveis por inteiro; busca em largura total; "Qual é a sua parte?" com borda amarela pulsando enquanto não há parte.
 - Imprimir partes (só no computador, página do arranjo): modal com todas as partes marcadas; cópias por parte lembradas em `stabat.printCopies` (1 na primeira vez); só frente (sem página em branco entre partes); sem a grade. O PDF é o do MuseScore, sem relayout.
+- Topo: menu hambúrguer à direita com "Calendário da Banda" e o grupo recolhível "Jogos" (aberto quando se está num jogo) → "Que nota é essa?".
+- "Que nota é essa?": 7 botões (4+3 no celular) com Dó Ré Mi + letra (C D E), uma cor por nota (borda de baixo do botão; ao acertar, colore só a parte preta da semibreve), toca a nota ao acertar (mudo lembrado em `stabat.games.sound`). Memória em `stabat.games.queNota`. Sem cronômetro na tela; rodadas de 10.
 - Identidade visual: azul-marinho `#1f2a44`, dourado `#a8761c`, papel de partitura, Fraunces (títulos) + Inter. Pode evoluir, mas é o norte.
 
 ## Armadilhas conhecidas

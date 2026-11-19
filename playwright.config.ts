@@ -37,12 +37,12 @@ export default defineConfig({
   projects: [
     {
       name: "fixture",
-      testMatch: /(home|arrangement|part|calendar|smells|print)\.spec\.ts/,
+      testMatch: /(home|arrangement|part|calendar|smells|print|games|menu)\.spec\.ts/,
       use: { ...devices["Desktop Chrome"], ...use, baseURL: FIXTURE },
     },
     {
       name: "mobile",
-      testMatch: /mobile\.spec\.ts/,
+      testMatch: /(mobile|games)\.spec\.ts/,
       use: { ...devices["Pixel 7"], ...use, baseURL: FIXTURE },
     },
     {
