@@ -1,8 +1,10 @@
+import { href } from "../lib/collections";
+import { useCollection } from "../hooks/useCollection";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { partGain } from "../lib/mix";
 import { FAMILY_LABEL, byFamily, familyOf, shortName } from "../lib/parts";
-import { myPart, prefs } from "../lib/storage";
+import { myPartOf, prefs } from "../lib/storage";
 import type { Family, Part } from "../lib/types";
 import { FAMILY_COLOR } from "./familyColor";
 import { CaretIcon } from "./icons";
@@ -50,6 +52,7 @@ interface Props {
 /** instrumentos agrupados por família (grupos recolhíveis, fechados por padrão,
  *  menos o da parte do músico, que sempre abre aberto para o "você" aparecer de cara) */
 export function Mixer({ arrangementId, parts, on, solo, myPartId, onChange }: Props) {
+  const col = useCollection();
   const [open, setOpen] = useState<string[]>(() => {
     const saved = prefs.get<string[]>("openFams", []);
     const mine = parts.find((p) => p.id === myPartId);
@@ -158,8 +161,8 @@ export function Mixer({ arrangementId, parts, on, solo, myPartId, onChange }: Pr
                     S
                   </button>
                   <Link
-                    to={`/${arrangementId}/${p.id}`}
-                    onClick={() => myPart.set({ id: p.id, name: p.name })}
+                    to={href(col, arrangementId, p.id)}
+                    onClick={() => myPartOf(col).set({ id: p.id, name: p.name })}
                     className="text-xs font-semibold whitespace-nowrap text-accent hover:underline"
                   >
                     parte →

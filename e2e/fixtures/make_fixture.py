@@ -129,7 +129,24 @@ def main():
     index = [{k: m[k] for k in ("id", "title", "subtitle", "hue", "tempo", "time", "measures", "duration", "version")} | {"nparts": len(m["parts"])}
              for m in (meta, meta2)]
     (ROOT / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1))
+    make_quartet(meta)
     print("ok:", [p["id"] for p in parts])
+
+
+def make_quartet(meta):
+    """Coleção do quarteto (/quarteto): um arranjo que aponta (links simbólicos) para os arquivos do teste."""
+    q = ROOT / "quarteto"
+    d = q / "natal"
+    d.mkdir(parents=True, exist_ok=True)
+    for name in ("audio", "parts", "pdf", "score.musicxml"):
+        link = d / name
+        if link.is_symlink() or link.exists():
+            link.unlink()
+        link.symlink_to(Path("..") / ".." / "teste" / name)
+    mq = dict(meta, id="natal", title="Natal do Quarteto", subtitle="Fixture do quarteto", hue=[150, 45])
+    (d / "meta.json").write_text(json.dumps(mq, ensure_ascii=False, indent=1))
+    index = [{k: mq[k] for k in ("id", "title", "subtitle", "hue", "tempo", "time", "measures", "duration", "version")} | {"nparts": len(mq["parts"])}]
+    (q / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1))
 
 
 if __name__ == "__main__":

@@ -6,15 +6,17 @@ import { ArrowIcon, PersonIcon, SearchIcon } from "../components/icons";
 import { Card, Spinner } from "../components/ui";
 import { btnClass } from "../components/btnClass";
 import { useAsync } from "../hooks/useAsync";
+import { useCollection } from "../hooks/useCollection";
+import { href, type Collection } from "../lib/collections";
 import { fetchIndex, fetchMeta } from "../lib/data";
 import { fmtTime, matches } from "../lib/format";
 import { shortName } from "../lib/parts";
-import { myPart } from "../lib/storage";
+import { myPartOf } from "../lib/storage";
 import type { ArrangementMeta, ArrangementSummary, Part } from "../lib/types";
 
-async function loadAll(): Promise<{ index: ArrangementSummary[]; metas: ArrangementMeta[] }> {
-  const index = await fetchIndex();
-  const metas = await Promise.all(index.map((a) => fetchMeta(a.id)));
+async function loadAll(c: Collection): Promise<{ index: ArrangementSummary[]; metas: ArrangementMeta[] }> {
+  const index = await fetchIndex(c);
+  const metas = await Promise.all(index.map((a) => fetchMeta(c, a.id)));
   return { index, metas };
 }
 
@@ -64,6 +66,7 @@ function ArrangementCard({
   meta: ArrangementMeta;
   mine: Part | null;
 }) {
+  const col = useCollection();
   const has = mine && meta.parts.some((p) => p.id === mine.id);
   return (
     <article
@@ -74,7 +77,7 @@ function ArrangementCard({
       <div className="flex flex-1 flex-col gap-2.5 px-4 pt-3 pb-4">
         {/* link "esticado": o cartão inteiro é clicável */}
         <Link
-          to={`/${a.id}`}
+          to={href(col, a.id)}
           className="text-[13px] text-muted outline-none after:absolute after:inset-0 after:z-[1]"
         >
           {a.subtitle}
@@ -82,8 +85,8 @@ function ArrangementCard({
         <div className="mt-auto flex">
           {has ? (
             <Link
-              to={`/${a.id}/${mine.id}`}
-              onClick={() => myPart.set({ id: mine.id, name: mine.name })}
+              to={href(col, a.id, mine.id)}
+              onClick={() => myPartOf(col).set({ id: mine.id, name: mine.name })}
               className={`${btnClass({ primary: true })} relative z-[2] flex-1`}
             >
               Estudar {shortName(mine.name)}
@@ -100,7 +103,9 @@ function ArrangementCard({
 }
 
 export function HomePage() {
-  const state = useAsync(loadAll, []);
+  const col = useCollection();
+  const myPart = myPartOf(col);
+  const state = useAsync(() => loadAll(col), [col.id]);
   const [query, setQuery] = useState("");
   const [mineId, setMineId] = useState(() => myPart.get()?.id ?? "");
 
@@ -113,6 +118,8 @@ export function HomePage() {
     return out;
   }, [state]);
   const mine = allParts.find((p) => p.id === mineId) ?? null;
+  // coleção ainda sem arranjos publicados (ex.: o quarteto enquanto os arranjos são preparados)
+  const empty = state.status === "ok" && state.data.index.length === 0;
 
   const choose = (id: string) => {
     setMineId(id);
@@ -125,63 +132,74 @@ export function HomePage() {
       <TopBar />
       <div className="bg-navy px-4 pt-6 pb-[70px] text-[#f3eee4]">
         <div className="mx-auto max-w-[1200px] px-4">
-          <h1 className="text-[clamp(26px,5vw,38px)]">Repertório da banda</h1>
-          <p className="mt-2 max-w-[560px] opacity-75">
-            Escolha um arranjo, ouça a banda inteira e estude a sua parte em casa.
-          </p>
+          <h1 className="text-[clamp(26px,5vw,38px)]">{col.title}</h1>
+          <p className="mt-2 max-w-[560px] opacity-75">{col.intro}</p>
         </div>
       </div>
 
       <div className="mx-auto -mt-12 max-w-[1200px] px-4">
-        <Card
-          className={`flex flex-wrap items-center gap-3 px-4 py-3.5 ${
-            mine
-              ? ""
-              : "border-attention animate-attention motion-reduce:animate-none motion-reduce:ring-3 motion-reduce:ring-attention/45"
-          }`}
-        >
-          <div className="grid size-[38px] flex-none place-items-center rounded-[10px] bg-accent-soft text-accent">
-            <PersonIcon className="size-5" />
-          </div>
-          <div className="min-w-[180px] flex-1">
-            <b className="block">Qual é a sua parte?</b>
-            <span className="text-[13px] text-muted">
-              Fica salvo neste aparelho. Cada arranjo ganha um atalho direto para ela.
-            </span>
-          </div>
-          <PartPicker
-            id="mypart"
-            label="Minha parte"
-            parts={allParts}
-            value={mineId || null}
-            onChange={(id) => choose(id ?? "")}
-            placeholder="Escolher minha parte"
-            clearable
-            className="w-full sm:w-[260px]"
-          />
-        </Card>
+        {empty ? (
+          <Card className="px-4 py-6 text-center">
+            <div data-testid="empty-repertoire">
+              <b className="block font-display text-xl">Em breve</b>
+              <span className="text-[15px] text-muted">
+                Os arranjos d{col.theEnsemble} estão sendo preparados. Volte daqui a pouco!
+              </span>
+            </div>
+          </Card>
+        ) : (
+          <Card
+            className={`flex flex-wrap items-center gap-3 px-4 py-3.5 ${
+              mine
+                ? ""
+                : "border-attention animate-attention motion-reduce:animate-none motion-reduce:ring-3 motion-reduce:ring-attention/45"
+            }`}
+          >
+            <div className="grid size-[38px] flex-none place-items-center rounded-[10px] bg-accent-soft text-accent">
+              <PersonIcon className="size-5" />
+            </div>
+            <div className="min-w-[180px] flex-1">
+              <b className="block">Qual é a sua parte?</b>
+              <span className="text-[13px] text-muted">
+                Fica salvo neste aparelho. Cada arranjo ganha um atalho direto para ela.
+              </span>
+            </div>
+            <PartPicker
+              id="mypart"
+              label="Minha parte"
+              parts={allParts}
+              value={mineId || null}
+              onChange={(id) => choose(id ?? "")}
+              placeholder="Escolher minha parte"
+              clearable
+              className="w-full sm:w-[260px]"
+            />
+          </Card>
+        )}
       </div>
 
       <main className="mx-auto mt-7 mb-16 max-w-[1200px] px-4">
-        <div className="mb-3.5 flex flex-wrap items-center gap-3">
-          <h2 className="flex-1 text-xl">Arranjos publicados</h2>
-          <label className="relative block w-full">
-            <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
-            <input
-              id="q"
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar arranjo…"
-              aria-label="Buscar arranjo"
-              autoComplete="off"
-              className="w-full rounded-[10px] border border-line bg-surface py-2 pr-3 pl-9 focus:border-accent focus:outline-2 focus:outline-accent"
-            />
-          </label>
-        </div>
+        {!empty && (
+          <div className="mb-3.5 flex flex-wrap items-center gap-3">
+            <h2 className="flex-1 text-xl">Arranjos publicados</h2>
+            <label className="relative block w-full">
+              <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
+              <input
+                id="q"
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar arranjo…"
+                aria-label="Buscar arranjo"
+                autoComplete="off"
+                className="w-full rounded-[10px] border border-line bg-surface py-2 pr-3 pl-9 focus:border-accent focus:outline-2 focus:outline-accent"
+              />
+            </label>
+          </div>
+        )}
         {state.status === "loading" && <Spinner label="Carregando repertório…" />}
         {state.status === "error" && <p className="text-muted">{state.error.message}</p>}
-        {state.status === "ok" && (
+        {state.status === "ok" && !empty && (
           <Cards index={state.data.index} metas={state.data.metas} query={query} mine={mine} />
         )}
       </main>

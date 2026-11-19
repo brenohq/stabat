@@ -1,0 +1,17 @@
+[
+ {
+  "id": "natal",
+  "title": "Natal do Quarteto",
+  "subtitle": "Fixture do quarteto",
+  "hue": [
+   150,
+   45
+  ],
+  "tempo": 120,
+  "time": "4/4",
+  "measures": 6,
+  "duration": 16.0,
+  "version": "fixture1",
+  "nparts": 2
+ }
+]

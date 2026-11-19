@@ -1,3 +1,5 @@
+import { href } from "../lib/collections";
+import { useCollection } from "../hooks/useCollection";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import { BottomBar, Clock, RewindButton, SpeedSelect } from "../components/BottomBar";
@@ -19,7 +21,7 @@ import { assetUrl, fetchMeta } from "../lib/data";
 import { fmtTime } from "../lib/format";
 import { partGain } from "../lib/mix";
 import { sectionAt } from "../lib/parts";
-import { myPart } from "../lib/storage";
+import { myPartOf } from "../lib/storage";
 import { Timeline } from "../lib/timeline";
 import type { ArrangementMeta } from "../lib/types";
 import { SCORE_SCALE } from "../score/sizing";
@@ -28,7 +30,8 @@ import { NotFound } from "./NotFound";
 
 export function ArrangementPage() {
   const { arranjoId = "" } = useParams();
-  const state = useAsync(() => fetchMeta(arranjoId), [arranjoId]);
+  const col = useCollection();
+  const state = useAsync(() => fetchMeta(col, arranjoId), [col.id, arranjoId]);
   if (state.status === "loading")
     return (
       <>
@@ -41,9 +44,10 @@ export function ArrangementPage() {
 }
 
 function Arrangement({ meta }: { meta: ArrangementMeta }) {
+  const col = useCollection();
   const timeline = useMemo(() => new Timeline(meta.timeline, meta.duration), [meta]);
   // 18 partes decodificadas pesam: 32 kHz basta para estudo e economiza memória no celular
-  const urls = useMemo(() => meta.parts.map((p) => assetUrl(meta, `audio/${p.id}.mp3`)), [meta]);
+  const urls = useMemo(() => meta.parts.map((p) => assetUrl(col, meta, `audio/${p.id}.mp3`)), [meta]);
   const { engine, progress, error } = usePlayer(timeline, urls, { sampleRate: 32000 });
   const [on, setOn] = useState(() => new Set(meta.parts.map((p) => p.index)));
   const [solo, setSolo] = useState(() => new Set<number>());
@@ -51,7 +55,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   const [printing, setPrinting] = useState(false);
   const [zoom, zoomIn, zoomOut] = useZoom();
   const [view, setView] = useState<ScoreView | null>(null);
-  const mine = myPart.get();
+  const mine = myPartOf(col).get();
   const myInThis = mine && meta.parts.find((p) => p.id === mine.id);
 
   const loaded = useEngineValue(engine, (e) => e.loaded, false);
@@ -91,7 +95,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
       <TopBar
         crumbs={
           <>
-            <Link to="/">Repertório</Link> / <span>{meta.title}</span>
+            <Link to={href(col)}>{col.crumb}</Link> / <span>{meta.title}</span>
           </>
         }
       />
@@ -109,7 +113,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
       <div className="mx-auto grid max-w-[1400px] items-start gap-4 px-4 pt-3.5 pb-[calc(var(--barh,130px)+24px)] min-[901px]:grid-cols-[1fr_300px]">
         <Card className="min-h-[60vh] overflow-hidden">
           <Score
-            url={assetUrl(meta, "score.musicxml")}
+            url={assetUrl(col, meta, "score.musicxml")}
             steps={SCORE_SCALE}
             zoom={zoom}
             muted={muted}
@@ -224,7 +228,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
             </Button>
             {myInThis && (
               <Link
-                to={`/${meta.id}/${myInThis.id}`}
+                to={href(col, meta.id, myInThis.id)}
                 className={btnClass({ primary: true })}
                 data-testid="study-mine"
               >

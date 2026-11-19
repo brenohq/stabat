@@ -1,3 +1,5 @@
+import { href } from "../lib/collections";
+import { useCollection } from "../hooks/useCollection";
 import { Link } from "react-router";
 import { useAsync } from "../hooks/useAsync";
 import { assetUrl } from "../lib/data";
@@ -28,16 +30,17 @@ export function SmellPanel({
   report: SmellReport | null;
   onMeasure: (m: number) => void;
 }) {
+  const col = useCollection();
   const all = useAsync(
     () =>
       Promise.all(
         meta.parts.map(async (p) => {
-          const r = await fetch(assetUrl(meta, `parts/${p.id}.musicxml`));
+          const r = await fetch(assetUrl(col, meta, `parts/${p.id}.musicxml`));
           if (!r.ok) throw new Error(`Não foi possível ler ${p.name}`);
           return { part: p, report: smellReport(writtenPitches(await r.text()), smellRange(p.name)) };
         }),
       ),
-    [meta.id, meta.version],
+    [col.id, meta.id, meta.version],
   );
   const count = (r: SmellReport) => r.high + r.low;
   const total = all.status === "ok" ? all.data.reduce((s, x) => s + count(x.report), 0) : null;
@@ -104,7 +107,7 @@ export function SmellPanel({
               return (
                 <li key={p.id}>
                   <Link
-                    to={`/${meta.id}/${p.id}/smells`}
+                    to={href(col, meta.id, p.id, "smells")}
                     aria-current={here ? "page" : undefined}
                     className={`-mx-2 flex items-center justify-between rounded-md px-2 py-[3px] hover:bg-surface-2 ${
                       here ? "bg-accent-soft font-semibold" : ""

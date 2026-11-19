@@ -1,0 +1,104 @@
+{
+ "id": "natal",
+ "title": "Natal do Quarteto",
+ "subtitle": "Fixture do quarteto",
+ "hue": [
+  150,
+  45
+ ],
+ "tempo": 120,
+ "time": "4/4",
+ "measures": 6,
+ "duration": 16.0,
+ "marks": [
+  {
+   "m": 0,
+   "label": "A"
+  },
+  {
+   "m": 4,
+   "label": "B"
+  }
+ ],
+ "parts": [
+  {
+   "id": "clarinete-sib-1",
+   "name": "Clarinete Sib 1",
+   "index": 0
+  },
+  {
+   "id": "tuba-mib-1",
+   "name": "Tuba Mib 1",
+   "index": 1
+  }
+ ],
+ "timeline": [
+  {
+   "m": 0,
+   "t": 0,
+   "end": 2000,
+   "beats": 4
+  },
+  {
+   "m": 1,
+   "t": 2000,
+   "end": 4000,
+   "beats": 4
+  },
+  {
+   "m": 2,
+   "t": 4000,
+   "end": 6000,
+   "beats": 4
+  },
+  {
+   "m": 3,
+   "t": 6000,
+   "end": 8000,
+   "beats": 4
+  },
+  {
+   "m": 2,
+   "t": 8000,
+   "end": 10000,
+   "beats": 4
+  },
+  {
+   "m": 3,
+   "t": 10000,
+   "end": 12000,
+   "beats": 4
+  },
+  {
+   "m": 4,
+   "t": 12000,
+   "end": 14000,
+   "beats": 4
+  },
+  {
+   "m": 5,
+   "t": 14000,
+   "end": 16000,
+   "beats": 4
+  }
+ ],
+ "grid": [
+  [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ]
+ ],
+ "version": "fixture1"
+}

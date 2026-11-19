@@ -14,8 +14,13 @@ Para cada arranjo listado em tools/arranjos.json:
   5. exporta o PDF de cada parte (o mesmo de "Exportar → Partes" do MuseScore) em
      arranjos/<id>/pdf/<parte>.pdf, para o botão "Imprimir partes".
 
+O quarteto (página escondida stabat.com.br/quarteto) é uma coleção à parte: configuração em
+tools/quarteto.json, partituras em Scores/quarteto/, dados em arranjos/quarteto/<id>/ e
+áudio guardado em tools/.cache/quarteto/<id>/.
+
 Uso:
   python3 tools/publicar.py            # todos (pula o áudio se o .mscz não mudou)
+  python3 tools/publicar.py --quarteto noite-feliz  # um arranjo do quarteto
   python3 tools/publicar.py apt chuva  # só alguns
   python3 tools/publicar.py --forcar   # renderiza o áudio de todas as partes de novo
                                        # (ex.: depois de atualizar o MuseScore ou o Muse Sounds)
@@ -30,6 +35,11 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "public" / "arranjos"
 CACHE = ROOT / "tools" / ".cache"
 SCORES = Path.home() / "Documents" / "MuseScore4" / "Scores"
+# coleções: configuração, pasta das partituras, pasta publicada e cache de áudio
+COLLECTIONS = {
+    "banda": {"conf": ROOT / "tools" / "arranjos.json", "scores": SCORES, "out": OUT, "cache": CACHE},
+    "quarteto": {"conf": ROOT / "tools" / "quarteto.json", "scores": SCORES / "quarteto", "out": OUT / "quarteto", "cache": CACHE / "quarteto"},
+}
 MSCORE_CANDIDATES = [Path.home() / ".local/opt/musescore/MuseScore-Studio.AppImage", Path("/usr/bin/mscore4portable"), Path("/usr/bin/mscore")]
 SR = 44100
 MP3_PARTE = "80k"
@@ -366,16 +376,16 @@ def update_audio(mscz, digest, work, dest, slugs, force):
     return duration
 
 
-def publish(cfg, force):
+def publish(cfg, force, col=COLLECTIONS["banda"]):
     aid = cfg["id"]
-    src = SCORES / cfg["arquivo"]
+    src = col["scores"] / cfg["arquivo"]
     log(f"== {aid}: {src.name}")
-    work = CACHE / aid
+    work = col["cache"] / aid
     work.mkdir(parents=True, exist_ok=True)
     mscz = work / "fonte.mscz"
     shutil.copyfile(src, mscz)
     digest = sha(mscz)
-    dest = OUT / aid
+    dest = col["out"] / aid
     dest.mkdir(parents=True, exist_ok=True)
 
     run_mscore(["-o", "score.musicxml", "fonte.mscz"], cwd=work)
@@ -403,23 +413,37 @@ def publish(cfg, force):
     return meta
 
 
+def check_ids(conf, col):
+    """Um arranjo da banda não pode se chamar como a pasta de outra coleção (arranjos/quarteto/)."""
+    if col["out"] != OUT:
+        return
+    reserved = {c["out"].name for c in COLLECTIONS.values() if c["out"].parent == OUT}
+    bad = [c["id"] for c in conf if c["id"] in reserved]
+    if bad:
+        sys.exit(f"id reservado para outra coleção: {', '.join(bad)}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ids", nargs="*")
     ap.add_argument("--forcar", action="store_true")
+    ap.add_argument("--quarteto", action="store_true", help="publica arranjos do quarteto (tools/quarteto.json)")
     a = ap.parse_args()
-    conf = json.loads((ROOT / "tools" / "arranjos.json").read_text())
+    col = COLLECTIONS["quarteto" if a.quarteto else "banda"]
+    conf = json.loads(col["conf"].read_text())
+    check_ids(conf, col)
     for c in conf:
         if not a.ids or c["id"] in a.ids:
-            publish(c, a.forcar)
+            publish(c, a.forcar, col)
     # índice com todos os arranjos já publicados, na ordem do arquivo de configuração
     index = []
     for c in conf:
-        mp = OUT / c["id"] / "meta.json"
+        mp = col["out"] / c["id"] / "meta.json"
         if mp.exists():
             m = json.loads(mp.read_text())
             index.append({k: m[k] for k in ("id", "title", "subtitle", "hue", "tempo", "time", "measures", "duration", "version")} | {"nparts": len(m["parts"])})
-    (OUT / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1))
+    col["out"].mkdir(parents=True, exist_ok=True)
+    (col["out"] / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1))
     log(f"índice: {len(index)} arranjos")
 
 

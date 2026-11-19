@@ -1,5 +1,6 @@
 import { test } from "@playwright/test";
 import { openLoaded } from "./helpers";
+import quartet from "../public/arranjos/quarteto/index.json" with { type: "json" };
 
 /** capturas para revisão visual: npm run shots → .shots/*.png */
 const pages: {
@@ -24,13 +25,20 @@ const pages: {
   { name: "parte", path: "/apt/trompete-sib-1", loaded: true },
   { name: "parte-seletor", path: "/apt/trompete-sib-1", loaded: true, open: "#switch" },
   { name: "calendario", path: "/calendario", loaded: false },
+  { name: "quarteto", path: "/quarteto", loaded: false },
   { name: "menu", path: "/jogos/que-nota", loaded: false, open: "[aria-label=Menu]" },
   { name: "jogo-inicio", path: "/jogos/que-nota", loaded: false },
   { name: "jogo", path: "/jogos/que-nota", loaded: false, open: "text=Começar" },
 ];
 /** o que esperar antes da captura, nas páginas sem partitura */
 const ready = (path: string) =>
-  path === "/calendario" ? "evento" : path.startsWith("/jogos") ? "game-stage" : "arrangement-card";
+  path === "/calendario"
+    ? "evento"
+    : path.startsWith("/jogos")
+      ? "game-stage"
+      : path === "/quarteto" && !quartet.length
+        ? "empty-repertoire"
+        : "arrangement-card";
 const sizes = [
   { name: "desktop", width: 1366, height: 900 },
   { name: "celular", width: 390, height: 844 },

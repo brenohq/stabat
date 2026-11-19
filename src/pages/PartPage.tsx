@@ -1,3 +1,5 @@
+import { href } from "../lib/collections";
+import { useCollection } from "../hooks/useCollection";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { PartPicker } from "../components/PartPicker";
@@ -19,7 +21,7 @@ import { fmtTime } from "../lib/format";
 import { DEFAULT_PART_MIX, matchGains, mixGains, mixLevels } from "../lib/mix";
 import { sectionAt, shortName } from "../lib/parts";
 import { pitchName, smellRange, smellReport, type SmellRange, type SmellReport } from "../lib/smells";
-import { myPart } from "../lib/storage";
+import { myPartOf } from "../lib/storage";
 import { Timeline } from "../lib/timeline";
 import type { ArrangementMeta, Part } from "../lib/types";
 import { PART_SCALE } from "../score/sizing";
@@ -28,7 +30,8 @@ import { NotFound } from "./NotFound";
 
 export function PartPage({ smells = false }: { smells?: boolean }) {
   const { arranjoId = "", parteId = "" } = useParams();
-  const state = useAsync(() => fetchMeta(arranjoId), [arranjoId]);
+  const col = useCollection();
+  const state = useAsync(() => fetchMeta(col, arranjoId), [col.id, arranjoId]);
   if (state.status === "loading")
     return (
       <>
@@ -42,9 +45,10 @@ export function PartPage({ smells = false }: { smells?: boolean }) {
   return <PartStudy key={`${arranjoId}/${parteId}`} meta={state.data} part={part} smells={smells} />;
 }
 
-const PRESETS = [
-  { label: "Com banda", value: DEFAULT_PART_MIX },
-  { label: "Só banda", value: 0 },
+/** atalhos do equilíbrio ("Com banda" / "Com quarteto"…) */
+const presets = (ensemble: string) => [
+  { label: `Com ${ensemble}`, value: DEFAULT_PART_MIX },
+  { label: `Só ${ensemble}`, value: 0 },
   { label: "Só minha parte", value: 100 },
 ];
 
@@ -52,11 +56,13 @@ const PRESETS = [
 type LoopSel = null | { a: number | null; b?: undefined } | { a: number; b: number };
 
 function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; smells: boolean }) {
+  const col = useCollection();
+  const myPart = myPartOf(col);
   const navigate = useNavigate();
   const timeline = useMemo(() => new Timeline(meta.timeline, meta.duration), [meta]);
   // [0] minha parte, [1] banda sem a minha parte
   const urls = useMemo(
-    () => [assetUrl(meta, `audio/${part.id}.mp3`), assetUrl(meta, `audio/sem-${part.id}.mp3`)],
+    () => [assetUrl(col, meta, `audio/${part.id}.mp3`), assetUrl(col, meta, `audio/sem-${part.id}.mp3`)],
     [meta, part],
   );
   const { engine, progress, error } = usePlayer(timeline, urls);
@@ -148,7 +154,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
       <TopBar
         crumbs={
           <>
-            <Link to="/">Repertório</Link> / <Link to={`/${meta.id}`}>{meta.title}</Link> /{" "}
+            <Link to={href(col)}>{col.crumb}</Link> / <Link to={href(col, meta.id)}>{meta.title}</Link> /{" "}
             <span>{shortName(part.name)}</span>
           </>
         }
@@ -163,7 +169,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
         <div className="min-w-0">
           <div className="mb-3.5 flex flex-wrap items-center gap-3.5">
             <Link
-              to={`/${meta.id}`}
+              to={href(col, meta.id)}
               title="Voltar ao arranjo"
               aria-label="Voltar ao arranjo"
               className="grid size-9 place-items-center rounded-[10px] border border-line bg-surface"
@@ -184,9 +190,9 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
               onChange={(id) => {
                 const p = meta.parts.find((x) => x.id === id);
                 if (!p) return;
-                if (smells) return void navigate(`/${meta.id}/${p.id}/smells`);
+                if (smells) return void navigate(href(col, meta.id, p.id, "smells"));
                 myPart.set({ id: p.id, name: p.name });
-                void navigate(`/${meta.id}/${p.id}`);
+                void navigate(href(col, meta.id, p.id));
               }}
               className="w-full sm:w-[240px]"
             />
@@ -198,7 +204,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
           )}
           <Card className="overflow-hidden p-1.5">
             <Score
-              url={assetUrl(meta, `parts/${part.id}.musicxml`)}
+              url={assetUrl(col, meta, `parts/${part.id}.musicxml`)}
               steps={PART_SCALE}
               zoom={zoom}
               stripAbbrevOnPhone
@@ -253,7 +259,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
                 <b className="text-[13px] font-semibold text-ink" data-testid="level-band">
                   {Math.round(levels.band * 100)}%
                 </b>
-                banda
+                {col.ensemble}
               </div>
               <input
                 id="mix"
@@ -262,7 +268,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
                 max={100}
                 value={mix}
                 onChange={(e) => setMix(Number(e.target.value))}
-                aria-label="Equilíbrio entre a banda e a minha parte"
+                aria-label={`Equilíbrio entre ${col.theEnsemble} e a minha parte`}
                 className="w-full"
               />
               <div className="flex flex-col items-center leading-tight">
@@ -281,7 +287,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
               role="group"
               aria-label="Atalhos de volume"
             >
-              {PRESETS.map((p) => (
+              {presets(col.ensemble).map((p) => (
                 <button
                   key={p.label}
                   type="button"

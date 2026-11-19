@@ -20,7 +20,8 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 ## Arquitetura
 
 - **Vite + React 19 + TypeScript estrito + Tailwind v4 + React Router 7**. Site estático no **Vercel**.
-- Rotas (`src/App.tsx`): `/` repertório · `/calendario` agenda da banda · `/jogos/que-nota` jogo de leitura (`/jogos` redireciona) · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
+- Rotas (`src/App.tsx`): `/` repertório · `/calendario` agenda da banda · `/jogos/que-nota` jogo de leitura (`/jogos` redireciona) · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`) · `/quarteto` (+ `/quarteto/:arranjoId/:parteId`) repertório do quarteto, **escondido** (sem link em menu nenhum; `X-Robots-Tag: noindex` no `vercel.json`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
+- **Coleções** (`src/lib/collections.ts`): `BANDA` e `QUARTETO`, cada uma com prefixo de rota, pasta de dados (`arranjos/` ou `arranjos/quarteto/`), textos e a sua própria "minha parte" (`stabat.myPart` / `stabat.quarteto.myPart`). As páginas leem a coleção com `useCollection()` (contexto posto por `CollectionScope` na rota `/quarteto`); links sempre com `href(col, ...)`, dados com `fetchIndex/fetchMeta/assetUrl(col, ...)`.
 - `src/lib/`: **lógica pura e testada**. Nada de DOM aqui.
   - `timeline.ts`: ritornelos: compasso da partitura ↔ tempo do áudio, ocorrência mais próxima, trecho a..b, tempos do metrônomo.
   - `mix.ts`: volumes (parte: 90% minha parte / 10% banda; arranjo: ligado/solo).
@@ -37,7 +38,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 ## Testes e validação autônoma
 
-- **Arranjo de teste** em `e2e/fixtures/arranjos/teste`: 2 partes, 6 compassos, ritornelo em 3–4, tons puros, gerado por `e2e/fixtures/make_fixture.py`. Os testes usam ele: são rápidos e dão sempre o mesmo resultado. O `vite --mode e2e` (`.env.e2e`) serve esses dados em `/__fixtures__/`.
+- **Arranjo de teste** em `e2e/fixtures/arranjos/teste`: 2 partes, 6 compassos, ritornelo em 3–4, tons puros, gerado por `e2e/fixtures/make_fixture.py` (que também cria `arranjos/quarteto/natal`, com links simbólicos para os arquivos do teste). Os testes usam ele: são rápidos e dão sempre o mesmo resultado. O `vite --mode e2e` (`.env.e2e`) serve esses dados em `/__fixtures__/`.
 - Projetos do Playwright: `fixture` (desktop), `mobile` (Pixel 7), `real` (fumaça com os arranjos publicados), `shots` (só com `SHOTS=1`).
 - Com `VITE_DEBUG=1` (dev e testes) a página expõe `window.__stabat.page = { engine, timeline, meta, view }` (e o jogo, `window.__stabat.game.state()`: fase, nota da vez, respostas). `e2e/helpers.ts` lê dali: posição, tocando, volumes (`gains()`), nível de som (`level()`), loop.
 - Local usa o Chrome do sistema (`channel: "chrome"`); o CI usa o Chromium do Playwright.
@@ -68,6 +69,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 1. `.mscz` em `~/Documents/MuseScore4/Scores/` com Muse Sounds no Mixer.
 2. Linha em `tools/arranjos.json` (`id`, `arquivo`, `titulo`, `subtitulo`, `cor`).
+   - **Quarteto**: `.mscz` em `Scores/quarteto/`, linha em `tools/quarteto.json` e `npm run publicar -- --quarteto <id>` (dados em `public/arranjos/quarteto/`, cache em `tools/.cache/quarteto/`). Enquanto não há nada publicado, `public/arranjos/quarteto/index.json` é `[]` e a página mostra "Em breve".
 3. `npm run publicar -- <id>` (precisa de MuseScore AppImage em `~/.local/opt/musescore/`, ffmpeg, numpy). Se o `.mscz` não mudou, não mexe no áudio. Se mudou, renderiza no Muse Sounds **só as partes que mudaram** (impressão digital = `.mscx` da parte + som dela; áudio sem perdas guardado em `tools/.cache/<id>/partes/*.flac`, ~140 MB por arranjo) e refaz a mistura com todas (MP3 de cada parte e "sem a parte"). Também exporta o PDF de cada parte (`pdf/`), refeito só quando o `.mscz` muda. `--forcar` renderiza todas de novo (ex.: depois de atualizar o MuseScore ou o Muse Sounds).
 4. `npm run verify` (o projeto `real` toca cada arranjo publicado), commit e push. O Vercel publica; o GitHub Actions testa.
 

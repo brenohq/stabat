@@ -1,0 +1,37 @@
+[
+  {
+    "id": "de-colores-2-4",
+    "arquivo": "De Colores - Quarteto (2-4).mscz",
+    "titulo": "De Colores",
+    "subtitulo": "Tradicional · versão 2/4",
+    "cor": [30, 320]
+  },
+  {
+    "id": "entao-e-natal",
+    "arquivo": "Então é Natal - Quarteto.mscz",
+    "titulo": "Então é Natal",
+    "subtitulo": "Simone",
+    "cor": [150, 45]
+  },
+  {
+    "id": "jingle-bell-rock",
+    "arquivo": "Jingle Bell Rock - Quarteto.mscz",
+    "titulo": "Jingle Bell Rock",
+    "subtitulo": "Bobby Helms",
+    "cor": [355, 140]
+  },
+  {
+    "id": "jingle-bells",
+    "arquivo": "Jingle Bells - Quarteto.mscz",
+    "titulo": "Jingle Bells",
+    "subtitulo": "James Lord Pierpont",
+    "cor": [50, 175]
+  },
+  {
+    "id": "noite-feliz",
+    "arquivo": "Noite Feliz - Quarteto.mscz",
+    "titulo": "Noite Feliz",
+    "subtitulo": "Franz Xaver Gruber",
+    "cor": [230, 50]
+  }
+]

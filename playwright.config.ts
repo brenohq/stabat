@@ -37,7 +37,7 @@ export default defineConfig({
   projects: [
     {
       name: "fixture",
-      testMatch: /(home|arrangement|part|calendar|smells|print|games|menu)\.spec\.ts/,
+      testMatch: /(home|arrangement|part|calendar|smells|print|games|menu|quarteto)\.spec\.ts/,
       use: { ...devices["Desktop Chrome"], ...use, baseURL: FIXTURE },
     },
     {

@@ -1,3 +1,4 @@
+import { useCollection } from "../hooks/useCollection";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { assetUrl, fetchBytes } from "../lib/data";
 import { mergePdfs } from "../lib/pdf";
@@ -52,6 +53,7 @@ export function PrintDialog({
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const col = useCollection();
   const [selected, setSelected] = useState(() => new Set(meta.parts.map((p) => p.id)));
   const [copies, setCopies] = useState(() => initialCopies(meta.parts, printCopies.get()));
   const [busy, setBusy] = useState<"print" | "download" | null>(null);
@@ -89,7 +91,7 @@ export function PrintDialog({
     try {
       const sources = await Promise.all(
         job.map(async (j) => ({
-          bytes: await fetchBytes(assetUrl(meta, `pdf/${j.id}.pdf`)),
+          bytes: await fetchBytes(assetUrl(col, meta, `pdf/${j.id}.pdf`)),
           copies: j.copies,
         })),
       );

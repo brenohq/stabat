@@ -1,5 +1,6 @@
 """Testes do script de publicação (sem MuseScore): usa o arranjo de teste de e2e/fixtures."""
 import copy
+import json
 import sys
 import tempfile
 import unittest
@@ -8,6 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 import publicar  # noqa: E402
+
+def json_load(path):
+    return json.loads(Path(path).read_text())
+
 
 FIXTURE = ROOT / "e2e" / "fixtures" / "arranjos" / "teste" / "score.musicxml"
 
@@ -21,6 +26,22 @@ class TestPublicar(unittest.TestCase):
         self.assertEqual(publicar.slug("Trompete Sib 1"), "trompete-sib-1")
         self.assertEqual(publicar.slug("Saxhorn Mib 2"), "saxhorn-mib-2")
         self.assertEqual(publicar.slug("Bombardino Dó"), "bombardino-do")
+
+    def test_quarteto_tem_pastas_proprias(self):
+        q = publicar.COLLECTIONS["quarteto"]
+        self.assertEqual(q["out"], publicar.OUT / "quarteto")
+        self.assertEqual(q["cache"], publicar.CACHE / "quarteto")
+        self.assertEqual(q["scores"], publicar.SCORES / "quarteto")
+        for c in publicar.COLLECTIONS.values():
+            for cfg in json_load(c["conf"]):
+                self.assertTrue({"id", "arquivo", "titulo"} <= cfg.keys(), cfg)
+
+    def test_id_da_banda_nao_pode_ser_quarteto(self):
+        banda, quarteto = publicar.COLLECTIONS["banda"], publicar.COLLECTIONS["quarteto"]
+        with self.assertRaises(SystemExit):
+            publicar.check_ids([{"id": "quarteto"}], banda)
+        publicar.check_ids([{"id": "apt"}], banda)
+        publicar.check_ids([{"id": "quarteto"}], quarteto)  # dentro do quarteto, tanto faz
 
     def test_part_hash_muda_com_notas_ou_som(self):
         tracks = [{"partId": "3", "out": {"volumeDb": 0}}]

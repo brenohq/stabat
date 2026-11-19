@@ -1,3 +1,4 @@
+import type { Collection } from "./collections";
 import type { MyPart } from "./types";
 
 /** localStorage com tolerância a navegação privada / armazenamento bloqueado. */
@@ -18,11 +19,14 @@ function write(key: string, value: unknown): void {
   }
 }
 
-/** A parte do músico. Sempre que ele escolhe uma parte, grava; os seletores usam a salva como padrão. */
-export const myPart = {
-  get: (): MyPart | null => read<MyPart | null>("myPart", null),
-  set: (p: MyPart | null): void => write("myPart", p),
-};
+/** A parte do músico (uma por coleção: banda e quarteto têm formações diferentes).
+ *  Sempre que ele escolhe uma parte, grava; os seletores usam a salva como padrão. */
+export function myPartOf(c: Collection) {
+  return {
+    get: (): MyPart | null => read<MyPart | null>(c.myPartKey, null),
+    set: (p: MyPart | null): void => write(c.myPartKey, p),
+  };
+}
 
 export const prefs = {
   get: read,

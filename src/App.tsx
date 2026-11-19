@@ -1,4 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { CollectionScope } from "./hooks/useCollection";
+import { QUARTETO } from "./lib/collections";
 import { ArrangementPage } from "./pages/ArrangementPage";
 import { CalendarPage } from "./pages/CalendarPage";
 import { HomePage } from "./pages/HomePage";
@@ -7,7 +9,8 @@ import { NotFound } from "./pages/NotFound";
 import { PartPage } from "./pages/PartPage";
 
 /** Endereços: /  ·  /calendario  ·  /jogos/que-nota  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1)
- *  ·  /:arranjo/:parte/smells (escondida) */
+ *  ·  /:arranjo/:parte/smells (escondida)
+ *  ·  /quarteto (escondida: repertório do quarteto, com as mesmas páginas de arranjo e parte embaixo) */
 export function App() {
   return (
     <BrowserRouter>
@@ -20,6 +23,13 @@ export function App() {
         <Route path="/:arranjoId/:parteId" element={<PartPage />} />
         {/* escondida: só pela URL, para revisar notas fora da extensão */}
         <Route path="/:arranjoId/:parteId/smells" element={<PartPage smells />} />
+        {/* escondida: só pela URL, nenhum menu leva até aqui (e vercel.json manda os robôs não indexarem) */}
+        <Route path="/quarteto" element={<CollectionScope collection={QUARTETO} />}>
+          <Route index element={<HomePage />} />
+          <Route path=":arranjoId" element={<ArrangementPage />} />
+          <Route path=":arranjoId/:parteId" element={<PartPage />} />
+          <Route path=":arranjoId/:parteId/smells" element={<PartPage smells />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
