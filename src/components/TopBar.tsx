@@ -1,5 +1,3 @@
-import { href } from "../lib/collections";
-import { useCollection } from "../hooks/useCollection";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import { CalendarIcon, ChevronDownIcon, CloseIcon, GameIcon, MenuIcon, NoteIcon } from "./icons";
@@ -84,11 +82,10 @@ function SiteMenu() {
 }
 
 export function TopBar({ crumbs }: { crumbs?: ReactNode }) {
-  const col = useCollection();
   return (
     <header className="flex items-center gap-3.5 bg-navy px-4 py-2 text-[#f3eee4]">
       <Link
-        to={href(col)}
+        to="/"
         className="flex flex-none items-center gap-2 py-1 font-display text-[22px] font-semibold no-underline"
       >
         <NoteIcon className="size-[22px]" />

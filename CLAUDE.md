@@ -21,7 +21,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 - **Vite + React 19 + TypeScript estrito + Tailwind v4 + React Router 7**. Site estático no **Vercel**.
 - Rotas (`src/App.tsx`): `/` repertório · `/calendario` agenda da banda · `/jogos/que-nota` jogo de leitura (`/jogos` redireciona) · `/:arranjoId` arranjo · `/:arranjoId/:parteId` parte (ex.: `/apt/trompete-sib-1`) · `/quarteto` (+ `/quarteto/:arranjoId/:parteId`) repertório do quarteto, **escondido** (sem link em menu nenhum; `X-Robots-Tag: noindex` no `vercel.json`). No Vercel, `vercel.json` reescreve tudo (menos `arranjos/`, `vendor/`, `assets/`) para `index.html`.
-- **Coleções** (`src/lib/collections.ts`): `BANDA` e `QUARTETO`, cada uma com prefixo de rota, pasta de dados (`arranjos/` ou `arranjos/quarteto/`), textos e a sua própria "minha parte" (`stabat.myPart` / `stabat.quarteto.myPart`). As páginas leem a coleção com `useCollection()` (contexto posto por `CollectionScope` na rota `/quarteto`); links sempre com `href(col, ...)`, dados com `fetchIndex/fetchMeta/assetUrl(col, ...)`.
+- **Coleções** (`src/lib/collections.ts`): `BANDA` e `QUARTETO`, cada uma com prefixo de rota, pasta de dados (`arranjos/` ou `arranjos/quarteto/`), textos e a sua própria "minha parte" (`stabat.myPart` / `stabat.quarteto.myPart`). As páginas leem a coleção com `useCollection()` (contexto posto por `CollectionScope` na rota `/quarteto`); links sempre com `href(col, ...)` (menos o logo "stabat" do topo, que sempre leva a `/`), dados com `fetchIndex/fetchMeta/assetUrl(col, ...)`.
 - `src/lib/`: **lógica pura e testada**. Nada de DOM aqui.
   - `timeline.ts`: ritornelos: compasso da partitura ↔ tempo do áudio, ocorrência mais próxima, trecho a..b, tempos do metrônomo.
   - `mix.ts`: volumes (parte: 90% minha parte / 10% banda; arranjo: ligado/solo).
@@ -76,7 +76,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 ## Links compartilhados (WhatsApp etc.)
 
 - Os robôs de pré-visualização não rodam JavaScript. Para uma página ter miniatura própria: imagem 1200×630 em `public/og/`, uma entrada em `SHARE_PAGES` (`src/lib/share.ts`) e uma reescrita no `vercel.json` (antes da genérica) para o HTML que o build gera (`dist/<file>`).
-- A imagem do jogo sai de `npm run og` (`tools/og/render.mjs`, usa a clave e a semibreve do `NoteStaff`).
+- A home usa as tags do próprio `index.html` e `public/og/home.png`. As imagens saem de `npm run og`: `tools/og/render.mjs` (jogo, usa a clave e a semibreve do `NoteStaff`) e `tools/og/home.mjs` (leque com as capas dos 5 primeiros arranjos do `index.json`; rode de novo quando o repertório mudar).
 - O WhatsApp guarda a miniatura de cada link por um tempo: para testar uma imagem nova, mande o link com `?v=2` no fim.
 
 ## Deploy

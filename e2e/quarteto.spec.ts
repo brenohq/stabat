@@ -30,8 +30,8 @@ test.describe("quarteto", () => {
     expect(natal.length).toBeGreaterThan(0);
     expect(natal.every((p) => p.includes("/arranjos/quarteto/natal/"))).toBe(true);
 
-    // o logo e as migalhas voltam para o quarteto, não para a banda
-    await expect(page.getByRole("link", { name: "stabat" })).toHaveAttribute("href", "/quarteto");
+    // o logo leva ao site principal; as migalhas voltam para o quarteto
+    await expect(page.getByRole("link", { name: "stabat" })).toHaveAttribute("href", "/");
     await expect(page.getByRole("navigation", { name: "Navegação" }).getByRole("link")).toHaveAttribute(
       "href",
       "/quarteto",
