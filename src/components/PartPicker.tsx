@@ -1,7 +1,8 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
-import { FAMILY_LABEL, byFamily, familyOf, partNumber } from "../lib/parts";
+import { FAMILY_LABEL, byFamily, familyOf } from "../lib/parts";
 import type { Part } from "../lib/types";
-import { FAMILY_COLOR } from "./familyColor";
+import { FAMILY_COLOR, FAMILY_SOFT } from "./familyColor";
+import { InstrumentIcon } from "./InstrumentIcon";
 import { CheckIcon, ChevronDownIcon, PersonIcon } from "./icons";
 
 interface Props {
@@ -131,7 +132,7 @@ export function PartPicker({
           aria-hidden
         >
           {selected ? (
-            <span className="font-display text-lg font-semibold">{partNumber(selected.name) || "♪"}</span>
+            <InstrumentIcon name={selected.name} className="size-[22px]" />
           ) : (
             <PersonIcon className="size-[18px]" />
           )}
@@ -193,10 +194,16 @@ export function PartPicker({
                         data-part={p.id}
                         onClick={() => pick(p.id)}
                         onPointerMove={() => setActive(p.id)}
-                        className={`flex cursor-pointer items-center gap-2.5 rounded-[9px] px-2.5 py-2.5 text-[15px] sm:py-2 sm:text-sm ${
+                        className={`flex cursor-pointer items-center gap-2.5 rounded-[9px] px-2 py-2 text-[15px] sm:py-1.5 sm:text-sm ${
                           active === p.id ? "bg-accent-soft" : ""
                         } ${sel ? "font-semibold" : ""}`}
                       >
+                        <span
+                          className={`grid size-7 flex-none place-items-center rounded-[8px] ${FAMILY_SOFT[f]}`}
+                          aria-hidden
+                        >
+                          <InstrumentIcon name={p.name} className="size-[18px]" />
+                        </span>
                         <span className="flex-1">{p.name}</span>
                         {sel && <CheckIcon className="size-4 text-accent" />}
                       </div>

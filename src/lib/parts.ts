@@ -18,9 +18,25 @@ export function shortName(name: string): string {
   return name.replace(/ (Sib|Mib|Fá|Dó)\b/, "");
 }
 
-/** "Trompete Sib 1" → "1"; sem número → "" */
-export function partNumber(name: string): string {
-  return / (\d+)$/.exec(name)?.[1] ?? "";
+export type Instrument =
+  "clarinet" | "sax" | "trumpet" | "saxhorn" | "trombone" | "euphonium" | "tuba" | "sousaphone";
+
+// "saxhorn" antes de "sax"
+const INSTRUMENTS: [RegExp, Instrument][] = [
+  [/clarinete/, "clarinet"],
+  [/saxhorn/, "saxhorn"],
+  [/sax/, "sax"],
+  [/trompete/, "trumpet"],
+  [/trombone/, "trombone"],
+  [/bombardino|euf[oô]nio/, "euphonium"],
+  [/sousafone/, "sousaphone"],
+  [/tuba/, "tuba"],
+];
+
+/** "Saxhorn Mib 1" → "saxhorn" (o ícone da parte); instrumento sem ícone → null */
+export function instrumentOf(name: string): Instrument | null {
+  const n = name.toLowerCase();
+  return INSTRUMENTS.find(([re]) => re.test(n))?.[1] ?? null;
 }
 
 /** partes agrupadas por família, na ordem da grade */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { byFamily, familyOf, partNumber, sectionAt, shortName } from "./parts";
+import { byFamily, familyOf, instrumentOf, sectionAt, shortName } from "./parts";
 import { matches } from "./format";
 
 describe("partes", () => {
@@ -39,10 +39,19 @@ describe("partes", () => {
   });
 });
 
-describe("partNumber", () => {
-  it("pega o número do fim do nome", () => {
-    expect(partNumber("Trompete Sib 1")).toBe("1");
-    expect(partNumber("Sax Alto Mib 2")).toBe("2");
-    expect(partNumber("Bombardino Dó")).toBe("");
+describe("instrumentOf", () => {
+  it("acha o instrumento de cada parte da banda", () => {
+    expect(instrumentOf("Clarinete Sib 1")).toBe("clarinet");
+    expect(instrumentOf("Sax Alto Mib 2")).toBe("sax");
+    expect(instrumentOf("Sax Tenor Sib 1")).toBe("sax");
+    expect(instrumentOf("Saxhorn Mib 1")).toBe("saxhorn");
+    expect(instrumentOf("Trompete Sib 1")).toBe("trumpet");
+    expect(instrumentOf("Trombone Sib 2")).toBe("trombone");
+    expect(instrumentOf("Bombardino Dó")).toBe("euphonium");
+    expect(instrumentOf("Tuba Mib 1")).toBe("tuba");
+    expect(instrumentOf("Sousafone Sib 1")).toBe("sousaphone");
+  });
+  it("instrumento sem ícone", () => {
+    expect(instrumentOf("Flauta 1")).toBeNull();
   });
 });
