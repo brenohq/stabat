@@ -232,19 +232,21 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
       <BottomBar
         top={
           <>
-            <PlayButton
-              playing={playing}
-              progress={loaded ? null : progress}
-              onClick={() => engine?.toggle()}
-            />
-            <RewindButton onClick={() => engine?.stop()} />
-            <ZoomControls onIn={zoomIn} onOut={zoomOut} />
-            <Clock
-              measure={measure + 1}
-              section={sectionAt(meta.marks, measure)}
-              seconds={fmtTime(second)}
-              duration={fmtTime(meta.duration)}
-            />
+            <div className="flex items-center gap-2">
+              <PlayButton
+                playing={playing}
+                progress={loaded ? null : progress}
+                onClick={() => engine?.toggle()}
+              />
+              <RewindButton onClick={() => engine?.stop()} />
+              <ZoomControls onIn={zoomIn} onOut={zoomOut} />
+              <Clock
+                measure={measure + 1}
+                section={sectionAt(meta.marks, measure)}
+                seconds={fmtTime(second)}
+                duration={fmtTime(meta.duration)}
+              />
+            </div>
             <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
             <div className="grid min-w-[240px] flex-1 grid-cols-[auto_1fr_auto] items-center gap-2.5 text-xs text-muted max-sm:basis-full">
               <div className="flex flex-col items-center leading-tight">

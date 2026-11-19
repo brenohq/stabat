@@ -66,7 +66,7 @@ export function RewindButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       title="Voltar ao início"
       aria-label="Voltar ao início"
-      className="-ml-2 grid size-9 flex-none cursor-pointer place-items-center rounded-[10px] border border-line bg-surface text-ink hover:border-muted [&_svg]:size-[18px]"
+      className="grid size-9 flex-none cursor-pointer place-items-center rounded-[10px] border border-line bg-surface text-ink hover:border-muted [&_svg]:size-[18px]"
     >
       <RewindIcon />
     </button>

@@ -8,7 +8,7 @@ import { Score } from "../components/Score";
 import { useZoom } from "../hooks/useZoom";
 import { TopBar } from "../components/TopBar";
 import { ZoomControls } from "../components/ZoomControls";
-import { MetronomeIcon, PrinterIcon } from "../components/icons";
+import { ArrowIcon, MetronomeIcon, PrinterIcon } from "../components/icons";
 import { Button, Card, Spinner } from "../components/ui";
 import { btnClass } from "../components/btnClass";
 import { exposeDebug } from "../debug";
@@ -167,19 +167,21 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
         wide
         top={
           <>
-            <PlayButton
-              playing={playing}
-              progress={loaded ? null : progress}
-              onClick={() => engine?.toggle()}
-            />
-            <RewindButton onClick={() => engine?.stop()} />
-            <ZoomControls onIn={zoomIn} onOut={zoomOut} />
-            <Clock
-              measure={measure + 1}
-              section={sectionAt(meta.marks, measure)}
-              seconds={fmtTime(second)}
-              duration={fmtTime(meta.duration)}
-            />
+            <div className="flex items-center gap-2">
+              <PlayButton
+                playing={playing}
+                progress={loaded ? null : progress}
+                onClick={() => engine?.toggle()}
+              />
+              <RewindButton onClick={() => engine?.stop()} />
+              <ZoomControls onIn={zoomIn} onOut={zoomOut} />
+              <Clock
+                measure={measure + 1}
+                section={sectionAt(meta.marks, measure)}
+                seconds={fmtTime(second)}
+                duration={fmtTime(meta.duration)}
+              />
+            </div>
             <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
             <div className="flex flex-wrap gap-1 max-sm:w-full" data-testid="sections">
               {meta.marks.map((mk) => (
@@ -204,9 +206,6 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
         bottom={
           <>
             {error && <span className="text-xs text-red-700">{error}</span>}
-            {!loaded && !error && (
-              <span className="text-xs text-muted">Carregando áudio {Math.round(progress * 100)}%</span>
-            )}
             <span className="flex-1" />
             <Button id="metro" on={metronome} onClick={() => engine?.setMetronome(!metronome)}>
               <MetronomeIcon /> Metrônomo
@@ -224,7 +223,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
                 className={btnClass({ primary: true })}
                 data-testid="study-mine"
               >
-                Minha parte →
+                Minha parte <ArrowIcon />
               </Link>
             )}
           </>
