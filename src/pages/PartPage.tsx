@@ -296,26 +296,32 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
               ))}
             </div>
             {error && <span className="text-xs text-red-700">{error}</span>}
-            <span className="flex-1" />
-            <Button id="loop" on={loopSel !== null} onClick={toggleLoop}>
-              <LoopIcon />
-              {loopSel?.b !== undefined
-                ? ` c. ${loopSel.a + 1}–${loopSel.b + 1} ✕`
-                : loopSel
-                  ? " Escolhendo… ✕"
-                  : " Repetir trecho"}
-            </Button>
-            <Button
-              id="count"
-              on={countIn}
-              title="Conta um compasso antes de começar"
-              onClick={() => engine?.setCountIn(!countIn)}
-            >
-              {Array.from({ length: beatsInFirst }, (_, i) => i + 1).join(" ")}
-            </Button>
-            <Button id="metro" on={metronome} onClick={() => engine?.setMetronome(!metronome)}>
-              <MetronomeIcon /> Metrônomo
-            </Button>
+            <div className="ml-auto flex flex-wrap justify-end gap-2">
+              <Button
+                id="metro"
+                title="Metrônomo"
+                on={metronome}
+                onClick={() => engine?.setMetronome(!metronome)}
+              >
+                <MetronomeIcon /> <span className="max-sm:sr-only">Metrônomo</span>
+              </Button>
+              <Button
+                id="count"
+                on={countIn}
+                title="Conta um compasso antes de começar"
+                onClick={() => engine?.setCountIn(!countIn)}
+              >
+                {Array.from({ length: beatsInFirst }, (_, i) => i + 1).join(" ")}
+              </Button>
+              <Button id="loop" on={loopSel !== null} onClick={toggleLoop}>
+                <LoopIcon />
+                {loopSel?.b !== undefined
+                  ? ` c. ${loopSel.a + 1}–${loopSel.b + 1} ✕`
+                  : loopSel
+                    ? " Escolhendo… ✕"
+                    : " Repetir trecho"}
+              </Button>
+            </div>
           </>
         }
       />

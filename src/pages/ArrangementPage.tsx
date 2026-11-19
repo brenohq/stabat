@@ -207,8 +207,13 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
           <>
             {error && <span className="text-xs text-red-700">{error}</span>}
             <span className="flex-1" />
-            <Button id="metro" on={metronome} onClick={() => engine?.setMetronome(!metronome)}>
-              <MetronomeIcon /> Metrônomo
+            <Button
+              id="metro"
+              title="Metrônomo"
+              on={metronome}
+              onClick={() => engine?.setMetronome(!metronome)}
+            >
+              <MetronomeIcon /> <span className="max-sm:sr-only">Metrônomo</span>
             </Button>
             <Button
               className="min-[901px]:hidden"
