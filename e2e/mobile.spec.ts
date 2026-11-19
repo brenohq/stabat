@@ -9,6 +9,27 @@ test.describe("celular", () => {
     expect(bar.y + bar.height).toBeGreaterThanOrEqual(page.viewportSize()!.height);
   });
 
+  test("parte: a rolagem automática rola só a área da partitura e a barra fica no rodapé", async ({
+    page,
+  }) => {
+    // tela baixa e partitura grande: o arranjo de teste (6 compassos) não cabe
+    await page.setViewportSize({ width: page.viewportSize()!.width, height: 600 });
+    await openLoaded(page, "/teste/clarinete-sib-1");
+    for (let i = 0; i < 8; i++) await page.locator("#zin").click();
+    const area = page.getByTestId("scroll-area");
+    await expect.poll(() => area.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeGreaterThan(150);
+    await page.evaluate(() => {
+      const p = (window as unknown as { __stabat: { page: { view: { scrollTo(i: number): void } } } })
+        .__stabat.page;
+      p.view.scrollTo(5);
+    });
+    await expect.poll(() => area.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+    // o documento não rola (no celular isso mexeria na barra de endereço e descolaria a barra)
+    expect(await page.evaluate(() => document.scrollingElement!.scrollTop)).toBe(0);
+    const bar = (await page.getByTestId("bottom-bar").boundingBox())!;
+    expect(Math.round(bar.y + bar.height)).toBe(page.viewportSize()!.height);
+  });
+
   test("arranjo: gaveta de instrumentos abre acima da barra", async ({ page }) => {
     await openLoaded(page, "/teste");
     const panel = page.getByTestId("mixer-panel");

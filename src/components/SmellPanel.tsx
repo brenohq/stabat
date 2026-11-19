@@ -49,7 +49,7 @@ export function SmellPanel({
   return (
     <aside
       data-testid="smell-panel"
-      className="sticky top-4 max-h-[calc(100vh-var(--barh,150px)-32px)] overflow-auto rounded-[14px] border border-line bg-surface p-4 shadow-card"
+      className="sticky top-4 max-h-[calc(100dvh-var(--barh,150px)-32px)] overflow-auto rounded-[14px] border border-line bg-surface p-4 shadow-card"
     >
       <div className="text-xs font-semibold tracking-wide text-muted uppercase">Smells não resolvidos</div>
       <div className="mt-2 flex items-baseline gap-2">

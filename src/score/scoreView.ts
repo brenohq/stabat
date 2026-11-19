@@ -38,8 +38,6 @@ export class ScoreView {
   private lastKey = "";
   private ro: ResizeObserver | null = null;
   private disposed = false;
-  /** px de barra fixa embaixo (para rolar sem esconder o compasso atrás dela) */
-  bottomInset = () => 0;
 
   constructor(
     private readonly el: HTMLElement,
@@ -180,14 +178,19 @@ export class ScoreView {
     if (scroll && this.hl) this.scrollTo(i);
   }
 
-  /** rola até o compasso i (se não estiver à vista) */
+  /**
+   * Rola até o compasso i (se não estiver à vista). Rola a área de rolagem da página
+   * (`[data-scroll]`, ver PlayerLayout), nunca o documento: no celular, rolar o documento
+   * mexe na barra de endereço e descola a barra de controles.
+   */
   scrollTo(i: number): void {
     const m = this.measureEls[i];
     if (!m) return;
     const r = (m.closest("g.system") ?? m).getBoundingClientRect();
-    const bottom = this.bottomInset();
-    if (r.top < 10 || r.bottom > innerHeight - bottom - 10)
-      scrollBy({ top: r.top - (innerHeight - bottom) * 0.18, behavior: "smooth" });
+    const box = this.el.closest<HTMLElement>("[data-scroll]");
+    const { top, bottom } = box?.getBoundingClientRect() ?? { top: 0, bottom: innerHeight };
+    if (r.top < top + 10 || r.bottom > bottom - 10)
+      (box ?? window).scrollBy({ top: r.top - top - (bottom - top) * 0.18, behavior: "smooth" });
   }
 
   /** colore as notas soando no compasso m, fração frac */

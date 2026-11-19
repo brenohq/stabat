@@ -56,7 +56,6 @@ export function Score({
         : undefined,
       onMeasureClick: (m) => live.current.onMeasureClick(m),
     });
-    v.bottomInset = () => document.querySelector<HTMLElement>("[data-testid=bottom-bar]")?.offsetHeight ?? 0;
     let alive = true;
     v.load(url).then(
       () => alive && setView(v),

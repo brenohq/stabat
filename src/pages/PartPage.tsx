@@ -3,6 +3,7 @@ import { useCollection } from "../hooks/useCollection";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { PartPicker } from "../components/PartPicker";
+import { PlayerLayout } from "../components/PlayerLayout";
 import { BottomBar, Clock, RewindButton, SpeedSelect } from "../components/BottomBar";
 import { PlayButton } from "../components/PlayButton";
 import { Score } from "../components/Score";
@@ -150,7 +151,106 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
   const beatsInFirst = meta.timeline[0]?.beats ?? 4;
 
   return (
-    <>
+    <PlayerLayout
+      bar={
+        <BottomBar
+          top={
+            <>
+              <div className="flex items-center gap-2">
+                <PlayButton
+                  playing={playing}
+                  progress={loaded ? null : progress}
+                  onClick={() => engine?.toggle()}
+                />
+                <RewindButton onClick={() => engine?.stop()} />
+                <ZoomControls onIn={zoomIn} onOut={zoomOut} />
+                <Clock
+                  measure={measure + 1}
+                  section={sectionAt(meta.marks, measure)}
+                  seconds={fmtTime(second)}
+                  duration={fmtTime(meta.duration)}
+                />
+              </div>
+              <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
+              <div className="grid min-w-[240px] flex-1 grid-cols-[auto_1fr_auto] items-center gap-2.5 text-xs text-muted max-sm:basis-full">
+                <div className="flex flex-col items-center leading-tight">
+                  <b className="text-[13px] font-semibold text-ink" data-testid="level-band">
+                    {Math.round(levels.band * 100)}%
+                  </b>
+                  {col.ensemble}
+                </div>
+                <input
+                  id="mix"
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={mix}
+                  onChange={(e) => setMix(Number(e.target.value))}
+                  aria-label={`Equilíbrio entre ${col.theEnsemble} e a minha parte`}
+                  className="w-full"
+                />
+                <div className="flex flex-col items-center leading-tight">
+                  <b className="text-[13px] font-semibold text-ink" data-testid="level-me">
+                    {Math.round(levels.me * 100)}%
+                  </b>
+                  minha parte
+                </div>
+              </div>
+            </>
+          }
+          bottom={
+            <>
+              <div
+                className="inline-flex overflow-hidden rounded-[10px] border border-line"
+                role="group"
+                aria-label="Atalhos de volume"
+              >
+                {presets(col.ensemble).map((p) => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    aria-pressed={mix === p.value}
+                    onClick={() => setMix(p.value)}
+                    className={`cursor-pointer border-r border-line px-2.5 py-1.5 text-[13px] last:border-r-0 ${
+                      mix === p.value ? "bg-accent-soft font-semibold" : "bg-surface"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              {error && <span className="text-xs text-red-700">{error}</span>}
+              <div className="flex flex-wrap gap-2 sm:ml-auto sm:justify-end">
+                <Button
+                  id="metro"
+                  title="Metrônomo"
+                  on={metronome}
+                  onClick={() => engine?.setMetronome(!metronome)}
+                >
+                  <MetronomeIcon /> <span className="max-sm:sr-only">Metrônomo</span>
+                </Button>
+                <Button
+                  id="count"
+                  on={countIn}
+                  title="Conta um compasso antes de começar"
+                  onClick={() => engine?.setCountIn(!countIn)}
+                >
+                  {Array.from({ length: beatsInFirst }, (_, i) => i + 1).join(" ")}
+                </Button>
+                <Button id="loop" on={loopSel !== null} onClick={toggleLoop}>
+                  <LoopIcon />
+                  {loopSel?.b !== undefined
+                    ? ` c. ${loopSel.a + 1}–${loopSel.b + 1} ✕`
+                    : loopSel
+                      ? " Escolhendo… ✕"
+                      : " Repetir trecho"}
+                </Button>
+              </div>
+            </>
+          }
+        />
+      }
+    >
       <TopBar
         crumbs={
           <>
@@ -160,7 +260,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
         }
       />
       <main
-        className={`mx-auto px-4 pt-4 pb-[calc(var(--barh,190px)+24px)] ${
+        className={`mx-auto px-4 pt-4 pb-6 ${
           smells
             ? "grid max-w-[1400px] items-start gap-x-4 min-[1100px]:grid-cols-[minmax(0,1fr)_280px]"
             : "max-w-[1060px]"
@@ -234,104 +334,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
             : "Agora clique no último compasso do trecho"}
         </div>
       )}
-
-      <BottomBar
-        top={
-          <>
-            <div className="flex items-center gap-2">
-              <PlayButton
-                playing={playing}
-                progress={loaded ? null : progress}
-                onClick={() => engine?.toggle()}
-              />
-              <RewindButton onClick={() => engine?.stop()} />
-              <ZoomControls onIn={zoomIn} onOut={zoomOut} />
-              <Clock
-                measure={measure + 1}
-                section={sectionAt(meta.marks, measure)}
-                seconds={fmtTime(second)}
-                duration={fmtTime(meta.duration)}
-              />
-            </div>
-            <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
-            <div className="grid min-w-[240px] flex-1 grid-cols-[auto_1fr_auto] items-center gap-2.5 text-xs text-muted max-sm:basis-full">
-              <div className="flex flex-col items-center leading-tight">
-                <b className="text-[13px] font-semibold text-ink" data-testid="level-band">
-                  {Math.round(levels.band * 100)}%
-                </b>
-                {col.ensemble}
-              </div>
-              <input
-                id="mix"
-                type="range"
-                min={0}
-                max={100}
-                value={mix}
-                onChange={(e) => setMix(Number(e.target.value))}
-                aria-label={`Equilíbrio entre ${col.theEnsemble} e a minha parte`}
-                className="w-full"
-              />
-              <div className="flex flex-col items-center leading-tight">
-                <b className="text-[13px] font-semibold text-ink" data-testid="level-me">
-                  {Math.round(levels.me * 100)}%
-                </b>
-                minha parte
-              </div>
-            </div>
-          </>
-        }
-        bottom={
-          <>
-            <div
-              className="inline-flex overflow-hidden rounded-[10px] border border-line"
-              role="group"
-              aria-label="Atalhos de volume"
-            >
-              {presets(col.ensemble).map((p) => (
-                <button
-                  key={p.label}
-                  type="button"
-                  aria-pressed={mix === p.value}
-                  onClick={() => setMix(p.value)}
-                  className={`cursor-pointer border-r border-line px-2.5 py-1.5 text-[13px] last:border-r-0 ${
-                    mix === p.value ? "bg-accent-soft font-semibold" : "bg-surface"
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-            {error && <span className="text-xs text-red-700">{error}</span>}
-            <div className="flex flex-wrap gap-2 sm:ml-auto sm:justify-end">
-              <Button
-                id="metro"
-                title="Metrônomo"
-                on={metronome}
-                onClick={() => engine?.setMetronome(!metronome)}
-              >
-                <MetronomeIcon /> <span className="max-sm:sr-only">Metrônomo</span>
-              </Button>
-              <Button
-                id="count"
-                on={countIn}
-                title="Conta um compasso antes de começar"
-                onClick={() => engine?.setCountIn(!countIn)}
-              >
-                {Array.from({ length: beatsInFirst }, (_, i) => i + 1).join(" ")}
-              </Button>
-              <Button id="loop" on={loopSel !== null} onClick={toggleLoop}>
-                <LoopIcon />
-                {loopSel?.b !== undefined
-                  ? ` c. ${loopSel.a + 1}–${loopSel.b + 1} ✕`
-                  : loopSel
-                    ? " Escolhendo… ✕"
-                    : " Repetir trecho"}
-              </Button>
-            </div>
-          </>
-        }
-      />
-    </>
+    </PlayerLayout>
   );
 }
 

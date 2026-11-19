@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import { BottomBar, Clock, RewindButton, SpeedSelect } from "../components/BottomBar";
 import { Mixer } from "../components/Mixer";
+import { PlayerLayout } from "../components/PlayerLayout";
 import { PlayButton } from "../components/PlayButton";
 import { PrintDialog } from "../components/PrintDialog";
 import { Score } from "../components/Score";
@@ -91,7 +92,83 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   })();
 
   return (
-    <>
+    <PlayerLayout
+      bar={
+        <BottomBar
+          wide
+          top={
+            <>
+              <div className="flex items-center gap-2">
+                <PlayButton
+                  playing={playing}
+                  progress={loaded ? null : progress}
+                  onClick={() => engine?.toggle()}
+                />
+                <RewindButton onClick={() => engine?.stop()} />
+                <ZoomControls onIn={zoomIn} onOut={zoomOut} />
+                <Clock
+                  measure={measure + 1}
+                  section={sectionAt(meta.marks, measure)}
+                  seconds={fmtTime(second)}
+                  duration={fmtTime(meta.duration)}
+                />
+              </div>
+              <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
+              <div className="flex flex-wrap gap-1 max-sm:w-full" data-testid="sections">
+                {meta.marks.map((mk) => (
+                  <button
+                    key={mk.m}
+                    type="button"
+                    title={`Ensaio ${mk.label} (c. ${mk.m + 1})`}
+                    onClick={() => {
+                      const k = timeline.first(mk.m);
+                      if (k !== null && engine?.loaded) engine.seek(timeline.startOf(k), { autoplay: true });
+                    }}
+                    className={`size-8 cursor-pointer rounded-lg border font-display font-semibold ${
+                      curSection === mk.m
+                        ? "border-accent bg-accent text-accent-ink"
+                        : "border-line bg-surface"
+                    }`}
+                  >
+                    {mk.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          }
+          bottom={
+            <>
+              {error && <span className="text-xs text-red-700">{error}</span>}
+              <span className="flex-1 max-sm:hidden" />
+              <Button
+                id="metro"
+                title="Metrônomo"
+                on={metronome}
+                onClick={() => engine?.setMetronome(!metronome)}
+              >
+                <MetronomeIcon /> <span className="max-sm:sr-only">Metrônomo</span>
+              </Button>
+              <Button
+                className="min-[901px]:hidden"
+                onClick={() => setDrawer((d) => !d)}
+                aria-expanded={drawer}
+              >
+                Instrumentos
+              </Button>
+              {myInThis && (
+                <Link
+                  to={href(col, meta.id, myInThis.id)}
+                  className={btnClass({ primary: true })}
+                  data-testid="study-mine"
+                >
+                  Minha parte <ArrowIcon />
+                </Link>
+              )}
+            </>
+          }
+        />
+      }
+    >
       <TopBar
         crumbs={
           <>
@@ -110,7 +187,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
         </Button>
       </div>
 
-      <div className="mx-auto grid max-w-[1400px] items-start gap-4 px-4 pt-3.5 pb-[calc(var(--barh,130px)+24px)] min-[901px]:grid-cols-[1fr_300px]">
+      <div className="mx-auto grid max-w-[1400px] items-start gap-4 px-4 pt-3.5 pb-6 min-[901px]:grid-cols-[1fr_300px]">
         <Card className="min-h-[60vh] overflow-hidden">
           <Score
             url={assetUrl(col, meta, "score.musicxml")}
@@ -127,7 +204,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
         <aside
           data-testid="mixer-panel"
           data-open={drawer}
-          className={`overflow-auto rounded-[14px] border border-line bg-surface py-1.5 shadow-card min-[901px]:sticky min-[901px]:top-4 min-[901px]:max-h-[calc(100vh-var(--barh,130px)-32px)] max-[900px]:fixed max-[900px]:inset-x-0 max-[900px]:bottom-[var(--barh,0px)] max-[900px]:z-30 max-[900px]:max-h-[70vh] max-[900px]:rounded-b-none max-[900px]:transition-[transform,visibility] ${
+          className={`overflow-auto rounded-[14px] border border-line bg-surface py-1.5 shadow-card min-[901px]:sticky min-[901px]:top-4 min-[901px]:max-h-[calc(100dvh-var(--barh,130px)-32px)] max-[900px]:fixed max-[900px]:inset-x-0 max-[900px]:bottom-[var(--barh,0px)] max-[900px]:z-30 max-[900px]:max-h-[70vh] max-[900px]:rounded-b-none max-[900px]:transition-[transform,visibility] ${
             drawer
               ? "max-[900px]:visible max-[900px]:translate-y-0 max-[900px]:shadow-[0_-10px_40px_rgb(0_0_0/0.25)]"
               : "max-[900px]:invisible max-[900px]:translate-y-[calc(100%+var(--barh,0px)+20px)]"
@@ -166,78 +243,6 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
       </div>
 
       <PrintDialog meta={meta} open={printing} onClose={() => setPrinting(false)} />
-
-      <BottomBar
-        wide
-        top={
-          <>
-            <div className="flex items-center gap-2">
-              <PlayButton
-                playing={playing}
-                progress={loaded ? null : progress}
-                onClick={() => engine?.toggle()}
-              />
-              <RewindButton onClick={() => engine?.stop()} />
-              <ZoomControls onIn={zoomIn} onOut={zoomOut} />
-              <Clock
-                measure={measure + 1}
-                section={sectionAt(meta.marks, measure)}
-                seconds={fmtTime(second)}
-                duration={fmtTime(meta.duration)}
-              />
-            </div>
-            <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
-            <div className="flex flex-wrap gap-1 max-sm:w-full" data-testid="sections">
-              {meta.marks.map((mk) => (
-                <button
-                  key={mk.m}
-                  type="button"
-                  title={`Ensaio ${mk.label} (c. ${mk.m + 1})`}
-                  onClick={() => {
-                    const k = timeline.first(mk.m);
-                    if (k !== null && engine?.loaded) engine.seek(timeline.startOf(k), { autoplay: true });
-                  }}
-                  className={`size-8 cursor-pointer rounded-lg border font-display font-semibold ${
-                    curSection === mk.m ? "border-accent bg-accent text-accent-ink" : "border-line bg-surface"
-                  }`}
-                >
-                  {mk.label}
-                </button>
-              ))}
-            </div>
-          </>
-        }
-        bottom={
-          <>
-            {error && <span className="text-xs text-red-700">{error}</span>}
-            <span className="flex-1 max-sm:hidden" />
-            <Button
-              id="metro"
-              title="Metrônomo"
-              on={metronome}
-              onClick={() => engine?.setMetronome(!metronome)}
-            >
-              <MetronomeIcon /> <span className="max-sm:sr-only">Metrônomo</span>
-            </Button>
-            <Button
-              className="min-[901px]:hidden"
-              onClick={() => setDrawer((d) => !d)}
-              aria-expanded={drawer}
-            >
-              Instrumentos
-            </Button>
-            {myInThis && (
-              <Link
-                to={href(col, meta.id, myInThis.id)}
-                className={btnClass({ primary: true })}
-                data-testid="study-mine"
-              >
-                Minha parte <ArrowIcon />
-              </Link>
-            )}
-          </>
-        }
-      />
-    </>
+    </PlayerLayout>
   );
 }
