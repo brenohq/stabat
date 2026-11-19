@@ -296,7 +296,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
               ))}
             </div>
             {error && <span className="text-xs text-red-700">{error}</span>}
-            <div className="ml-auto flex flex-wrap justify-end gap-2">
+            <div className="flex flex-wrap gap-2 sm:ml-auto sm:justify-end">
               <Button
                 id="metro"
                 title="Metrônomo"

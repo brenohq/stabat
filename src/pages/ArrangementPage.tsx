@@ -206,7 +206,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
         bottom={
           <>
             {error && <span className="text-xs text-red-700">{error}</span>}
-            <span className="flex-1" />
+            <span className="flex-1 max-sm:hidden" />
             <Button
               id="metro"
               title="Metrônomo"
