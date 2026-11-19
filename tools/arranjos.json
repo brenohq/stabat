@@ -1,5 +1,12 @@
 [
   {
+    "id": "abba-gold",
+    "arquivo": "Abba Gold - Banda.mscz",
+    "titulo": "Abba Gold",
+    "subtitulo": "ABBA · Medley",
+    "cor": [310, 210]
+  },
+  {
     "id": "apt",
     "arquivo": "APT - Banda.mscz",
     "titulo": "APT.",

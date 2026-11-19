@@ -1,5 +1,20 @@
 [
  {
+  "id": "abba-gold",
+  "title": "Abba Gold",
+  "subtitle": "ABBA · Medley",
+  "hue": [
+   310,
+   210
+  ],
+  "tempo": 100,
+  "time": "4/4",
+  "measures": 172,
+  "duration": 404.935,
+  "version": "7eb23c6712",
+  "nparts": 18
+ },
+ {
   "id": "apt",
   "title": "APT.",
   "subtitle": "Rosé & Bruno Mars",
