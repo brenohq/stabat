@@ -2,10 +2,13 @@
  * Sons curtos dos jogos, sintetizados no Web Audio (nada para baixar). O AudioContext nasce no
  * primeiro som, que sempre vem de um toque, então o navegador deixa tocar.
  */
+import { ignoreSilentSwitch, releaseSilentSwitch } from "./silentSwitch";
+
 let ctx: AudioContext | null = null;
 
 function audio(): AudioContext | null {
   try {
+    ignoreSilentSwitch(); // iPhone: tocar mesmo com a chave de silencioso (dentro do toque)
     ctx ??= new AudioContext();
     if (ctx.state === "suspended") void ctx.resume();
     return ctx;
@@ -52,4 +55,9 @@ export function fanfare(): void {
 /** toque grave e curto do erro: avisa sem assustar */
 export function thud(): void {
   tone(150, { dur: 0.18, gain: 0.18, type: "sine" });
+}
+
+/** ao sair do jogo: solta o <audio> mudo do iPhone antigo (some da tela de bloqueio) */
+export function stopSfx(): void {
+  releaseSilentSwitch();
 }

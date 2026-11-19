@@ -4,7 +4,7 @@ import { NoteStaff } from "../components/games/NoteStaff";
 import { staffGeometry } from "../components/games/staffGeometry";
 import { MuteIcon, SoundIcon } from "../components/icons";
 import { btnClass } from "../components/btnClass";
-import { fanfare, thud, tone } from "../audio/sfx";
+import { fanfare, stopSfx, thud, tone } from "../audio/sfx";
 import { exposeDebug } from "../debug";
 import {
   LETTERS,
@@ -135,7 +135,10 @@ export function NoteGamePage() {
 
   useEffect(() => {
     const list = timers.current;
-    return () => list.forEach(clearTimeout);
+    return () => {
+      list.forEach(clearTimeout);
+      stopSfx();
+    };
   }, []);
 
   const later = (ms: number, fn: () => void) => {
