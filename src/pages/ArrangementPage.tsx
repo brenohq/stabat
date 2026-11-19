@@ -49,8 +49,9 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   const col = useCollection();
   const timeline = useMemo(() => new Timeline(meta.timeline, meta.duration), [meta]);
   // 18 partes decodificadas pesam: 32 kHz basta para estudo e economiza memória no celular
+  // (os arranjos longos pedem menos no meta.json)
   const urls = useMemo(() => meta.parts.map((p) => assetUrl(col, meta, `audio/${p.id}.mp3`)), [meta]);
-  const { engine, progress, error } = usePlayer(timeline, urls, { sampleRate: 32000 });
+  const { engine, progress, error } = usePlayer(timeline, urls, { sampleRate: meta.sampleRate ?? 32000 });
   const [on, setOn] = useState(() => new Set(meta.parts.map((p) => p.index)));
   const [solo, setSolo] = useState(() => new Set<number>());
   const [drawer, setDrawer] = useState(false);

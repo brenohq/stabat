@@ -40,6 +40,8 @@ export interface ArrangementMeta {
   grid: number[][];
   /** muda quando o .mscz muda (usado para invalidar cache dos arquivos) */
   version: string;
+  /** taxa (Hz) em que o site decodifica o áudio; só nos arranjos longos (menos memória no celular) */
+  sampleRate?: number;
 }
 
 export type ArrangementSummary = Pick<

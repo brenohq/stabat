@@ -4,7 +4,8 @@
     "arquivo": "Abba Gold - Banda.mscz",
     "titulo": "Abba Gold",
     "subtitulo": "ABBA · Medley",
-    "cor": [310, 210]
+    "cor": [310, 210],
+    "taxa": 22050
   },
   {
     "id": "apt",
@@ -74,6 +75,7 @@
     "arquivo": "Só Modão - Banda.mscz",
     "titulo": "Só Modão",
     "subtitulo": "Medley sertanejo",
-    "cor": [40, 110]
+    "cor": [40, 110],
+    "taxa": 22050
   }
 ]

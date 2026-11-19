@@ -50,6 +50,14 @@ class TestPublicar(unittest.TestCase):
         self.assertNotEqual(h, publicar.part_hash(b"<pitch>50</pitch>", tracks))
         self.assertNotEqual(h, publicar.part_hash(b"<pitch>62</pitch>", [{"partId": "3", "out": {"volumeDb": -3}}]))
 
+    def test_taxa_muda_carimbo_e_versao(self):
+        d = "ab" * 32
+        self.assertEqual(publicar.audio_stamp(d, None), d)
+        self.assertEqual(publicar.version(d, None), d[:10])
+        self.assertNotEqual(publicar.audio_stamp(d, 22050), d)
+        self.assertNotEqual(publicar.version(d, 22050), d[:10])
+        self.assertEqual(len(publicar.version(d, 22050)), 10)
+
     def test_changed_parts_so_o_que_mudou(self):
         hashes = {"clarinete-sib-1": "a", "tuba-mib-1": "b", "trompete-sib-1": "c"}
         cached = {"clarinete-sib-1": "a", "tuba-mib-1": "velho"}

@@ -69,6 +69,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 1. `.mscz` em `~/Documents/MuseScore4/Scores/banda/` com Muse Sounds no Mixer.
 2. Linha em `tools/arranjos.json` (`id`, `arquivo`, `titulo`, `subtitulo`, `cor`).
+   - Arranjo longo (medley de 4+ min): `"taxa": 22050` na linha. Os MP3 saem a 22050 Hz (64k/80k) e o site decodifica nessa taxa (`sampleRate` no `meta.json`), em vez de 32 kHz: ~30% menos memória no celular. Mudar a taxa só refaz a mistura (sem renderizar de novo).
    - **Quarteto**: `.mscz` em `Scores/quarteto/`, linha em `tools/quarteto.json` e `npm run publicar -- --quarteto <id>` (dados em `public/arranjos/quarteto/`, cache em `tools/.cache/quarteto/`). Enquanto não há nada publicado, `public/arranjos/quarteto/index.json` é `[]` e a página mostra "Em breve".
 3. `npm run publicar -- <id>` (precisa de MuseScore AppImage em `~/.local/opt/musescore/`, ffmpeg, numpy). Se o `.mscz` não mudou, não mexe no áudio. Se mudou, renderiza no Muse Sounds **só as partes que mudaram** (impressão digital = `.mscx` da parte + som dela; áudio sem perdas guardado em `tools/.cache/<id>/partes/*.flac`, ~140 MB por arranjo) e refaz a mistura com todas (MP3 de cada parte e "sem a parte"). Também exporta o PDF de cada parte (`pdf/`), refeito só quando o `.mscz` muda. `--forcar` renderiza todas de novo (ex.: depois de atualizar o MuseScore ou o Muse Sounds).
 4. `npm run verify` (o projeto `real` toca cada arranjo publicado), commit e push. O Vercel publica; o GitHub Actions testa.

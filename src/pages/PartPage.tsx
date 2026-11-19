@@ -67,7 +67,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
     () => [assetUrl(col, meta, `audio/${part.id}.mp3`), assetUrl(col, meta, `audio/sem-${part.id}.mp3`)],
     [meta, part],
   );
-  const { engine, progress, error } = usePlayer(timeline, urls);
+  const { engine, progress, error } = usePlayer(timeline, urls, { sampleRate: meta.sampleRate });
   const [mix, setMix] = useState(DEFAULT_PART_MIX);
   const [loopSel, setLoopSel] = useState<LoopSel>(null);
   const [zoom, zoomIn, zoomOut] = useZoom();

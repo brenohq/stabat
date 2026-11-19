@@ -44,6 +44,9 @@ MSCORE_CANDIDATES = [Path.home() / ".local/opt/musescore/MuseScore-Studio.AppIma
 SR = 44100
 MP3_PARTE = "80k"
 MP3_BANDA = "96k"
+# arranjos longos podem pedir "taxa" (Hz) menor no arranjos.json: o site decodifica as 18 partes nessa
+# taxa (menos memória no celular) e os MP3 saem nela (MPEG-2: 22050 Hz aceita até 160k)
+MP3_LEVE = {"parte": "64k", "banda": "80k"}
 # mude quando o jeito de renderizar mudar: invalida o áudio guardado de todas as partes
 RENDER_VERSION = 1
 
@@ -86,10 +89,12 @@ def read_wav_mono(path):
     return np.frombuffer(r.stdout, dtype="<f4").copy()
 
 
-def encode_mp3(signal, path, bitrate):
+def encode_mp3(signal, path, bitrate, rate=None):
+    """MP3 mono; com rate, reamostra a saída para essa taxa."""
     pcm = (np.clip(signal, -1, 1) * 32767).astype("<i2").tobytes()
+    out_rate = ["-ar", str(rate)] if rate else []
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-i", "-",
-                    "-codec:a", "libmp3lame", "-b:a", bitrate, str(path)], input=pcm, check=True)
+                    *out_rate, "-codec:a", "libmp3lame", "-b:a", bitrate, str(path)], input=pcm, check=True)
 
 
 def part_hash(mscx: bytes, tracks) -> str:
@@ -152,7 +157,7 @@ def render_parts(parts, work, store):
         wav.unlink()
 
 
-def build_audio(sources, dest, slugs):
+def build_audio(sources, dest, slugs, rate=None):
     sigs = [read_wav_mono(w) for w in sources]
     n = max(len(s) for s in sigs)
     sigs = [np.pad(s, (0, n - len(s))) for s in sigs]
@@ -164,8 +169,8 @@ def build_audio(sources, dest, slugs):
     for f in dest.glob("*.mp3"):
         f.unlink()
     for s, sl in zip(sigs, slugs):
-        encode_mp3(s * gain, dest / f"{sl}.mp3", MP3_PARTE)
-        encode_mp3((total - s) * gain, dest / f"sem-{sl}.mp3", MP3_BANDA)
+        encode_mp3(s * gain, dest / f"{sl}.mp3", MP3_LEVE["parte"] if rate else MP3_PARTE, rate)
+        encode_mp3((total - s) * gain, dest / f"sem-{sl}.mp3", MP3_LEVE["banda"] if rate else MP3_BANDA, rate)
     return n / SR
 
 
@@ -334,12 +339,23 @@ def export_pdfs(digest, work, dest, slugs, force):
 
 # ---------------------------------------------------------------- principal
 
-def update_audio(mscz, digest, work, dest, slugs, force):
+def audio_stamp(digest, rate):
+    """O que o áudio publicado reflete: a partitura e, se houver, a taxa pedida."""
+    return f"{digest}@{rate}" if rate else digest
+
+
+def version(digest, rate):
+    """Muda quando a partitura ou a taxa mudam (o site usa para invalidar o cache dos MP3)."""
+    return digest[:10] if not rate else hashlib.sha256(audio_stamp(digest, rate).encode()).hexdigest()[:10]
+
+
+def update_audio(mscz, digest, work, dest, slugs, force, rate=None):
     """Renderiza só as partes que mudaram e refaz a mistura com todas. Devolve a duração (s)."""
     stamp = work / "audio.sha"
     meta_old = json.loads((dest / "meta.json").read_text()) if (dest / "meta.json").exists() else {}
     audio_ok = (dest / "audio").exists() and meta_old.get("duration")
-    if not force and audio_ok and stamp.exists() and stamp.read_text() == digest:
+    rate_ok = meta_old.get("sampleRate") == rate
+    if not force and audio_ok and rate_ok and stamp.exists() and stamp.read_text() == audio_stamp(digest, rate):
         log("   áudio em dia (partitura não mudou)")
         return meta_old["duration"]
 
@@ -367,12 +383,13 @@ def update_audio(mscz, digest, work, dest, slugs, force):
             f.unlink()
     index_path.write_text(json.dumps(hashes, indent=1))
 
-    if todo or not audio_ok:
-        log("   mixando a banda inteira (MP3 de cada parte e \"sem a parte\")")
-        duration = build_audio([store / f"{sl}.flac" for sl in slugs], dest / "audio", slugs)
+    if todo or not audio_ok or not rate_ok:
+        taxa = f" a {rate} Hz" if rate else ""
+        log(f"   mixando a banda inteira{taxa} (MP3 de cada parte e \"sem a parte\")")
+        duration = build_audio([store / f"{sl}.flac" for sl in slugs], dest / "audio", slugs, rate)
     else:
         duration = meta_old["duration"]
-    stamp.write_text(digest)
+    stamp.write_text(audio_stamp(digest, rate))
     return duration
 
 
@@ -394,7 +411,8 @@ def publish(cfg, force, col=COLLECTIONS["banda"]):
     root, first, parts = split_parts(work / "score.musicxml", dest / "parts")
     slugs = [p["id"] for p in parts]
 
-    duration = update_audio(mscz, digest, work, dest, slugs, force)
+    rate = cfg.get("taxa")
+    duration = update_audio(mscz, digest, work, dest, slugs, force, rate)
     export_pdfs(digest, work, dest, slugs, force)
     sigs = time_signatures(first)
     mq = measure_lengths(first)
@@ -406,8 +424,10 @@ def publish(cfg, force, col=COLLECTIONS["banda"]):
     meta = {
         "id": aid, "title": cfg["titulo"], "subtitle": cfg.get("subtitulo", ""), "hue": cfg.get("cor"),
         "tempo": round(tempo), "time": f"{num}/{den}", "measures": len(mq), "duration": round(duration, 3),
-        "marks": marks, "parts": parts, "timeline": timeline, "grid": grid, "version": digest[:10],
+        "marks": marks, "parts": parts, "timeline": timeline, "grid": grid, "version": version(digest, rate),
     }
+    if rate:
+        meta["sampleRate"] = rate
     (dest / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, separators=(",", ":")))
     log(f"   ok: {len(parts)} partes, {len(mq)} compassos, {len(timeline)} compassos tocados, {duration:.1f}s")
     return meta
