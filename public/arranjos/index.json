@@ -118,5 +118,20 @@
   "duration": 108.652,
   "version": "4222caf0c9",
   "nparts": 18
+ },
+ {
+  "id": "so-modao",
+  "title": "Só Modão",
+  "subtitle": "Medley sertanejo",
+  "hue": [
+   40,
+   110
+  ],
+  "tempo": 120,
+  "time": "3/4",
+  "measures": 174,
+  "duration": 230.646,
+  "version": "512d07a381",
+  "nparts": 18
  }
 ]

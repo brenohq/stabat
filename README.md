@@ -22,7 +22,7 @@ Mais detalhes de arquitetura e testes estão em [CLAUDE.md](CLAUDE.md).
 
 ## Publicar um arranjo novo
 
-1. Termine o arranjo no MuseScore Studio, com os sons Muse Sounds configurados no Mixer. O arquivo fica em `~/Documents/MuseScore4/Scores/`.
+1. Termine o arranjo no MuseScore Studio, com os sons Muse Sounds configurados no Mixer. O arquivo fica em `~/Documents/MuseScore4/Scores/banda/`.
 2. Acrescente uma linha em `tools/arranjos.json`:
    ```json
    {"id": "nome-curto", "arquivo": "Nome - Banda.mscz", "titulo": "Nome", "subtitulo": "Autor", "cor": [200, 230]}

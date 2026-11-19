@@ -54,5 +54,12 @@
     "titulo": "Noite Feliz",
     "subtitulo": "Franz Xaver Gruber",
     "cor": [230, 50]
+  },
+  {
+    "id": "so-modao",
+    "arquivo": "Só Modão - Banda.mscz",
+    "titulo": "Só Modão",
+    "subtitulo": "Medley sertanejo",
+    "cor": [40, 110]
   }
 ]

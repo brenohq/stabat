@@ -37,7 +37,7 @@ CACHE = ROOT / "tools" / ".cache"
 SCORES = Path.home() / "Documents" / "MuseScore4" / "Scores"
 # coleções: configuração, pasta das partituras, pasta publicada e cache de áudio
 COLLECTIONS = {
-    "banda": {"conf": ROOT / "tools" / "arranjos.json", "scores": SCORES, "out": OUT, "cache": CACHE},
+    "banda": {"conf": ROOT / "tools" / "arranjos.json", "scores": SCORES / "banda", "out": OUT, "cache": CACHE},
     "quarteto": {"conf": ROOT / "tools" / "quarteto.json", "scores": SCORES / "quarteto", "out": OUT / "quarteto", "cache": CACHE / "quarteto"},
 }
 MSCORE_CANDIDATES = [Path.home() / ".local/opt/musescore/MuseScore-Studio.AppImage", Path("/usr/bin/mscore4portable"), Path("/usr/bin/mscore")]

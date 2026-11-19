@@ -67,7 +67,7 @@ Versões travadas em `.tool-versions` (asdf): Node e Python. Dependência Python
 
 ## Publicar um arranjo
 
-1. `.mscz` em `~/Documents/MuseScore4/Scores/` com Muse Sounds no Mixer.
+1. `.mscz` em `~/Documents/MuseScore4/Scores/banda/` com Muse Sounds no Mixer.
 2. Linha em `tools/arranjos.json` (`id`, `arquivo`, `titulo`, `subtitulo`, `cor`).
    - **Quarteto**: `.mscz` em `Scores/quarteto/`, linha em `tools/quarteto.json` e `npm run publicar -- --quarteto <id>` (dados em `public/arranjos/quarteto/`, cache em `tools/.cache/quarteto/`). Enquanto não há nada publicado, `public/arranjos/quarteto/index.json` é `[]` e a página mostra "Em breve".
 3. `npm run publicar -- <id>` (precisa de MuseScore AppImage em `~/.local/opt/musescore/`, ffmpeg, numpy). Se o `.mscz` não mudou, não mexe no áudio. Se mudou, renderiza no Muse Sounds **só as partes que mudaram** (impressão digital = `.mscx` da parte + som dela; áudio sem perdas guardado em `tools/.cache/<id>/partes/*.flac`, ~140 MB por arranjo) e refaz a mistura com todas (MP3 de cada parte e "sem a parte"). Também exporta o PDF de cada parte (`pdf/`), refeito só quando o `.mscz` muda. `--forcar` renderiza todas de novo (ex.: depois de atualizar o MuseScore ou o Muse Sounds).
