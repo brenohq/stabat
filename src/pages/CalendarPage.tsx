@@ -1,4 +1,5 @@
 import { TopBar } from "../components/TopBar";
+import { usePageView } from "../hooks/usePageView";
 import { AGENDA, falta, partesDaData, separar, type Evento } from "../lib/agenda";
 
 function EventoCard({ e, agora, passado }: { e: Evento; agora: Date; passado?: boolean }) {
@@ -38,6 +39,7 @@ function EventoCard({ e, agora, passado }: { e: Evento; agora: Date; passado?: b
 }
 
 export function CalendarPage() {
+  usePageView("stabat · Calendário da Banda");
   const agora = new Date();
   const { proximos, passados } = separar(AGENDA, agora);
   return (

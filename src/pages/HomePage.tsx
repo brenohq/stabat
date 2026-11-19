@@ -7,6 +7,7 @@ import { Card, Spinner } from "../components/ui";
 import { btnClass } from "../components/btnClass";
 import { useAsync } from "../hooks/useAsync";
 import { useCollection } from "../hooks/useCollection";
+import { usePageView } from "../hooks/usePageView";
 import { href, type Collection } from "../lib/collections";
 import { fetchIndex, fetchMeta } from "../lib/data";
 import { fmtTime, matches } from "../lib/format";
@@ -104,6 +105,7 @@ function ArrangementCard({
 
 export function HomePage() {
   const col = useCollection();
+  usePageView(`stabat · ${col.title}`);
   const myPart = myPartOf(col);
   const state = useAsync(() => loadAll(col), [col.id]);
   const [query, setQuery] = useState("");

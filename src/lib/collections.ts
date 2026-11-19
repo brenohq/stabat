@@ -49,3 +49,8 @@ export const QUARTETO: Collection = {
 export function href(c: Collection, ...segments: string[]): string {
   return [c.base, ...segments].join("/") || "/";
 }
+
+/** título da aba (e do Analytics): pageTitle(QUARTETO, "Noite Feliz") → "stabat · Quarteto · Noite Feliz" */
+export function pageTitle(c: Collection, ...segments: string[]): string {
+  return ["stabat", ...(c.base ? [c.crumb] : []), ...segments].join(" · ");
+}

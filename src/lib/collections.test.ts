@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BANDA, QUARTETO, href } from "./collections";
+import { BANDA, QUARTETO, href, pageTitle } from "./collections";
 
 describe("href", () => {
   it("banda fica na raiz", () => {
@@ -14,5 +14,10 @@ describe("href", () => {
   });
   it("cada coleção lembra a sua própria parte", () => {
     expect(BANDA.myPartKey).not.toBe(QUARTETO.myPartKey);
+  });
+  it("o título diz de qual coleção é a página", () => {
+    expect(pageTitle(BANDA, "Apt")).toBe("stabat · Apt");
+    expect(pageTitle(QUARTETO, "Noite Feliz")).toBe("stabat · Quarteto · Noite Feliz");
+    expect(pageTitle(QUARTETO, "Trombone", "Noite Feliz")).toBe("stabat · Quarteto · Trombone · Noite Feliz");
   });
 });

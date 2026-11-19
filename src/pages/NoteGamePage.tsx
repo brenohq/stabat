@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { TopBar } from "../components/TopBar";
+import { usePageView } from "../hooks/usePageView";
 import { NoteStaff } from "../components/games/NoteStaff";
 import { staffGeometry } from "../components/games/staffGeometry";
 import { MuteIcon, SoundIcon } from "../components/icons";
@@ -123,6 +124,7 @@ const newRound = (g: Game, warmup: number): Game =>
   nextCard({ ...g, results: [], roundBest: 0, roundConfusions: {}, warmup });
 
 export function NoteGamePage() {
+  usePageView("Que nota é essa? · stabat");
   const [game, setGame] = useState(initialGame);
   const [sound, setSound] = useState(gameSound.get);
   const [fx, setFx] = useState<Fx[]>([]);
@@ -302,7 +304,6 @@ export function NoteGamePage() {
 
   return (
     <>
-      <title>Que nota é essa? · stabat</title>
       <TopBar crumbs={<span>Jogos / Que nota é essa?</span>} />
       <main className="mx-auto max-w-[680px] px-3 pt-4 pb-10 sm:px-4 sm:pt-8">
         <div className="mb-3 flex items-baseline justify-between gap-3 px-1">

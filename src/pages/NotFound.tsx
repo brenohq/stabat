@@ -1,11 +1,13 @@
-import { href } from "../lib/collections";
+import { href, pageTitle } from "../lib/collections";
 import { useCollection } from "../hooks/useCollection";
+import { usePageView } from "../hooks/usePageView";
 import { Link } from "react-router";
 import { TopBar } from "../components/TopBar";
 import { btnClass } from "../components/btnClass";
 
 export function NotFound({ message = "Página não encontrada." }: { message?: string }) {
   const col = useCollection();
+  usePageView(pageTitle(col, "Página não encontrada"));
   return (
     <>
       <TopBar />

@@ -1,4 +1,5 @@
-import { href } from "../lib/collections";
+import { href, pageTitle } from "../lib/collections";
+import { usePageView } from "../hooks/usePageView";
 import { useCollection } from "../hooks/useCollection";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
@@ -86,9 +87,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
   useEffect(() => {
     if (!smells) myPart.set({ id: part.id, name: part.name });
   }, [part, smells]);
-  useEffect(() => {
-    document.title = `stabat · ${smells ? "smells · " : ""}${part.name} · ${meta.title}`;
-  }, [meta, part, smells]);
+  usePageView(pageTitle(col, ...(smells ? ["smells"] : []), part.name, meta.title));
   const goToMeasure = (m: number) => {
     engine?.seekMeasure(m);
     view?.highlight(m, false);

@@ -1,4 +1,5 @@
-import { href } from "../lib/collections";
+import { href, pageTitle } from "../lib/collections";
+import { usePageView } from "../hooks/usePageView";
 import { useCollection } from "../hooks/useCollection";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
@@ -80,9 +81,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
     exposeDebug("page", engine ? { engine, timeline, meta, view } : null);
     return () => exposeDebug("page", null);
   }, [engine, timeline, meta, view]);
-  useEffect(() => {
-    document.title = `stabat · ${meta.title}`;
-  }, [meta]);
+  usePageView(pageTitle(col, meta.title));
 
   const onMeasureClick = useCallback((m: number) => engine?.loaded && engine.seekMeasure(m), [engine]);
   const curSection = (() => {

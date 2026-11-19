@@ -23,8 +23,11 @@ test.describe("quarteto", () => {
       if (r.url().includes("/__fixtures__/")) data.push(new URL(r.url()).pathname);
     });
     await page.goto("/quarteto");
+    // o título (que vai para o Analytics) diz que é do quarteto
+    await expect(page).toHaveTitle("stabat · Repertório do quarteto");
     await page.getByTestId("arrangement-card").first().click();
     await expect(page).toHaveURL(/\/quarteto\/natal$/);
+    await expect(page).toHaveTitle("stabat · Quarteto · Natal do Quarteto");
     await openLoaded(page, "/quarteto/natal");
     const natal = data.filter((p) => p.includes("/natal/"));
     expect(natal.length).toBeGreaterThan(0);
@@ -39,6 +42,7 @@ test.describe("quarteto", () => {
 
     await openLoaded(page, "/quarteto/natal/tuba-mib-1");
     await expect(page.getByRole("button", { name: "Só quarteto" })).toBeVisible();
+    await expect(page).toHaveTitle("stabat · Quarteto · Tuba Mib 1 · Natal do Quarteto");
     await expect(page.getByRole("link", { name: "Voltar ao arranjo" })).toHaveAttribute(
       "href",
       "/quarteto/natal",
