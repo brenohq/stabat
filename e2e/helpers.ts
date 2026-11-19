@@ -39,7 +39,11 @@ export async function openLoaded(page: Page, path: string): Promise<void> {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(path);
-  await expect.poll(async () => (await engine(page).catch(() => null))?.loaded ?? false).toBe(true);
+  // arranjos longos (Abba Gold: 18 partes × 6min45s) levam ~9 s para baixar e decodificar sozinhos, e bem
+  // mais com os testes rodando em paralelo; o limite padrão de 15 s fica curto
+  await expect
+    .poll(async () => (await engine(page).catch(() => null))?.loaded ?? false, { timeout: 45_000 })
+    .toBe(true);
   await expect(page.getByTestId("score").locator("g.measure").first()).toBeVisible();
   expect(errors, "erros de JavaScript na página").toEqual([]);
 }
