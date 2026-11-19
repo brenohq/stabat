@@ -29,7 +29,7 @@ function CoverBadge({ children }: { children: ReactNode }) {
 function Cover({ a }: { a: ArrangementSummary }) {
   const [h1, h2] = a.hue ?? [40, 220];
   return (
-    <div className="relative flex h-32 flex-col justify-between gap-2 overflow-hidden p-3 pb-2.5 pl-4">
+    <div className="relative flex h-28 flex-col justify-between gap-2 overflow-hidden p-3 pb-2.5 pl-4">
       <svg viewBox="0 0 400 96" preserveAspectRatio="none" aria-hidden className="absolute inset-0 size-full">
         <defs>
           <linearGradient id={`g-${a.id}`} x1="0" x2="1">
@@ -39,7 +39,7 @@ function Cover({ a }: { a: ArrangementSummary }) {
         </defs>
         <rect width="400" height="96" fill={`url(#g-${a.id})`} />
         {[0, 1, 2, 3, 4].map((i) => (
-          <line key={i} x1="0" x2="400" y1={28 + i * 9} y2={28 + i * 9} stroke="rgb(255 255 255 / .18)" />
+          <line key={i} x1="0" x2="400" y1={30 + i * 9} y2={30 + i * 9} stroke="rgb(255 255 255 / .18)" />
         ))}
       </svg>
       <div className="relative flex flex-wrap gap-1.5">
