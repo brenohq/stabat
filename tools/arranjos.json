@@ -56,6 +56,13 @@
     "cor": [230, 50]
   },
   {
+    "id": "numb",
+    "arquivo": "Numb - Banda.mscz",
+    "titulo": "Numb",
+    "subtitulo": "Linkin Park",
+    "cor": [270, 190]
+  },
+  {
     "id": "so-modao",
     "arquivo": "Só Modão - Banda.mscz",
     "titulo": "Só Modão",
