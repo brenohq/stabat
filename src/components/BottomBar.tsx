@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { RewindIcon } from "./icons";
 
 /**
  * Barra de controles fixa no rodapé (arranjo e parte). Publica a própria altura em --barh,
@@ -53,5 +54,44 @@ export function Clock({
       <br />
       {seconds} / {duration}
     </div>
+  );
+}
+
+/** volta ao início (ou ao início do trecho em loop); fica logo à direita do play */
+export function RewindButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      id="rewind"
+      onClick={onClick}
+      title="Voltar ao início"
+      aria-label="Voltar ao início"
+      className="-ml-2 grid size-9 flex-none cursor-pointer place-items-center rounded-[10px] border border-line bg-surface text-ink hover:border-muted [&_svg]:size-[18px]"
+    >
+      <RewindIcon />
+    </button>
+  );
+}
+
+const RATES = [0.5, 0.6, 0.75, 0.9, 1];
+
+/** velocidade de reprodução (sem mudar a afinação) */
+export function SpeedSelect({ rate, onChange }: { rate: number; onChange: (rate: number) => void }) {
+  return (
+    <label className="flex items-center gap-1.5 text-[13px] text-muted">
+      Velocidade
+      <select
+        id="rate"
+        value={rate}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="rounded-lg border border-line bg-surface px-2 py-1 text-ink"
+      >
+        {RATES.map((r) => (
+          <option key={r} value={r}>
+            {Math.round(r * 100)}%
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

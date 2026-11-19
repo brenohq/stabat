@@ -23,7 +23,7 @@ export function PlayButton({
       disabled={loading}
       aria-label={loading ? "Carregando áudio" : playing ? "Pausar" : "Tocar"}
       data-playing={playing}
-      className="relative grid size-12 flex-none cursor-pointer place-items-center rounded-full bg-accent text-accent-ink shadow-[0_4px_14px_rgb(168_118_28/0.35)] active:scale-95 disabled:cursor-progress"
+      className="relative grid size-12 flex-none cursor-pointer place-items-center rounded-full bg-accent text-accent-ink shadow-[0_4px_14px_rgb(168_118_28/0.35)] active:scale-95 disabled:cursor-progress border border-transparent disabled:border-line disabled:bg-surface-2 disabled:text-muted disabled:shadow-none disabled:active:scale-100"
     >
       {playing ? <PauseIcon className="size-[22px]" /> : <PlayIcon className="size-[22px]" />}
       {loading && (

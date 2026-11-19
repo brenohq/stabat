@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
-import { BottomBar, Clock } from "../components/BottomBar";
+import { BottomBar, Clock, RewindButton, SpeedSelect } from "../components/BottomBar";
 import { Mixer } from "../components/Mixer";
 import { PlayButton } from "../components/PlayButton";
 import { PrintDialog } from "../components/PrintDialog";
@@ -8,7 +8,7 @@ import { Score } from "../components/Score";
 import { useZoom } from "../hooks/useZoom";
 import { TopBar } from "../components/TopBar";
 import { ZoomControls } from "../components/ZoomControls";
-import { MetronomeIcon, PrinterIcon, RewindIcon } from "../components/icons";
+import { MetronomeIcon, PrinterIcon } from "../components/icons";
 import { Button, Card, Spinner } from "../components/ui";
 import { btnClass } from "../components/btnClass";
 import { exposeDebug } from "../debug";
@@ -18,7 +18,7 @@ import { usePlayer } from "../hooks/usePlayer";
 import { assetUrl, fetchMeta } from "../lib/data";
 import { fmtTime } from "../lib/format";
 import { partGain } from "../lib/mix";
-import { sectionAt, shortName } from "../lib/parts";
+import { sectionAt } from "../lib/parts";
 import { myPart } from "../lib/storage";
 import { Timeline } from "../lib/timeline";
 import type { ArrangementMeta } from "../lib/types";
@@ -39,8 +39,6 @@ export function ArrangementPage() {
   if (state.status === "error") return <NotFound message="Arranjo não encontrado." />;
   return <Arrangement key={arranjoId} meta={state.data} />;
 }
-
-const RATES = [0.5, 0.6, 0.75, 0.9, 1];
 
 function Arrangement({ meta }: { meta: ArrangementMeta }) {
   const timeline = useMemo(() => new Timeline(meta.timeline, meta.duration), [meta]);
@@ -106,15 +104,6 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
         <Button className="max-[900px]:hidden" onClick={() => setPrinting(true)} data-testid="print-open">
           <PrinterIcon /> Imprimir partes
         </Button>
-        {myInThis && (
-          <Link
-            to={`/${meta.id}/${myInThis.id}`}
-            className={btnClass({ primary: true })}
-            data-testid="study-mine"
-          >
-            Estudar {shortName(myInThis.name)} →
-          </Link>
-        )}
       </div>
 
       <div className="mx-auto grid max-w-[1400px] items-start gap-4 px-4 pt-3.5 pb-[calc(var(--barh,130px)+24px)] min-[901px]:grid-cols-[1fr_300px]">
@@ -183,6 +172,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
               progress={loaded ? null : progress}
               onClick={() => engine?.toggle()}
             />
+            <RewindButton onClick={() => engine?.stop()} />
             <ZoomControls onIn={zoomIn} onOut={zoomOut} />
             <Clock
               measure={measure + 1}
@@ -190,6 +180,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
               seconds={fmtTime(second)}
               duration={fmtTime(meta.duration)}
             />
+            <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
             <div className="flex flex-wrap gap-1 max-sm:w-full" data-testid="sections">
               {meta.marks.map((mk) => (
                 <button
@@ -212,29 +203,11 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
         }
         bottom={
           <>
-            <Button onClick={() => engine?.stop()} title="Voltar ao início">
-              <RewindIcon /> Início
-            </Button>
             {error && <span className="text-xs text-red-700">{error}</span>}
             {!loaded && !error && (
               <span className="text-xs text-muted">Carregando áudio {Math.round(progress * 100)}%</span>
             )}
             <span className="flex-1" />
-            <label className="flex items-center gap-1.5 text-[13px] text-muted">
-              Velocidade
-              <select
-                id="rate"
-                value={rate}
-                onChange={(e) => void engine?.setRate(Number(e.target.value))}
-                className="rounded-lg border border-line bg-surface px-2 py-1"
-              >
-                {RATES.map((r) => (
-                  <option key={r} value={r}>
-                    {Math.round(r * 100)}%
-                  </option>
-                ))}
-              </select>
-            </label>
             <Button id="metro" on={metronome} onClick={() => engine?.setMetronome(!metronome)}>
               <MetronomeIcon /> Metrônomo
             </Button>
@@ -245,6 +218,15 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
             >
               Instrumentos
             </Button>
+            {myInThis && (
+              <Link
+                to={`/${meta.id}/${myInThis.id}`}
+                className={btnClass({ primary: true })}
+                data-testid="study-mine"
+              >
+                Minha parte →
+              </Link>
+            )}
           </>
         }
       />

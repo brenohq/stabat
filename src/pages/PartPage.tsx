@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { PartPicker } from "../components/PartPicker";
-import { BottomBar, Clock } from "../components/BottomBar";
+import { BottomBar, Clock, RewindButton, SpeedSelect } from "../components/BottomBar";
 import { PlayButton } from "../components/PlayButton";
 import { Score } from "../components/Score";
 import { SmellPanel } from "../components/SmellPanel";
@@ -61,7 +61,6 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
   );
   const { engine, progress, error } = usePlayer(timeline, urls);
   const [mix, setMix] = useState(DEFAULT_PART_MIX);
-  const [speed, setSpeed] = useState(100);
   const [loopSel, setLoopSel] = useState<LoopSel>(null);
   const [zoom, zoomIn, zoomOut] = useZoom();
   const [view, setView] = useState<ScoreView | null>(null);
@@ -70,6 +69,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
   const playing = useEngineValue(engine, (e) => e.playing, false);
   const second = useEngineValue(engine, (e) => Math.floor(e.now() / 1000), 0);
   const measure = useEngineValue(engine, (e) => timeline.at(e.now()).m, 0);
+  const rate = useEngineValue(engine, (e) => e.rate, 1);
   const metronome = useEngineValue(engine, (e) => e.metronome, true);
   const countIn = useEngineValue(engine, (e) => e.countIn, false);
   useSpaceToggle(engine);
@@ -104,15 +104,6 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
     exposeDebug("page", engine ? { engine, timeline, meta, view, part } : null);
     return () => exposeDebug("page", null);
   }, [engine, timeline, meta, view, part]);
-
-  // velocidade: aplica quando o controle para de mexer
-  useEffect(() => {
-    if (!engine) return;
-    const t = setTimeout(() => {
-      if (engine.rate !== speed / 100) void engine.setRate(speed / 100);
-    }, 250);
-    return () => clearTimeout(t);
-  }, [engine, speed]);
 
   const picking = loopSel !== null && loopSel.b === undefined;
   const loopRange: [number, number] | null =
@@ -246,6 +237,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
               progress={loaded ? null : progress}
               onClick={() => engine?.toggle()}
             />
+            <RewindButton onClick={() => engine?.stop()} />
             <ZoomControls onIn={zoomIn} onOut={zoomOut} />
             <Clock
               measure={measure + 1}
@@ -253,6 +245,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
               seconds={fmtTime(second)}
               duration={fmtTime(meta.duration)}
             />
+            <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
             <div className="grid min-w-[240px] flex-1 grid-cols-[auto_1fr_auto] items-center gap-2.5 text-xs text-muted max-sm:basis-full">
               <div className="flex flex-col items-center leading-tight">
                 <b className="text-[13px] font-semibold text-ink" data-testid="level-band">
@@ -302,20 +295,6 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
             </div>
             {error && <span className="text-xs text-red-700">{error}</span>}
             <span className="flex-1" />
-            <label className="flex items-center gap-2 text-[13px] text-muted">
-              Velocidade
-              <input
-                id="rate"
-                type="range"
-                min={40}
-                max={100}
-                step={5}
-                value={speed}
-                onChange={(e) => setSpeed(Number(e.target.value))}
-                className="w-[110px]"
-              />
-              <b className="min-w-9 text-ink">{speed}%</b>
-            </label>
             <Button id="loop" on={loopSel !== null} onClick={toggleLoop}>
               <LoopIcon />
               {loopSel?.b !== undefined

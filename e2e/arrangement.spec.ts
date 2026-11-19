@@ -126,12 +126,13 @@ test.describe("página do arranjo", () => {
     expect(bar.y).toBeGreaterThan(vh / 2);
   });
 
-  test("atalho 'Estudar minha parte' aparece quando há parte salva", async ({ page }) => {
+  test("atalho 'Minha parte' aparece quando há parte salva", async ({ page }) => {
     await expect(page.getByTestId("study-mine")).toHaveCount(0);
     await page.evaluate(() =>
       localStorage.setItem("stabat.myPart", JSON.stringify({ id: "tuba-mib-1", name: "Tuba Mib 1" })),
     );
     await page.reload();
-    await expect(page.getByTestId("study-mine")).toHaveText(/Estudar Tuba 1/);
+    await expect(page.getByTestId("study-mine")).toHaveText(/Minha parte/);
+    await expect(page.getByTestId("study-mine")).toHaveAttribute("href", "/teste/tuba-mib-1");
   });
 });
