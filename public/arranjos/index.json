@@ -30,6 +30,21 @@
   "nparts": 18
  },
  {
+  "id": "cheia-de-manias",
+  "title": "Cheia de Manias",
+  "subtitle": "Raça Negra",
+  "hue": [
+   0,
+   45
+  ],
+  "tempo": 100,
+  "time": "2/4",
+  "measures": 84,
+  "duration": 204.599,
+  "version": "b6e7347f15",
+  "nparts": 18
+ },
+ {
   "id": "chuva-de-arroz",
   "title": "Chuva de Arroz",
   "subtitle": "Luan Santana",
@@ -71,7 +86,7 @@
   "time": "4/4",
   "measures": 60,
   "duration": 123.0,
-  "version": "3c4b9de35d",
+  "version": "0765831525",
   "nparts": 18
  },
  {

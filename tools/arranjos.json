@@ -15,6 +15,13 @@
     "cor": [340, 20]
   },
   {
+    "id": "cheia-de-manias",
+    "arquivo": "Cheia de Manias - Banda.mscz",
+    "titulo": "Cheia de Manias",
+    "subtitulo": "Raça Negra",
+    "cor": [0, 45]
+  },
+  {
     "id": "chuva-de-arroz",
     "arquivo": "Chuva de Arroz - Banda.mscz",
     "titulo": "Chuva de Arroz",

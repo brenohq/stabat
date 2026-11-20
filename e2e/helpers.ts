@@ -47,7 +47,8 @@ export async function openPlayer(page: Page, path: string): Promise<void> {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(path);
   await expect.poll(async () => (await engine(page).catch(() => null)) !== null).toBe(true);
-  await expect(page.getByTestId("score").locator("g.measure").first()).toBeVisible();
+  // a grade dos arranjos longos (Abba Gold, Só Modão) demora a desenhar no CI, mais lento que a máquina local
+  await expect(page.getByTestId("score").locator("g.measure").first()).toBeVisible({ timeout: 45_000 });
   expect(errors, "erros de JavaScript na página").toEqual([]);
 }
 
