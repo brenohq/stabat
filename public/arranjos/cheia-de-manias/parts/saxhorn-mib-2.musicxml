@@ -255,10 +255,10 @@
     <measure number="5" width="284.68">
       <print new-page="yes" page-number="2">
         <staff-layout number="1">
-          <staff-distance>79.32</staff-distance>
+          <staff-distance>78.13</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="79.66" default-y="-1104.79">
+      <note default-x="79.66" default-y="-1093.81">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -270,7 +270,7 @@
         </note>
       </measure>
     <measure number="6" width="279.79">
-      <note default-x="13" default-y="-1104.79">
+      <note default-x="13" default-y="-1093.81">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -282,7 +282,7 @@
         </note>
       </measure>
     <measure number="7" width="279.46">
-      <note default-x="18.76" default-y="-1119.79">
+      <note default-x="18.76" default-y="-1108.81">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -294,7 +294,7 @@
         </note>
       </measure>
     <measure number="8" width="279.69">
-      <note default-x="18.76" default-y="-1114.79">
+      <note default-x="18.76" default-y="-1103.81">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -306,6 +306,11 @@
         </note>
       </measure>
     <measure number="9" width="281.85">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-33.48" relative-y="30" justify="center" font-weight="bold" font-size="14">A</rehearsal>
+          </direction-type>
+        </direction>
       <barline location="left">
         <bar-style>heavy-light</bar-style>
         <repeat direction="forward" />
@@ -318,7 +323,7 @@
           </direction-type>
         <sound dynamics="54.44" />
         </direction>
-      <note default-x="33.48" default-y="-1129.79">
+      <note default-x="33.48" default-y="-1118.81">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -397,10 +402,10 @@
     <measure number="15" width="364.34">
       <print new-page="yes" page-number="4">
         <staff-layout number="1">
-          <staff-distance>78.88</staff-distance>
+          <staff-distance>78.16</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="79.66" default-y="-1130.71">
+      <note default-x="79.66" default-y="-1124.09">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -412,7 +417,7 @@
         </note>
       </measure>
     <measure number="16" width="260.72">
-      <note default-x="13" default-y="-1130.71">
+      <note default-x="13" default-y="-1124.09">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -428,21 +433,26 @@
         </barline>
       </measure>
     <measure number="17" width="260.03">
-      <note default-x="122.62" default-y="-1095.71">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-13" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
+          </direction-type>
+        </direction>
+      <note default-x="122.62" default-y="-1089.09">
         <rest measure="yes" />
         <duration>8</duration>
         <voice>1</voice>
         </note>
       </measure>
     <measure number="18" width="260">
-      <note default-x="122.6" default-y="-1095.71">
+      <note default-x="122.6" default-y="-1089.09">
         <rest measure="yes" />
         <duration>8</duration>
         <voice>1</voice>
         </note>
       </measure>
     <measure number="19" width="260.37">
-      <note default-x="13" default-y="-1130.71">
+      <note default-x="13" default-y="-1124.09">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -452,7 +462,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="127.6" default-y="-1130.71">
+      <note default-x="127.6" default-y="-1124.09">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1430,10 +1440,10 @@
     <measure number="75" width="345.41">
       <print new-page="yes" page-number="16">
         <staff-layout number="1">
-          <staff-distance>79.3</staff-distance>
+          <staff-distance>78.11</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="79.66" default-y="-1134.59">
+      <note default-x="79.66" default-y="-1123.62">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1443,7 +1453,7 @@
         <type>quarter</type>
         <stem>up</stem>
         </note>
-      <note default-x="212.65" default-y="-1109.59">
+      <note default-x="212.65" default-y="-1098.62">
         <rest />
         <duration>4</duration>
         <voice>1</voice>
@@ -1451,7 +1461,7 @@
         </note>
       </measure>
     <measure number="76" width="264.94">
-      <note default-x="18.45" default-y="-1109.59">
+      <note default-x="18.45" default-y="-1098.62">
         <rest />
         <duration>8</duration>
         <voice>1</voice>
@@ -1459,6 +1469,11 @@
         </note>
       </measure>
     <measure number="77" width="265.15">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-33.48" relative-y="30" justify="center" font-weight="bold" font-size="14">C</rehearsal>
+          </direction-type>
+        </direction>
       <barline location="left">
         <bar-style>heavy-light</bar-style>
         <repeat direction="forward" />
@@ -1471,7 +1486,7 @@
           </direction-type>
         <sound dynamics="54.44" />
         </direction>
-      <note default-x="33.48" default-y="-1129.59">
+      <note default-x="33.48" default-y="-1118.62">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -1483,7 +1498,7 @@
         </note>
       </measure>
     <measure number="78" width="264.94">
-      <note default-x="13" default-y="-1129.59">
+      <note default-x="13" default-y="-1118.62">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -1495,7 +1510,7 @@
         </note>
       </measure>
     <measure number="79" width="265.02">
-      <note default-x="13" default-y="-1134.59">
+      <note default-x="13" default-y="-1123.62">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1509,10 +1524,10 @@
     <measure number="80" width="258.36">
       <print new-page="yes" page-number="17">
         <staff-layout number="1">
-          <staff-distance>78.09</staff-distance>
+          <staff-distance>78.07</staff-distance>
           </staff-layout>
         </print>
-      <note default-x="79.66" default-y="-1123.41">
+      <note default-x="79.66" default-y="-1123.22">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1524,7 +1539,7 @@
         </note>
       </measure>
     <measure number="81" width="195">
-      <note default-x="13" default-y="-1093.41">
+      <note default-x="13" default-y="-1093.22">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -1536,7 +1551,7 @@
         </note>
       </measure>
     <measure number="82" width="195">
-      <note default-x="13" default-y="-1093.41">
+      <note default-x="13" default-y="-1093.22">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -1548,7 +1563,7 @@
         </note>
       </measure>
     <measure number="83" width="195">
-      <note default-x="13" default-y="-1123.41">
+      <note default-x="13" default-y="-1123.22">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1560,7 +1575,7 @@
         </note>
       </measure>
     <measure number="84" width="195">
-      <note default-x="13" default-y="-1123.41">
+      <note default-x="13" default-y="-1123.22">
         <pitch>
           <step>D</step>
           <octave>4</octave>

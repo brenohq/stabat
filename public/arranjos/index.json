@@ -26,7 +26,22 @@
   "time": "4/4",
   "measures": 56,
   "duration": 119.571,
-  "version": "248ac4d1ed",
+  "version": "903c3c557e",
+  "nparts": 18
+ },
+ {
+  "id": "cantico-de-maria",
+  "title": "Cântico de Maria",
+  "subtitle": "Magnificat",
+  "hue": [
+   215,
+   285
+  ],
+  "tempo": 140,
+  "time": "4/4",
+  "measures": 81,
+  "duration": 153.856,
+  "version": "a72ece995d",
   "nparts": 18
  },
  {
@@ -41,7 +56,7 @@
   "time": "2/4",
   "measures": 84,
   "duration": 204.599,
-  "version": "b6e7347f15",
+  "version": "deacd0fcff",
   "nparts": 18
  },
  {
@@ -56,7 +71,7 @@
   "time": "4/4",
   "measures": 51,
   "duration": 118.998,
-  "version": "e1e30c4825",
+  "version": "b74cfd1ab2",
   "nparts": 18
  },
  {
@@ -71,7 +86,7 @@
   "time": "2/4",
   "measures": 57,
   "duration": 104.998,
-  "version": "64eff204b8",
+  "version": "77f6ad3b51",
   "nparts": 18
  },
  {
@@ -86,7 +101,7 @@
   "time": "4/4",
   "measures": 60,
   "duration": 123.0,
-  "version": "0765831525",
+  "version": "0713dd557f",
   "nparts": 18
  },
  {
@@ -101,7 +116,7 @@
   "time": "3/4",
   "measures": 65,
   "duration": 144.428,
-  "version": "82625f4aa3",
+  "version": "a3b426c18b",
   "nparts": 18
  },
  {
@@ -116,7 +131,7 @@
   "time": "4/4",
   "measures": 65,
   "duration": 134.998,
-  "version": "ccfed7e91c",
+  "version": "43cc075501",
   "nparts": 18
  },
  {
@@ -131,7 +146,7 @@
   "time": "2/4",
   "measures": 79,
   "duration": 107.347,
-  "version": "1521e0611b",
+  "version": "5d17a39a70",
   "nparts": 18
  },
  {
@@ -146,7 +161,7 @@
   "time": "3/4",
   "measures": 30,
   "duration": 108.652,
-  "version": "4222caf0c9",
+  "version": "dab0a30839",
   "nparts": 18
  },
  {
@@ -159,9 +174,9 @@
   ],
   "tempo": 120,
   "time": "4/4",
-  "measures": 84,
-  "duration": 171.0,
-  "version": "0a1bc6fd42",
+  "measures": 85,
+  "duration": 174.998,
+  "version": "62cfaceb30",
   "nparts": 18
  },
  {
@@ -176,7 +191,22 @@
   "time": "3/4",
   "measures": 174,
   "duration": 230.646,
-  "version": "c6c195c4d0",
+  "version": "ed55168c67",
+  "nparts": 18
+ },
+ {
+  "id": "uma-brasileira",
+  "title": "Uma Brasileira",
+  "subtitle": "Os Paralamas do Sucesso",
+  "hue": [
+   120,
+   55
+  ],
+  "tempo": 100,
+  "time": "4/4",
+  "measures": 53,
+  "duration": 182.999,
+  "version": "3187416d7e",
   "nparts": 18
  }
 ]

@@ -15,6 +15,13 @@
     "cor": [340, 20]
   },
   {
+    "id": "cantico-de-maria",
+    "arquivo": "Cântico de Maria (Magnificat) - Banda.mscz",
+    "titulo": "Cântico de Maria",
+    "subtitulo": "Magnificat",
+    "cor": [215, 285]
+  },
+  {
     "id": "cheia-de-manias",
     "arquivo": "Cheia de Manias - Banda.mscz",
     "titulo": "Cheia de Manias",
@@ -84,5 +91,12 @@
     "subtitulo": "Medley sertanejo",
     "cor": [40, 110],
     "taxa": 22050
+  },
+  {
+    "id": "uma-brasileira",
+    "arquivo": "Uma Brasileira - Banda.mscz",
+    "titulo": "Uma Brasileira",
+    "subtitulo": "Os Paralamas do Sucesso",
+    "cor": [120, 55]
   }
 ]

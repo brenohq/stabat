@@ -279,7 +279,7 @@
             <left-margin>95.02</left-margin>
             <right-margin>0</right-margin>
             </system-margins>
-          <top-system-distance>70</top-system-distance>
+          <top-system-distance>90.52</top-system-distance>
           </system-layout>
         </print>
       <note default-x="79.66" default-y="10">
@@ -351,6 +351,11 @@
             </dynamics>
           </direction-type>
         <sound dynamics="54.44" />
+        </direction>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-33.48" relative-y="30" justify="center" font-weight="bold" font-size="14">A</rehearsal>
+          </direction-type>
         </direction>
       <note default-x="33.48" default-y="10">
         <pitch>
@@ -463,7 +468,7 @@
             <left-margin>95.02</left-margin>
             <right-margin>0</right-margin>
             </system-margins>
-          <top-system-distance>77.62</top-system-distance>
+          <top-system-distance>89.99</top-system-distance>
           </system-layout>
         </print>
       <note default-x="79.66" default-y="15">
@@ -504,9 +509,14 @@
     <measure number="17" width="260.03">
       <direction placement="above">
         <direction-type>
-          <segno default-x="-2.75" relative-y="20" />
+          <segno default-x="-2.75" relative-x="37" relative-y="29.64" />
           </direction-type>
         <sound segno="segno" />
+        </direction>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-13" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
+          </direction-type>
         </direction>
       <note default-x="13" default-y="-18.38">
         <rest />
@@ -2329,7 +2339,7 @@
             <left-margin>95.02</left-margin>
             <right-margin>0</right-margin>
             </system-margins>
-          <top-system-distance>70.36</top-system-distance>
+          <top-system-distance>90.87</top-system-distance>
           </system-layout>
         </print>
       <note default-x="192.64" default-y="-10">
@@ -2357,6 +2367,11 @@
             </dynamics>
           </direction-type>
         <sound dynamics="54.44" />
+        </direction>
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-33.48" relative-y="30" justify="center" font-weight="bold" font-size="14">C</rehearsal>
+          </direction-type>
         </direction>
       <note default-x="33.48" default-y="10">
         <pitch>
@@ -2412,7 +2427,7 @@
             <left-margin>95.02</left-margin>
             <right-margin>0</right-margin>
             </system-margins>
-          <top-system-distance>91.27</top-system-distance>
+          <top-system-distance>91.62</top-system-distance>
           </system-layout>
         </print>
       <note default-x="79.66" default-y="15">
@@ -2495,13 +2510,13 @@
         </note>
       <direction placement="above">
         <direction-type>
-          <words default-x="195" relative-y="20">D.S. al Fine</words>
+          <words default-x="195" relative-y="20">&lt;b&gt;D.S. al Fine&lt;/b&gt;</words>
           </direction-type>
         <sound dalsegno="segno" />
         </direction>
       <direction placement="above">
         <direction-type>
-          <words default-x="195" default-y="21.76" relative-y="20">Fine</words>
+          <words default-x="195" default-y="21.76" relative-y="20">&lt;b&gt;Fine&lt;/b&gt;</words>
           </direction-type>
         <sound fine="yes" />
         </direction>

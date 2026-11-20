@@ -5,7 +5,7 @@
     <rights>Banda de Música Nossa Senhora das Dores</rights>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-19</encoding-date>
+      <encoding-date>2026-11-20</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -188,6 +188,11 @@
     </part-list>
   <part id="P13">
     <measure number="1" width="426.37">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-20" relative-y="30" justify="center" font-weight="bold" font-size="14">A</rehearsal>
+          </direction-type>
+        </direction>
       <print>
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -346,6 +351,11 @@
         </barline>
       </measure>
     <measure number="10" width="349.4">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-12.96" relative-y="30" justify="center" font-weight="bold" font-size="14">B</rehearsal>
+          </direction-type>
+        </direction>
       <direction placement="below">
         <direction-type>
           <dynamics default-x="-1.18" default-y="-40" relative-y="-40">
@@ -1289,6 +1299,11 @@
         </barline>
       </measure>
     <measure number="24" width="342.29">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-12.96" relative-y="30" justify="center" font-weight="bold" font-size="14">C</rehearsal>
+          </direction-type>
+        </direction>
       <direction placement="below">
         <direction-type>
           <dynamics default-x="-1.18" default-y="-40" relative-y="-40">
@@ -1753,6 +1768,11 @@
         </note>
       </measure>
     <measure number="32" width="359.08">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-12.96" relative-y="30" justify="center" font-weight="bold" font-size="14">D</rehearsal>
+          </direction-type>
+        </direction>
       <note default-x="12.96" default-y="-1285">
         <pitch>
           <step>A</step>
@@ -2880,6 +2900,11 @@
         </barline>
       </measure>
     <measure number="48" width="352.51">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-12.96" relative-y="30" justify="center" font-weight="bold" font-size="14">E</rehearsal>
+          </direction-type>
+        </direction>
       <direction placement="below">
         <direction-type>
           <dynamics default-x="-1.18" default-y="-40" relative-y="-40">
@@ -3794,6 +3819,11 @@
         </barline>
       </measure>
     <measure number="65" width="428.49">
+      <direction placement="above" system="only-top">
+        <direction-type>
+          <rehearsal default-x="-34.76" relative-y="30" justify="center" font-weight="bold" font-size="14">F</rehearsal>
+          </direction-type>
+        </direction>
       <print new-page="yes" page-number="17">
         <staff-layout number="1">
           <staff-distance>65</staff-distance>
@@ -4966,55 +4996,40 @@
         </note>
       </measure>
     <measure number="84" width="250">
+      <note default-x="12" default-y="-1265">
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+          </pitch>
+        <duration>12</duration>
+        <voice>1</voice>
+        <type>half</type>
+        <dot default-x="28.5" default-y="-1265" />
+        <stem>down</stem>
+        </note>
+      <note default-x="166.79" default-y="-1270">
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+          </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>down</stem>
+        </note>
+      </measure>
+    <measure number="85" width="250">
       <note default-x="12" default-y="-1275">
         <pitch>
           <step>C</step>
           <octave>5</octave>
           </pitch>
-        <duration>2</duration>
+        <duration>16</duration>
         <voice>1</voice>
-        <type>eighth</type>
-        <stem>down</stem>
-        <beam number="1">begin</beam>
-        </note>
-      <note default-x="48.32" default-y="-1275">
-        <pitch>
-          <step>C</step>
-          <octave>5</octave>
-          </pitch>
-        <duration>2</duration>
-        <voice>1</voice>
-        <type>eighth</type>
-        <stem>down</stem>
-        <beam number="1">continue</beam>
-        </note>
-      <note default-x="84.64" default-y="-1275">
-        <pitch>
-          <step>C</step>
-          <octave>5</octave>
-          </pitch>
-        <duration>2</duration>
-        <voice>1</voice>
-        <type>eighth</type>
-        <stem>down</stem>
-        <beam number="1">continue</beam>
-        </note>
-      <note default-x="120.96" default-y="-1275">
-        <pitch>
-          <step>C</step>
-          <octave>5</octave>
-          </pitch>
-        <duration>2</duration>
-        <voice>1</voice>
-        <type>eighth</type>
-        <stem>down</stem>
-        <beam number="1">end</beam>
-        </note>
-      <note default-x="157.28" default-y="-1280">
-        <rest />
-        <duration>8</duration>
-        <voice>1</voice>
-        <type>half</type>
+        <type>whole</type>
+        <notations>
+          <fermata type="upright" relative-y="10" />
+          </notations>
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
