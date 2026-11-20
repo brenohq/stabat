@@ -17,10 +17,10 @@ import { Button, Card, Spinner } from "../components/ui";
 import { exposeDebug } from "../debug";
 import { useAsync } from "../hooks/useAsync";
 import { useEngineValue, useSpaceToggle, useWakeLock } from "../hooks/useEngine";
-import { usePlayer } from "../hooks/usePlayer";
+import { usePlayer, useTracks } from "../hooks/usePlayer";
 import { assetUrl, fetchMeta } from "../lib/data";
-import { fmtTime } from "../lib/format";
-import { DEFAULT_PART_MIX, matchGains, mixGains, mixLevels } from "../lib/mix";
+import { fmtSize, fmtTime } from "../lib/format";
+import { DEFAULT_PART_MIX, downloadSize, matchGains, mixGains, mixLevels } from "../lib/mix";
 import { sectionAt, shortName } from "../lib/parts";
 import { pitchName, smellRange, smellReport, type SmellRange, type SmellReport } from "../lib/smells";
 import { myPartOf } from "../lib/storage";
@@ -62,18 +62,17 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
   const myPart = myPartOf(col);
   const navigate = useNavigate();
   const timeline = useMemo(() => new Timeline(meta.timeline, meta.duration), [meta]);
-  // [0] minha parte, [1] banda sem a minha parte
-  const urls = useMemo(
-    () => [assetUrl(col, meta, `audio/${part.id}.mp3`), assetUrl(col, meta, `audio/sem-${part.id}.mp3`)],
-    [meta, part],
-  );
-  const { engine, progress, error } = usePlayer(timeline, urls, { sampleRate: meta.sampleRate });
+  const engine = usePlayer(timeline, { sampleRate: meta.sampleRate });
   const [mix, setMix] = useState(DEFAULT_PART_MIX);
   const [loopSel, setLoopSel] = useState<LoopSel>(null);
   const [zoom, zoomIn, zoomOut] = useZoom();
   const [view, setView] = useState<ScoreView | null>(null);
 
   const loaded = useEngineValue(engine, (e) => e.loaded, false);
+  const loading = useEngineValue(engine, (e) => e.loading, false);
+  const waiting = useEngineValue(engine, (e) => e.waiting, false);
+  const progress = useEngineValue(engine, (e) => e.progress, 0);
+  const error = useEngineValue(engine, (e) => e.error, null);
   const playing = useEngineValue(engine, (e) => e.playing, false);
   const second = useEngineValue(engine, (e) => Math.floor(e.now() / 1000), 0);
   const measure = useEngineValue(engine, (e) => timeline.at(e.now()).m, 0);
@@ -100,12 +99,18 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
     () => (engine && loaded ? matchGains(engine.loudness(0), engine.loudness(1)) : undefined),
     [engine, loaded],
   );
-  useEffect(() => {
-    if (!engine || !loaded) return;
+  // [0] minha parte, [1] banda sem a minha parte
+  const files = useMemo(() => [`${part.id}.mp3`, `sem-${part.id}.mp3`], [part]);
+  const tracks = useMemo(() => {
     const g = mixGains(mix, match);
-    engine.setGain(0, g.me);
-    engine.setGain(1, g.band);
-  }, [engine, loaded, mix, match]);
+    return [
+      { url: assetUrl(col, meta, `audio/${files[0]}`), gain: g.me },
+      { url: assetUrl(col, meta, `audio/${files[1]}`), gain: g.band },
+    ];
+  }, [col, meta, files, mix, match]);
+  useTracks(engine, tracks);
+  const bytes = downloadSize(meta.audio, files);
+  const size = bytes === null ? null : fmtSize(bytes);
   useEffect(() => {
     exposeDebug("page", engine ? { engine, timeline, meta, view, part } : null);
     return () => exposeDebug("page", null);
@@ -123,7 +128,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
 
   const onMeasureClick = useCallback(
     (m: number) => {
-      if (!engine?.loaded) return;
+      if (!engine) return;
       if (loopSel && loopSel.b === undefined) {
         if (loopSel.a === null) return setLoopSel({ a: m });
         const a = Math.min(loopSel.a, m);
@@ -158,7 +163,9 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
               <div className="flex items-center gap-2">
                 <PlayButton
                   playing={playing}
-                  progress={loaded ? null : progress}
+                  waiting={waiting}
+                  progress={loading ? progress : null}
+                  size={loaded ? null : size}
                   onClick={() => engine?.toggle()}
                 />
                 <RewindButton onClick={() => engine?.stop()} />
@@ -168,6 +175,7 @@ function PartStudy({ meta, part, smells }: { meta: ArrangementMeta; part: Part; 
                   section={sectionAt(meta.marks, measure)}
                   seconds={fmtTime(second)}
                   duration={fmtTime(meta.duration)}
+                  size={loaded || loading ? null : size}
                 />
               </div>
               <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />

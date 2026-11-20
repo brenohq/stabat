@@ -18,10 +18,10 @@ import { btnClass } from "../components/btnClass";
 import { exposeDebug } from "../debug";
 import { useAsync } from "../hooks/useAsync";
 import { useEngineValue, useSpaceToggle } from "../hooks/useEngine";
-import { usePlayer } from "../hooks/usePlayer";
+import { usePlayer, useTracks } from "../hooks/usePlayer";
 import { assetUrl, fetchMeta } from "../lib/data";
-import { fmtTime } from "../lib/format";
-import { partGain } from "../lib/mix";
+import { fmtSize, fmtTime } from "../lib/format";
+import { arrangementFiles, downloadSize, partGain } from "../lib/mix";
 import { sectionAt } from "../lib/parts";
 import { myPartOf } from "../lib/storage";
 import { Timeline } from "../lib/timeline";
@@ -50,10 +50,19 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   const timeline = useMemo(() => new Timeline(meta.timeline, meta.duration), [meta]);
   // 18 partes decodificadas pesam: 32 kHz basta para estudo e economiza memória no celular
   // (os arranjos longos pedem menos no meta.json)
-  const urls = useMemo(() => meta.parts.map((p) => assetUrl(col, meta, `audio/${p.id}.mp3`)), [meta]);
-  const { engine, progress, error } = usePlayer(timeline, urls, { sampleRate: meta.sampleRate ?? 32000 });
   const [on, setOn] = useState(() => new Set(meta.parts.map((p) => p.index)));
   const [solo, setSolo] = useState(() => new Set<number>());
+  // baixa o mínimo: a banda toda vem num arquivo só (tutti.mp3); ver arrangementFiles
+  const files = useMemo(
+    () => arrangementFiles(meta.parts, on, solo, meta.audio?.["tutti.mp3"] !== undefined),
+    [meta, on, solo],
+  );
+  const tracks = useMemo(
+    () => files.map((f) => ({ url: assetUrl(col, meta, `audio/${f}`), gain: 1 })),
+    [col, meta, files],
+  );
+  const engine = usePlayer(timeline, { sampleRate: meta.sampleRate ?? 32000 });
+  useTracks(engine, tracks);
   const [drawer, setDrawer] = useState(false);
   const [printing, setPrinting] = useState(false);
   const [zoom, zoomIn, zoomOut] = useZoom();
@@ -62,6 +71,12 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   const myInThis = mine && meta.parts.find((p) => p.id === mine.id);
 
   const loaded = useEngineValue(engine, (e) => e.loaded, false);
+  const loading = useEngineValue(engine, (e) => e.loading, false);
+  const waiting = useEngineValue(engine, (e) => e.waiting, false);
+  const progress = useEngineValue(engine, (e) => e.progress, 0);
+  const error = useEngineValue(engine, (e) => e.error, null);
+  const bytes = downloadSize(meta.audio, files);
+  const size = bytes === null ? null : fmtSize(bytes);
   const playing = useEngineValue(engine, (e) => e.playing, false);
   const second = useEngineValue(engine, (e) => Math.floor(e.now() / 1000), 0);
   const measure = useEngineValue(engine, (e) => timeline.at(e.now()).m, 0);
@@ -73,10 +88,6 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
     () => new Set(meta.parts.map((p) => p.index).filter((i) => partGain(i, on, solo) === 0)),
     [meta, on, solo],
   );
-  useEffect(() => {
-    if (!engine || !loaded) return;
-    meta.parts.forEach((p) => engine.setGain(p.index, partGain(p.index, on, solo)));
-  }, [engine, loaded, meta, on, solo]);
 
   useEffect(() => {
     exposeDebug("page", engine ? { engine, timeline, meta, view } : null);
@@ -84,7 +95,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
   }, [engine, timeline, meta, view]);
   usePageView(pageTitle(col, meta.title));
 
-  const onMeasureClick = useCallback((m: number) => engine?.loaded && engine.seekMeasure(m), [engine]);
+  const onMeasureClick = useCallback((m: number) => engine?.seekMeasure(m), [engine]);
   const curSection = (() => {
     let c: number | null = null;
     for (const mk of meta.marks) if (mk.m <= measure) c = mk.m;
@@ -101,7 +112,9 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
               <div className="flex items-center gap-2">
                 <PlayButton
                   playing={playing}
-                  progress={loaded ? null : progress}
+                  waiting={waiting}
+                  progress={loading ? progress : null}
+                  size={loaded ? null : size}
                   onClick={() => engine?.toggle()}
                 />
                 <RewindButton onClick={() => engine?.stop()} />
@@ -111,6 +124,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
                   section={sectionAt(meta.marks, measure)}
                   seconds={fmtTime(second)}
                   duration={fmtTime(meta.duration)}
+                  size={loaded || loading ? null : size}
                 />
               </div>
               <SpeedSelect rate={rate} onChange={(r) => void engine?.setRate(r)} />
@@ -122,7 +136,7 @@ function Arrangement({ meta }: { meta: ArrangementMeta }) {
                     title={`Ensaio ${mk.label} (c. ${mk.m + 1})`}
                     onClick={() => {
                       const k = timeline.first(mk.m);
-                      if (k !== null && engine?.loaded) engine.seek(timeline.startOf(k), { autoplay: true });
+                      if (k !== null) engine?.seek(timeline.startOf(k), { autoplay: true });
                     }}
                     className={`size-8 cursor-pointer rounded-lg border font-display font-semibold ${
                       curSection === mk.m

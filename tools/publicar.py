@@ -168,10 +168,18 @@ def build_audio(sources, dest, slugs, rate=None):
     dest.mkdir(parents=True, exist_ok=True)
     for f in dest.glob("*.mp3"):
         f.unlink()
+    banda = MP3_LEVE["banda"] if rate else MP3_BANDA
     for s, sl in zip(sigs, slugs):
         encode_mp3(s * gain, dest / f"{sl}.mp3", MP3_LEVE["parte"] if rate else MP3_PARTE, rate)
-        encode_mp3((total - s) * gain, dest / f"sem-{sl}.mp3", MP3_LEVE["banda"] if rate else MP3_BANDA, rate)
+        encode_mp3((total - s) * gain, dest / f"sem-{sl}.mp3", banda, rate)
+    # a banda toda num arquivo só: o site começa por ele e só baixa as partes se o músico mexer no mixer
+    encode_mp3(total * gain, dest / "tutti.mp3", banda, rate)
     return n / SR
+
+
+def audio_sizes(audio_dir):
+    """Tamanho (bytes) de cada MP3 publicado, para o site dizer quanto vai baixar."""
+    return {f.name: f.stat().st_size for f in sorted(Path(audio_dir).glob("*.mp3"))}
 
 
 # ---------------------------------------------------------------- partitura
@@ -353,7 +361,7 @@ def update_audio(mscz, digest, work, dest, slugs, force, rate=None):
     """Renderiza só as partes que mudaram e refaz a mistura com todas. Devolve a duração (s)."""
     stamp = work / "audio.sha"
     meta_old = json.loads((dest / "meta.json").read_text()) if (dest / "meta.json").exists() else {}
-    audio_ok = (dest / "audio").exists() and meta_old.get("duration")
+    audio_ok = (dest / "audio" / "tutti.mp3").exists() and meta_old.get("duration")
     rate_ok = meta_old.get("sampleRate") == rate
     if not force and audio_ok and rate_ok and stamp.exists() and stamp.read_text() == audio_stamp(digest, rate):
         log("   áudio em dia (partitura não mudou)")
@@ -428,6 +436,7 @@ def publish(cfg, force, col=COLLECTIONS["banda"]):
     }
     if rate:
         meta["sampleRate"] = rate
+    meta["audio"] = audio_sizes(dest / "audio")
     (dest / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, separators=(",", ":")))
     log(f"   ok: {len(parts)} partes, {len(mq)} compassos, {len(timeline)} compassos tocados, {duration:.1f}s")
     return meta

@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
-import { clickMeasure, engine, expectSound, openLoaded, scoreScale } from "./helpers";
+import { clickMeasure, engine, expectSound, openPlayer, play, scoreScale } from "./helpers";
 
 test.describe("página do arranjo", () => {
-  test.beforeEach(async ({ page }) => openLoaded(page, "/teste"));
+  test.beforeEach(async ({ page }) => openPlayer(page, "/teste"));
 
   test("play toca e o pause para de verdade", async ({ page }) => {
-    await page.locator("#play").click();
+    await play(page);
     await expect.poll(async () => (await engine(page)).pos).toBeGreaterThan(500);
     await expectSound(page, true);
     await page.locator("#play").click();
@@ -39,18 +39,67 @@ test.describe("página do arranjo", () => {
     expect((await engine(page)).metronome).toBe(true);
   });
 
-  test("desligar família apaga as pautas e zera o volume; solo isola", async ({ page }) => {
+  test("desligar família apaga as pautas e tira o áudio dela; solo isola", async ({ page }) => {
     const wood = page.locator('details[data-family="wood"]');
     await wood.getByRole("switch").click();
     await expect(wood.getByTestId("family-count")).toHaveText("0/1");
-    await expect.poll(async () => (await engine(page)).gains).toEqual([0, 1]);
+    await expect.poll(async () => (await engine(page)).files).toEqual(["tuba-mib-1.mp3"]);
     await expect(page.locator("g.staff.muted")).toHaveCount(6);
     await page.getByRole("button", { name: "todos" }).click();
-    await expect.poll(async () => (await engine(page)).gains).toEqual([1, 1]);
+    await expect.poll(async () => (await engine(page)).files).toEqual(["tutti.mp3"]);
     const brass = page.locator('details[data-family="brass-lo"]');
     await brass.locator("summary").click(); // abre o grupo
     await brass.getByRole("button", { name: /Solo/ }).click();
-    await expect.poll(async () => (await engine(page)).gains).toEqual([0, 1]);
+    await expect.poll(async () => (await engine(page)).files).toEqual(["tuba-mib-1.mp3"]);
+  });
+
+  test("só baixa o áudio no play, e a banda toda num arquivo só", async ({ page }) => {
+    const mp3: string[] = [];
+    page.on("request", (r) => {
+      const m = /\/audio\/([^?]+)/.exec(r.url());
+      if (m) mp3.push(m[1]!);
+    });
+    await expect(page.getByTestId("audio-size")).toHaveText(/· [\d,]+ MB/);
+    await page.waitForTimeout(500);
+    expect(mp3).toEqual([]);
+    expect((await engine(page)).loaded).toBe(false);
+    await play(page);
+    expect(mp3).toEqual(["tutti.mp3"]);
+    await expect(page.getByTestId("audio-size")).toHaveCount(0);
+  });
+
+  test("mexer no mixer tocando baixa só o que falta e não para", async ({ page }) => {
+    const mp3: string[] = [];
+    page.on("request", (r) => {
+      const m = /\/audio\/([^?]+)/.exec(r.url());
+      if (m) mp3.push(m[1]!);
+    });
+    await play(page);
+    await page.waitForTimeout(300);
+    await page.locator('details[data-family="wood"]').getByRole("switch").click();
+    await expect.poll(async () => (await engine(page)).loading).toBe(false);
+    const a = await engine(page);
+    expect(a.playing).toBe(true);
+    expect(a.files).toEqual(["tuba-mib-1.mp3"]);
+    expect(mp3).toEqual(["tutti.mp3", "tuba-mib-1.mp3"]);
+    await page.waitForTimeout(400);
+    const b = await engine(page);
+    expect(b.pos).toBeGreaterThan(a.pos + 200); // emendou sem voltar ao início
+    await expectSound(page, true);
+  });
+
+  test("apertar play de novo enquanto o áudio chega desiste de tocar", async ({ page }) => {
+    await page.route("**/audio/tutti.mp3*", async (route) => {
+      await new Promise((r) => setTimeout(r, 800));
+      await route.continue();
+    });
+    await page.locator("#play").click();
+    await expect(page.locator("#play")).toHaveAttribute("aria-label", "Carregando áudio");
+    await page.locator("#play").click();
+    await expect(page.locator("#play")).toHaveAttribute("aria-label", "Tocar");
+    await expect.poll(async () => (await engine(page)).loaded).toBe(true);
+    await page.waitForTimeout(300);
+    expect((await engine(page)).playing).toBe(false);
   });
 
   test("famílias começam fechadas e lembram o que foi aberto", async ({ page }) => {
@@ -109,7 +158,7 @@ test.describe("página do arranjo", () => {
     const warnings: string[] = [];
     page.on("console", (m) => m.type() === "warning" && warnings.push(m.text()));
     await page.locator("#rate").selectOption("0.75");
-    await page.locator("#play").click();
+    await play(page);
     await page.waitForTimeout(2000);
     const s = await engine(page);
     expect(s.rate).toBe(0.75);

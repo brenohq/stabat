@@ -17,3 +17,9 @@ export function matches(query: string, text: string): boolean {
     .filter(Boolean)
     .every((t) => hay.includes(t));
 }
+
+/** 1_396_000 → "1,4 MB" (tamanho de download) */
+export function fmtSize(bytes: number): string {
+  const mb = bytes / 1e6;
+  return `${mb.toLocaleString("pt-BR", { maximumFractionDigits: mb < 10 ? 1 : 0 })} MB`;
+}

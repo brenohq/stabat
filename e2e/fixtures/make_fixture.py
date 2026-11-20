@@ -17,7 +17,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent / "arranjos"
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
-from publicar import split_parts, measure_lengths, time_signatures  # noqa: E402
+from publicar import audio_sizes, split_parts, measure_lengths, time_signatures  # noqa: E402
 
 SR = 44100
 BEAT = 0.5  # s (120 bpm)
@@ -110,6 +110,7 @@ def main():
     for p, s, other in zip(parts, sigs, reversed(sigs)):
         mp3(s, d / "audio" / f"{p['id']}.mp3")
         mp3(other, d / "audio" / f"sem-{p['id']}.mp3")
+    mp3(sum(sigs), d / "audio" / "tutti.mp3")
     make_pdfs(d)
     mq = measure_lengths(first)
     sigs_ts = time_signatures(first)
@@ -117,7 +118,8 @@ def main():
     grid = [[1] * 6 for _ in parts]
     meta = {"id": "teste", "title": "Arranjo de Teste", "subtitle": "Fixture dos testes", "hue": [200, 230],
             "tempo": 120, "time": "4/4", "measures": len(mq), "duration": dur, "marks": [{"m": m, "label": l} for m, l in MARKS.items()],
-            "parts": parts, "timeline": timeline, "grid": grid, "version": "fixture1"}
+            "parts": parts, "timeline": timeline, "grid": grid, "version": "fixture1",
+            "audio": audio_sizes(d / "audio")}
     assert sigs_ts[0] == (4, 4)
     (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1))
     # um segundo arranjo só no índice/busca (reaproveita os arquivos do primeiro)

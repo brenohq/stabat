@@ -3,6 +3,8 @@ import { expect, type Page } from "@playwright/test";
 /** estado do motor de áudio da página (via window.__stabat, exposto com VITE_DEBUG=1) */
 interface EngineState {
   loaded: boolean;
+  loading: boolean;
+  waiting: boolean;
   playing: boolean;
   pos: number;
   rate: number;
@@ -11,6 +13,8 @@ interface EngineState {
   loop: [number, number] | null;
   measure: number;
   level: number;
+  /** arquivos de áudio pedidos ao motor, sem a pasta (ex.: "tutti.mp3") */
+  files: string[];
   gains: number[];
 }
 
@@ -21,6 +25,8 @@ export async function engine(page: Page): Promise<EngineState> {
     const e = p.engine;
     return {
       loaded: e.loaded,
+      loading: e.loading,
+      waiting: e.waiting,
       playing: e.playing,
       pos: Math.round(e.now()),
       rate: e.rate,
@@ -29,23 +35,35 @@ export async function engine(page: Page): Promise<EngineState> {
       loop: e.loop,
       measure: p.timeline.at(e.now()).m,
       level: e.level(),
-      gains: e.gains(),
+      files: e.tracks().map((t: { file: string }) => t.file),
+      gains: e.tracks().map((t: { gain: number }) => t.gain),
     };
   });
 }
 
-/** abre a página e espera áudio e partitura prontos */
-export async function openLoaded(page: Page, path: string): Promise<void> {
+/** abre a página do arranjo ou da parte e espera a partitura e o motor (o áudio só vem no play) */
+export async function openPlayer(page: Page, path: string): Promise<void> {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(path);
-  // arranjos longos (Abba Gold: 18 partes × 6min45s) levam ~9 s para baixar e decodificar sozinhos, e bem
-  // mais com os testes rodando em paralelo; o limite padrão de 15 s fica curto
-  await expect
-    .poll(async () => (await engine(page).catch(() => null))?.loaded ?? false, { timeout: 45_000 })
-    .toBe(true);
+  await expect.poll(async () => (await engine(page).catch(() => null)) !== null).toBe(true);
   await expect(page.getByTestId("score").locator("g.measure").first()).toBeVisible();
   expect(errors, "erros de JavaScript na página").toEqual([]);
+}
+
+/** aperta o play e espera o áudio baixar e começar a tocar */
+export async function play(page: Page): Promise<void> {
+  await page.locator("#play").click();
+  // arranjos longos (Abba Gold, 6min45s) demoram a baixar e decodificar com os testes em paralelo
+  await expect
+    .poll(
+      async () => {
+        const e = await engine(page);
+        return e.loaded && e.playing;
+      },
+      { timeout: 45_000 },
+    )
+    .toBe(true);
 }
 
 /** clica no compasso m (0 = primeiro) da partitura */

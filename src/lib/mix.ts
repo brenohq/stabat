@@ -1,4 +1,5 @@
 import type { Loudness } from "./loudness";
+import type { Part } from "./types";
 
 /** Página da parte: controle 0–100 (0 = só banda, 100 = só minha parte). */
 export const DEFAULT_PART_MIX = 90;
@@ -53,4 +54,37 @@ export function mixGains(
 export function partGain(i: number, on: ReadonlySet<number>, solo: ReadonlySet<number>): number {
   if (solo.size) return solo.has(i) ? 1 : 0;
   return on.has(i) ? 1 : 0;
+}
+
+/**
+ * Página do arranjo: arquivos de áudio (em audio/) para o que está ligado, baixando o
+ * mínimo. Com as misturas publicadas (`tutti.mp3`), a banda toda é um arquivo só, tirar
+ * uma parte usa o "sem a parte" e uma parte sozinha usa o arquivo dela; as outras
+ * combinações somam as partes ligadas, uma a uma.
+ */
+export function arrangementFiles(
+  parts: readonly Pick<Part, "id" | "index">[],
+  on: ReadonlySet<number>,
+  solo: ReadonlySet<number>,
+  hasTutti: boolean,
+): string[] {
+  const audible = parts.filter((p) => partGain(p.index, on, solo) > 0);
+  const own = (ps: typeof parts) => ps.map((p) => `${p.id}.mp3`);
+  if (!hasTutti) return own(audible);
+  if (audible.length === parts.length) return ["tutti.mp3"];
+  if (audible.length <= 1) return own(audible);
+  if (audible.length === parts.length - 1) {
+    const out = parts.find((p) => !audible.includes(p))!;
+    return [`sem-${out.id}.mp3`];
+  }
+  return own(audible);
+}
+
+/** bytes a baixar para tocar esses arquivos (null se o meta.json não traz os tamanhos) */
+export function downloadSize(
+  audio: Record<string, number> | undefined,
+  files: readonly string[],
+): number | null {
+  if (!audio || files.some((f) => audio[f] === undefined)) return null;
+  return files.reduce((n, f) => n + audio[f]!, 0);
 }

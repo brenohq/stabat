@@ -39,11 +39,14 @@ export function Clock({
   section,
   seconds,
   duration,
+  size,
 }: {
   measure: number;
   section: string | null;
   seconds: string;
   duration: string;
+  /** tamanho do áudio a baixar no primeiro play (some depois que baixa) */
+  size?: string | null;
 }) {
   return (
     <div className="text-[13px] whitespace-nowrap text-muted tabular-nums" data-testid="clock">
@@ -53,6 +56,12 @@ export function Clock({
       {section && <span>· ensaio {section}</span>}
       <br />
       {seconds} / {duration}
+      {size && (
+        <span data-testid="audio-size" title="Áudio a baixar quando tocar">
+          {" "}
+          · {size}
+        </span>
+      )}
     </div>
   );
 }

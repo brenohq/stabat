@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { openLoaded } from "./helpers";
+import { openPlayer } from "./helpers";
 import quartet from "../public/arranjos/quarteto/index.json" with { type: "json" };
 
 /** capturas para revisão visual: npm run shots → .shots/*.png */
@@ -53,7 +53,7 @@ for (const s of sizes)
           (id) => localStorage.setItem("stabat.myPart", JSON.stringify({ id, name: id })),
           p.mine,
         );
-      if (p.loaded) await openLoaded(page, p.path);
+      if (p.loaded) await openPlayer(page, p.path);
       else {
         await page.goto(p.path);
         await page.getByTestId(ready(p.path)).first().waitFor();

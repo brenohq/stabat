@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { engine, openLoaded, pickPart } from "./helpers";
+import { engine, openPlayer, pickPart } from "./helpers";
 
 test.describe("página /smells (escondida)", () => {
   test("a fixture não tem notas fora da extensão (Dó4 ainda vale)", async ({ page }) => {
-    await openLoaded(page, "/teste/tuba-mib-1/smells");
+    await openPlayer(page, "/teste/tuba-mib-1/smells");
     await expect(page.getByTestId("smells-count")).toHaveText(/Nenhuma nota fora/);
     await expect(page.getByTestId("score").locator("g.note.smell")).toHaveCount(0);
   });
@@ -22,7 +22,7 @@ test.describe("página /smells (escondida)", () => {
       },
     );
     await page.evaluate(() => localStorage.removeItem("stabat.myPart")).catch(() => {});
-    await openLoaded(page, "/teste/clarinete-sib-1/smells");
+    await openPlayer(page, "/teste/clarinete-sib-1/smells");
 
     const box = page.getByTestId("smells");
     await expect(page.getByTestId("smells-count")).toHaveText(/2 notas \(1 aguda, 1 grave\) em 2 compassos/);
@@ -52,7 +52,7 @@ test.describe("página /smells (escondida)", () => {
   });
 
   test("a página normal da parte não mostra smells", async ({ page }) => {
-    await openLoaded(page, "/teste/clarinete-sib-1");
+    await openPlayer(page, "/teste/clarinete-sib-1");
     await expect(page.getByTestId("smells")).toHaveCount(0);
     await expect(page.getByTestId("score").locator("g.note.smell")).toHaveCount(0);
   });

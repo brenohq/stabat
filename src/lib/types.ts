@@ -42,6 +42,8 @@ export interface ArrangementMeta {
   version: string;
   /** taxa (Hz) em que o site decodifica o áudio; só nos arranjos longos (menos memória no celular) */
   sampleRate?: number;
+  /** tamanho (bytes) de cada arquivo em audio/, ex.: {"tutti.mp3": 1396000}; ausente nos arranjos antigos */
+  audio?: Record<string, number>;
 }
 
 export type ArrangementSummary = Pick<

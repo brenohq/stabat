@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
-import { engine, expectSound, openLoaded } from "./helpers";
+import { engine, expectSound, openPlayer, play } from "./helpers";
 import index from "../public/arranjos/index.json" with { type: "json" };
 import quartet from "../public/arranjos/quarteto/index.json" with { type: "json" };
 
 /** fumaça com os arranjos publicados: cada um carrega, toca e pausa */
 for (const a of index) {
   test(`arranjo publicado: ${a.id}`, async ({ page }) => {
-    await openLoaded(page, `/${a.id}`);
-    await page.locator("#play").click();
+    await openPlayer(page, `/${a.id}`);
+    await play(page);
     await expectSound(page, true);
     await page.locator("#play").click();
     expect((await engine(page)).playing).toBe(false);
@@ -17,8 +17,8 @@ for (const a of index) {
 /** quarteto (/quarteto): enquanto não houver arranjos publicados, o índice é [] e nada roda aqui */
 for (const a of quartet as { id: string }[]) {
   test(`arranjo publicado do quarteto: ${a.id}`, async ({ page }) => {
-    await openLoaded(page, `/quarteto/${a.id}`);
-    await page.locator("#play").click();
+    await openPlayer(page, `/quarteto/${a.id}`);
+    await play(page);
     await expectSound(page, true);
     await page.locator("#play").click();
     expect((await engine(page)).playing).toBe(false);
@@ -27,8 +27,8 @@ for (const a of quartet as { id: string }[]) {
 
 test("parte publicada abre e toca", async ({ page }) => {
   const a = index[0]!;
-  await openLoaded(page, `/${a.id}/trompete-sib-1`);
-  await page.locator("#play").click();
+  await openPlayer(page, `/${a.id}/trompete-sib-1`);
+  await play(page);
   await expectSound(page, true);
   await expect(page.getByTestId("level-me")).toHaveText("90%");
 });

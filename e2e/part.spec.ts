@@ -1,13 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { clickMeasure, engine, expectSound, openLoaded, pickPart, scoreScale } from "./helpers";
+import { clickMeasure, engine, expectSound, openPlayer, pickPart, play, scoreScale } from "./helpers";
 import { SCORE_SCALE } from "../src/score/sizing";
 
 test.describe("página da parte", () => {
-  test.beforeEach(async ({ page }) => openLoaded(page, "/teste/clarinete-sib-1"));
+  test.beforeEach(async ({ page }) => openPlayer(page, "/teste/clarinete-sib-1"));
 
   test("abre com 90% minha parte / 10% banda e grava a parte escolhida", async ({ page }) => {
     await expect(page.getByTestId("level-me")).toHaveText("90%");
     await expect(page.getByTestId("level-band")).toHaveText("10%");
+    await play(page); // o volume da parte é igualado ao da banda quando o áudio chega
     // banda 6 dB abaixo (0,5) × 10/90; a parte vai ao mesmo volume percebido da banda
     await expect.poll(async () => (await engine(page)).gains[1]).toBeCloseTo(0.056, 2);
     const [me, band] = (await engine(page)).gains;
@@ -16,6 +17,7 @@ test.describe("página da parte", () => {
   });
 
   test("atalhos de volume", async ({ page }) => {
+    await play(page);
     await page.getByRole("button", { name: "Só banda" }).click();
     await expect(page.getByTestId("level-me")).toHaveText("0%");
     await expect.poll(async () => (await engine(page)).gains[0]).toBe(0);
@@ -26,7 +28,7 @@ test.describe("página da parte", () => {
   });
 
   test("play/pause com som", async ({ page }) => {
-    await page.locator("#play").click();
+    await play(page);
     await expectSound(page, true);
     await page.locator("#play").click();
     await expectSound(page, false);
@@ -40,6 +42,7 @@ test.describe("página da parte", () => {
     await clickMeasure(page, 3);
     await expect(page.locator("#loop")).toContainText("c. 3–4");
     await expect.poll(async () => (await engine(page)).loop).toEqual([4000, 8000]);
+    await expect.poll(async () => (await engine(page)).playing).toBe(true);
     await page.evaluate(() => (window as any).__stabat.page.engine.seek(7600));
     await page.waitForTimeout(900);
     const s = await engine(page);
@@ -65,7 +68,7 @@ test.describe("página da parte", () => {
   test("o zoom da parte vale também no arranjo", async ({ page }) => {
     await page.locator("#zin").click();
     await page.locator("#zin").click();
-    await openLoaded(page, "/teste");
+    await openPlayer(page, "/teste");
     await expect.poll(() => scoreScale(page)).toBe(Math.round(SCORE_SCALE.desktop * 1.2));
   });
 
@@ -80,7 +83,7 @@ test.describe("página da parte", () => {
     await expect(page.locator("#metro")).toHaveAttribute("aria-pressed", "true");
     await page.locator("#count").click();
     expect((await engine(page)).countIn).toBe(true);
-    await page.locator("#play").click();
+    await play(page);
     await page.waitForTimeout(1200); // 4 tempos de contagem = 2 s: ainda não andou
     expect((await engine(page)).pos).toBe(0);
     await expect.poll(async () => (await engine(page)).pos, { timeout: 5000 }).toBeGreaterThan(200);

@@ -5,8 +5,16 @@ import { ignoreSilentSwitch, releaseSilentSwitch } from "./silentSwitch";
 /** Processador do SoundTouch (MPL-2.0), servido de public/vendor. */
 const SOUNDTOUCH_URL = `${import.meta.env.BASE_URL}vendor/soundtouch-processor.js`;
 
+/** uma fonte de áudio pedida: o arquivo e o volume */
+export interface Track {
+  url: string;
+  gain: number;
+}
+
+/** fonte pronta para tocar */
 interface Stem {
-  buffer: AudioBuffer | null;
+  url: string;
+  buffer: AudioBuffer;
   gain: GainNode;
 }
 
@@ -42,7 +50,19 @@ export class Engine {
   private readonly bus: GainNode;
   private readonly clickGain: GainNode;
   private stNode: AudioWorkletNode | null | undefined;
+  /** fontes tocando agora */
   private stems: Stem[] = [];
+  /** fontes pedidas (podem ainda estar baixando) */
+  private want: Track[] = [];
+  /** áudio baixado e decodificado (ou a caminho), por URL */
+  private buffers = new Map<string, Promise<AudioBuffer>>();
+  /** muda a cada pedido novo: um carregamento ultrapassado não troca as fontes */
+  private gen = 0;
+  /** o músico já pediu para ouvir: a partir daí, trocar as fontes baixa o que faltar */
+  private requested = false;
+  private pendingCountIn = false;
+  private fetchSlots = 4;
+  private fetchQueue: (() => void)[] = [];
   private segments: Segment[] = [];
   private voices = new Set<OscillatorNode>();
   private listeners = new Set<Listener>();
@@ -53,7 +73,15 @@ export class Engine {
   pos = 0;
   rate = 1;
   playing = false;
+  /** as fontes pedidas estão prontas para tocar */
   loaded = false;
+  /** baixando fontes (a primeira vez ou uma troca de mistura) */
+  loading = false;
+  /** 0–1 do carregamento em curso */
+  progress = 0;
+  /** apertou play antes do áudio chegar: toca assim que carregar */
+  waiting = false;
+  error: string | null = null;
   metronome = true;
   countIn = false;
   loop: [number, number] | null = null;
@@ -103,47 +131,154 @@ export class Engine {
     return this.stems.length;
   }
 
-  /** baixa e decodifica as partes; o índice de cada URL é o índice usado em setGain */
-  async load(urls: string[], onProgress?: (fraction: number) => void): Promise<void> {
-    let done = 0;
-    this.stems = urls.map(() => {
-      const gain = this.ctx.createGain();
-      gain.connect(this.bus);
-      return { buffer: null, gain };
-    });
-    const queue = urls.map((u, i) => [u, i] as const);
-    const worker = async () => {
-      for (let item = queue.shift(); item; item = queue.shift()) {
-        const [url, i] = item;
-        const r = await fetch(url);
-        if (!r.ok) throw new Error(`Falha ao baixar ${url}`);
-        const data = await r.arrayBuffer();
-        if (this.disposed) return;
-        this.stems[i]!.buffer = await this.ctx.decodeAudioData(data);
-        onProgress?.(++done / urls.length);
+  /**
+   * Fontes a tocar (arquivo e volume; a ordem vale para loudness()). Nada é baixado antes
+   * do primeiro play. Depois dele, uma troca para outros arquivos baixa só o que falta e
+   * continua tocando a mistura anterior até tudo chegar; aí emenda sem parar.
+   */
+  setTracks(tracks: Track[]): void {
+    this.want = tracks;
+    if (this.loaded && sameUrls(tracks, this.stems)) {
+      if (this.loading) {
+        this.gen++; // voltou à mistura que já toca: esquece o que estava baixando
+        this.loading = false;
       }
+      tracks.forEach((t, i) => this.stems[i]!.gain.gain.setTargetAtTime(t.gain, this.ctx.currentTime, 0.02));
+      this.emit();
+      return;
+    }
+    if (this.requested) void this.prepare();
+    else this.emit();
+  }
+
+  /** fontes pedidas, com o arquivo sem a pasta (para testes e depuração) */
+  tracks(): { file: string; gain: number }[] {
+    return this.want.map((t) => ({
+      file: t.url.replace(/\?.*$/, "").replace(/^.*\//, ""),
+      gain: Math.round(t.gain * 1000) / 1000,
+    }));
+  }
+
+  /** baixa e decodifica as fontes pedidas e passa a tocar com elas */
+  private async prepare(): Promise<void> {
+    const gen = ++this.gen;
+    const want = this.want;
+    const urls = [...new Set(want.map((t) => t.url))];
+    const frac = new Map(urls.map((u) => [u, 0]));
+    const report = () => {
+      if (gen !== this.gen) return;
+      let sum = 0;
+      for (const f of frac.values()) sum += f;
+      this.progress = urls.length ? sum / urls.length : 1;
+      this.emit();
     };
-    await Promise.all(Array.from({ length: Math.min(4, urls.length) }, worker));
-    if (this.disposed) return;
+    this.loading = true;
+    this.error = null;
+    report();
+    let bufs: Map<string, AudioBuffer>;
+    try {
+      const list = await Promise.all(
+        urls.map((u) =>
+          this.buffer(u, (f) => (frac.set(u, f), report())).then((b) => (frac.set(u, 1), report(), b)),
+        ),
+      );
+      bufs = new Map(urls.map((u, i) => [u, list[i]!]));
+    } catch (err) {
+      for (const u of urls) this.buffers.delete(u); // deixa tentar de novo
+      if (gen !== this.gen || this.disposed) return;
+      console.error(err);
+      this.loading = false;
+      this.waiting = false;
+      this.error = "Erro ao carregar o áudio";
+      this.emit();
+      return;
+    }
+    if (gen !== this.gen || this.disposed) return;
+    this.swap(want, bufs);
+    // solta da memória o que não toca mais (se voltar, vem do cache do navegador)
+    for (const u of [...this.buffers.keys()]) if (!bufs.has(u)) this.buffers.delete(u);
+    this.loading = false;
     this.loaded = true;
+    this.progress = 1;
+    if (this.waiting) {
+      this.waiting = false;
+      void this.play({ countIn: this.pendingCountIn });
+    }
     this.emit();
   }
 
-  setGain(i: number, v: number): void {
-    this.stems[i]?.gain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.02);
+  /** áudio decodificado de uma URL (baixa uma vez; até 4 arquivos ao mesmo tempo) */
+  private buffer(url: string, onProgress: (fraction: number) => void): Promise<AudioBuffer> {
+    let p = this.buffers.get(url);
+    if (!p) {
+      p = this.withSlot(async () => {
+        const data = await download(url, onProgress);
+        return this.ctx.decodeAudioData(data);
+      });
+      this.buffers.set(url, p);
+    }
+    return p;
   }
 
-  /** volume percebido de uma parte já carregada (null se ainda não carregou) */
+  private async withSlot<T>(fn: () => Promise<T>): Promise<T> {
+    if (this.fetchSlots === 0) await new Promise<void>((r) => this.fetchQueue.push(r));
+    else this.fetchSlots--;
+    try {
+      return await fn();
+    } finally {
+      const next = this.fetchQueue.shift();
+      if (next) next();
+      else this.fetchSlots++;
+    }
+  }
+
+  /** troca as fontes; tocando, emenda com um cruzamento curto, sem mexer na posição */
+  private swap(want: Track[], bufs: Map<string, AudioBuffer>): void {
+    const old = this.stems;
+    const live = this.playing && this.segments.length > 0;
+    const t0 = this.ctx.currentTime + 0.05;
+    const fade = 0.02;
+    this.stems = want.map((t) => {
+      const gain = this.ctx.createGain();
+      if (live) {
+        gain.gain.setValueAtTime(0, 0);
+        gain.gain.setValueAtTime(0, t0);
+        gain.gain.linearRampToValueAtTime(t.gain, t0 + fade);
+      } else gain.gain.value = t.gain;
+      gain.connect(this.bus);
+      return { url: t.url, buffer: bufs.get(t.url)!, gain };
+    });
+    if (!live) {
+      for (const s of old) s.gain.disconnect();
+      return;
+    }
+    for (const s of old) {
+      s.gain.gain.cancelScheduledValues(t0);
+      s.gain.gain.setValueAtTime(s.gain.gain.value, t0);
+      s.gain.gain.linearRampToValueAtTime(0, t0 + fade);
+    }
+    for (const seg of this.segments) {
+      for (const x of seg.srcs) {
+        try {
+          x.stop(t0 + fade);
+        } catch {
+          /* já parado */
+        }
+      }
+      if (seg.end <= t0) continue;
+      const when = Math.max(t0, seg.when);
+      const from = seg.from + (when - seg.when) * 1000 * this.rate;
+      for (const s of this.stems) seg.srcs.push(this.source(s, when, from, seg.to));
+    }
+    setTimeout(() => old.forEach((s) => s.gain.disconnect()), 500);
+  }
+
+  /** volume percebido de uma fonte já carregada, na ordem de setTracks (null se ainda não carregou) */
   loudness(i: number): Loudness | null {
     const b = this.stems[i]?.buffer;
     if (!b) return null;
     const chans = Array.from({ length: b.numberOfChannels }, (_, c) => b.getChannelData(c));
     return measureLoudness(chans, b.sampleRate);
-  }
-
-  /** volume atual de cada parte (para testes e depuração) */
-  gains(): number[] {
-    return this.stems.map((s) => Math.round(s.gain.gain.value * 1000) / 1000);
   }
 
   /** nível RMS do que está saindo agora (0 = silêncio) */
@@ -193,7 +328,20 @@ export class Engine {
   }
 
   async play({ countIn = this.countIn }: { countIn?: boolean } = {}): Promise<void> {
-    if (this.playing || !this.loaded || this.disposed) return;
+    if (this.playing || this.disposed) return;
+    if (!this.loaded) {
+      // primeiro play: só agora baixa o áudio, e toca quando chegar
+      ignoreSilentSwitch(); // dentro do gesto do usuário
+      void this.ctx.resume().catch(() => {});
+      this.waiting = true;
+      this.pendingCountIn = countIn;
+      if (!this.requested || !this.loading) {
+        this.requested = true;
+        void this.prepare();
+      }
+      this.emit();
+      return;
+    }
     this.playing = true; // marca já: evita dois plays seguidos
     ignoreSilentSwitch(); // iPhone: tocar mesmo com a chave de silencioso (antes de qualquer await)
     if (this.ctx.state !== "running") await this.ctx.resume();
@@ -232,17 +380,19 @@ export class Engine {
       srcs: [],
       beatIdx: lowerBound(this.timeline.beats, from - 1, (b) => b.t),
     };
-    for (const s of this.stems) {
-      if (!s.buffer) continue;
-      const src = this.ctx.createBufferSource();
-      src.buffer = s.buffer;
-      src.playbackRate.value = this.rate;
-      src.connect(s.gain);
-      src.start(when, from / 1000, Math.max(0, (to - from) / 1000));
-      seg.srcs.push(src);
-    }
+    for (const s of this.stems) seg.srcs.push(this.source(s, when, from, to));
     this.segments.push(seg);
     if (this.segments.length > 3) this.segments.shift();
+  }
+
+  /** agenda um trecho (ms do áudio) de uma fonte para começar em `when` */
+  private source(s: Stem, when: number, from: number, to: number): AudioBufferSourceNode {
+    const src = this.ctx.createBufferSource();
+    src.buffer = s.buffer;
+    src.playbackRate.value = this.rate;
+    src.connect(s.gain);
+    src.start(when, from / 1000, Math.max(0, (to - from) / 1000));
+    return src;
   }
 
   private tick(): void {
@@ -318,6 +468,11 @@ export class Engine {
   }
 
   pause(): void {
+    if (this.waiting) {
+      this.waiting = false; // desistiu antes do áudio chegar (o download segue)
+      releaseSilentSwitch();
+      this.emit();
+    }
     if (!this.playing) return;
     this.pos = this.now();
     this.halt();
@@ -325,7 +480,7 @@ export class Engine {
   }
 
   toggle(): void {
-    if (this.playing) this.pause();
+    if (this.playing || this.waiting) this.pause();
     else void this.play();
   }
 
@@ -387,8 +542,55 @@ export class Engine {
 
   dispose(): void {
     this.disposed = true;
+    this.gen++;
     this.halt();
+    this.buffers.clear();
     this.listeners.clear();
     void this.ctx.close();
   }
+}
+
+function sameUrls(tracks: Track[], stems: Stem[]): boolean {
+  return tracks.length === stems.length && tracks.every((t, i) => t.url === stems[i]!.url);
+}
+
+/** baixa um arquivo inteiro, contando o progresso pelos bytes recebidos */
+async function download(url: string, onProgress: (fraction: number) => void): Promise<ArrayBuffer> {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Falha ao baixar ${url}`);
+  const total = Number(r.headers.get("content-length")) || 0;
+  if (!r.body || !total) return r.arrayBuffer();
+  const reader = r.body.getReader();
+  const out = new Uint8Array(total);
+  let got = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (got + value.length > total) return concatTail(out.subarray(0, got), value, reader);
+    out.set(value, got);
+    got += value.length;
+    onProgress(got / total);
+  }
+  return got === total ? out.buffer : out.slice(0, got).buffer;
+}
+
+/** o servidor mandou mais que o content-length (ex.: compressão): junta o resto sem contar */
+async function concatTail(
+  head: Uint8Array,
+  value: Uint8Array,
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+): Promise<ArrayBuffer> {
+  const chunks = [head, value];
+  for (;;) {
+    const r = await reader.read();
+    if (r.done) break;
+    chunks.push(r.value);
+  }
+  const out = new Uint8Array(chunks.reduce((n, c) => n + c.length, 0));
+  let o = 0;
+  for (const c of chunks) {
+    out.set(c, o);
+    o += c.length;
+  }
+  return out.buffer;
 }

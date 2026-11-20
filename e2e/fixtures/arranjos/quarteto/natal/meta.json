@@ -100,5 +100,12 @@
    1
   ]
  ],
- "version": "fixture1"
+ "version": "fixture1",
+ "audio": {
+  "clarinete-sib-1.mp3": 128565,
+  "sem-clarinete-sib-1.mp3": 128565,
+  "sem-tuba-mib-1.mp3": 128565,
+  "tuba-mib-1.mp3": 128565,
+  "tutti.mp3": 128565
+ }
 }

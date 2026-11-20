@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 import { PDFDocument } from "pdf-lib";
-import { openLoaded } from "./helpers";
+import { openPlayer } from "./helpers";
 
 /** no arranjo de teste: Clarinete Sib 1 tem 2 páginas, Tuba Mib 1 tem 1 */
 const copies = (page: Page, name: string) => page.getByLabel(`Cópias de ${name}`);
@@ -18,7 +18,7 @@ async function downloadPages(page: Page): Promise<number> {
 
 test.describe("imprimir partes", () => {
   test.beforeEach(async ({ page }) => {
-    await openLoaded(page, "/teste");
+    await openPlayer(page, "/teste");
     await page.getByTestId("print-open").click();
   });
 

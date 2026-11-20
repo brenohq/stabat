@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { openLoaded } from "./helpers";
+import { openPlayer } from "./helpers";
 
 test.describe("celular", () => {
   test("parte: sem abreviação do instrumento e barra no rodapé", async ({ page }) => {
-    await openLoaded(page, "/teste/clarinete-sib-1");
+    await openPlayer(page, "/teste/clarinete-sib-1");
     await expect(page.getByTestId("score")).not.toContainText("Cl. 1");
     const bar = (await page.getByTestId("bottom-bar").boundingBox())!;
     expect(bar.y + bar.height).toBeGreaterThanOrEqual(page.viewportSize()!.height);
@@ -14,7 +14,7 @@ test.describe("celular", () => {
   }) => {
     // tela baixa e partitura grande: o arranjo de teste (6 compassos) não cabe
     await page.setViewportSize({ width: page.viewportSize()!.width, height: 600 });
-    await openLoaded(page, "/teste/clarinete-sib-1");
+    await openPlayer(page, "/teste/clarinete-sib-1");
     for (let i = 0; i < 8; i++) await page.locator("#zin").click();
     const area = page.getByTestId("scroll-area");
     await expect.poll(() => area.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeGreaterThan(150);
@@ -31,7 +31,7 @@ test.describe("celular", () => {
   });
 
   test("arranjo: gaveta de instrumentos abre acima da barra", async ({ page }) => {
-    await openLoaded(page, "/teste");
+    await openPlayer(page, "/teste");
     const panel = page.getByTestId("mixer-panel");
     await expect(panel).toBeHidden();
     await page.getByRole("button", { name: "Instrumentos", exact: true }).click();

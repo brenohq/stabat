@@ -58,6 +58,14 @@ class TestPublicar(unittest.TestCase):
         self.assertNotEqual(publicar.version(d, 22050), d[:10])
         self.assertEqual(len(publicar.version(d, 22050)), 10)
 
+    def test_audio_sizes_lista_os_mp3(self):
+        with tempfile.TemporaryDirectory() as t:
+            d = Path(t)
+            (d / "tutti.mp3").write_bytes(b"x" * 5)
+            (d / "tuba.mp3").write_bytes(b"x" * 3)
+            (d / "notas.txt").write_text("fora")
+            self.assertEqual(publicar.audio_sizes(d), {"tuba.mp3": 3, "tutti.mp3": 5})
+
     def test_changed_parts_so_o_que_mudou(self):
         hashes = {"clarinete-sib-1": "a", "tuba-mib-1": "b", "trompete-sib-1": "c"}
         cached = {"clarinete-sib-1": "a", "tuba-mib-1": "velho"}

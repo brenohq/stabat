@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { measureLoudness } from "./loudness";
-import { DEFAULT_PART_MIX, PART_BOOST, matchGains, mixGains, mixLevels, partGain } from "./mix";
+import {
+  DEFAULT_PART_MIX,
+  PART_BOOST,
+  arrangementFiles,
+  downloadSize,
+  matchGains,
+  mixGains,
+  mixLevels,
+  partGain,
+} from "./mix";
 
 describe("mixagem da parte", () => {
   it("padrão é 90% minha parte / 10% banda", () => {
@@ -68,5 +77,48 @@ describe("volume no arranjo", () => {
     expect(partGain(2, on, new Set())).toBe(0);
     expect(partGain(0, on, new Set([1]))).toBe(0);
     expect(partGain(2, on, new Set([2]))).toBe(1);
+  });
+});
+
+describe("arquivos do arranjo", () => {
+  const parts = ["clarinete", "sax", "trompete", "tuba"].map((id, index) => ({ id, index }));
+  const all = new Set([0, 1, 2, 3]);
+  const none = new Set<number>();
+  const files = (on: Set<number>, solo = none, tutti = true) => arrangementFiles(parts, on, solo, tutti);
+
+  it("banda toda: um arquivo só", () => {
+    expect(files(all)).toEqual(["tutti.mp3"]);
+  });
+
+  it("sem uma parte: o arquivo 'sem a parte'", () => {
+    expect(files(new Set([0, 1, 3]))).toEqual(["sem-trompete.mp3"]);
+  });
+
+  it("uma parte (ligada ou em solo): o arquivo dela", () => {
+    expect(files(new Set([2]))).toEqual(["trompete.mp3"]);
+    expect(files(all, new Set([3]))).toEqual(["tuba.mp3"]);
+  });
+
+  it("outras combinações: as partes ligadas", () => {
+    expect(files(new Set([0, 3]))).toEqual(["clarinete.mp3", "tuba.mp3"]);
+    expect(files(all, new Set([1, 2]))).toEqual(["sax.mp3", "trompete.mp3"]);
+  });
+
+  it("nada ligado: nenhum arquivo", () => {
+    expect(files(none)).toEqual([]);
+  });
+
+  it("arranjo sem as misturas publicadas: sempre as partes", () => {
+    expect(files(all, none, false)).toEqual(parts.map((p) => `${p.id}.mp3`));
+  });
+});
+
+describe("tamanho do download", () => {
+  it("soma os arquivos; sem os tamanhos no meta.json, null", () => {
+    const audio = { "tutti.mp3": 1000, "tuba.mp3": 300, "sax.mp3": 200 };
+    expect(downloadSize(audio, ["tutti.mp3"])).toBe(1000);
+    expect(downloadSize(audio, ["tuba.mp3", "sax.mp3"])).toBe(500);
+    expect(downloadSize(audio, ["trompete.mp3"])).toBeNull();
+    expect(downloadSize(undefined, ["tuba.mp3"])).toBeNull();
   });
 });
