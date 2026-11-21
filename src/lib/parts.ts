@@ -19,10 +19,11 @@ export function shortName(name: string): string {
 }
 
 export type Instrument =
-  "clarinet" | "sax" | "trumpet" | "saxhorn" | "trombone" | "euphonium" | "tuba" | "sousaphone";
+  "recorder" | "clarinet" | "sax" | "trumpet" | "saxhorn" | "trombone" | "euphonium" | "tuba" | "sousaphone";
 
 // "saxhorn" antes de "sax"
 const INSTRUMENTS: [RegExp, Instrument][] = [
+  [/flauta doce/, "recorder"],
   [/clarinete/, "clarinet"],
   [/saxhorn/, "saxhorn"],
   [/sax/, "sax"],

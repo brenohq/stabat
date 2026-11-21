@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router";
-import { CalendarIcon, ChevronDownIcon, CloseIcon, GameIcon, MenuIcon, NoteIcon } from "./icons";
+import { BookIcon, CalendarIcon, ChevronDownIcon, CloseIcon, GameIcon, MenuIcon, NoteIcon } from "./icons";
 
 const itemClass = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-[15px] no-underline transition-colors hover:bg-surface-2 [&_svg]:size-[18px] [&_svg]:flex-none ${
     isActive ? "bg-accent-soft font-semibold" : ""
   }`;
 
-/** menu do topo: Calendário da Banda e o grupo recolhível Jogos */
+/** menu do topo, nesta ordem: Calendário da Banda, Estudos e o grupo recolhível Jogos */
 function SiteMenu() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
@@ -54,6 +54,10 @@ function SiteMenu() {
           <NavLink to="/calendario" className={itemClass} onClick={close}>
             <CalendarIcon />
             Calendário da Banda
+          </NavLink>
+          <NavLink to="/estudos" className={itemClass} onClick={close}>
+            <BookIcon />
+            Estudos
           </NavLink>
           <button
             type="button"

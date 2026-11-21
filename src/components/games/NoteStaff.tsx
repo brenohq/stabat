@@ -13,12 +13,22 @@ const CLEF =
 const WHOLE =
   "M216 125c93 0 206 -52 206 -123c0 -70 -52 -127 -216 -127c-149 0 -206 60 -206 127c0 68 83 123 216 123zM111 63c-2 -8 -3 -16 -3 -24c0 -32 15 -66 35 -89c21 -28 58 -52 94 -52c10 0 21 1 31 4c33 8 46 36 46 67c0 60 -55 134 -124 134c-31 0 -68 -5 -79 -40z";
 const WHOLE_WIDTH = 422;
+// acidentes da armadura (E262 sustenido, E260 bemol), também da Bravura via Verovio
+const SHARP =
+  "M136 186v169h17v-164l44 14v-91l-44 -14v-165l44 12v-91l-44 -13v-155h-17v150l-76 -22v-155h-17v149l-43 -13v90l43 14v167l-43 -14v92l43 13v169h17v-163zM60 73v-167l76 22v168z";
+const FLAT =
+  "M20 110c32 16 54 27 93 27c26 0 35 -3 54 -13c13 -7 24 -20 27 -38l4 -25c0 -28 -16 -57 -45 -89c-23 -25 -39 -44 -65 -68l-88 -79v644h20v-359zM90 106c-32 0 -48 -10 -70 -29v-194c31 31 54 59 71 84c21 32 32 59 32 84c0 9 1 16 1 20c0 14 -3 21 -11 30l-8 3z";
+/** x onde começa a armadura e quanto cada acidente ocupa (em espaços da pauta) */
+export const SIGNATURE_X = 3.9;
+export const SIGNATURE_STEP = 1.05;
 const BRAVURA_SPACE = 250;
 const INK = "#151515";
 
 export interface StaffNote {
   /** passo: 0 = 1ª linha (Mi4), meia linha por passo */
   step: number;
+  /** acidente escrito na própria nota (1 = sustenido, -1 = bemol) */
+  acc?: -1 | 0 | 1;
   color?: string;
   /** muda a chave do elemento → a animação de entrada roda de novo */
   key?: string | number;
@@ -30,6 +40,9 @@ export function NoteStaff({
   notes,
   xs,
   label,
+  signature,
+  underlay,
+  staffEnd,
   children,
 }: {
   geo: StaffGeometry;
@@ -37,6 +50,12 @@ export function NoteStaff({
   /** centro horizontal de cada nota */
   xs: number[];
   label: string;
+  /** armadura de clave: 1 = sustenidos, -1 = bemóis; passos de cada acidente */
+  signature?: { acc: -1 | 0 | 1; steps: number[] };
+  /** desenhado antes das notas (ex.: o destaque da nota da vez) */
+  underlay?: ReactNode;
+  /** onde as linhas da pauta terminam (padrão: a largura toda) */
+  staffEnd?: number;
   children?: ReactNode;
 }) {
   const { s, width, height, y } = geo;
@@ -47,10 +66,20 @@ export function NoteStaff({
     <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label} className="block h-auto w-full">
       <g stroke={INK} strokeWidth={line}>
         {[0, 2, 4, 6, 8].map((st) => (
-          <line key={st} x1={4} x2={width - 4} y1={y(st)} y2={y(st)} />
+          <line key={st} x1={4} x2={staffEnd ?? width - 4} y1={y(st)} y2={y(st)} />
         ))}
       </g>
+      {underlay}
       <path d={CLEF} fill={INK} transform={`translate(${s * 0.75} ${y(2)}) scale(${k} ${-k})`} />
+      {signature?.steps.map((st, i) => (
+        <path
+          key={i}
+          d={signature.acc > 0 ? SHARP : FLAT}
+          fill={INK}
+          data-testid="key-signature"
+          transform={`translate(${s * (SIGNATURE_X + i * SIGNATURE_STEP)} ${y(st)}) scale(${k} ${-k})`}
+        />
+      ))}
       {notes.map((n, i) => {
         const x = xs[i] ?? width / 2;
         const ledgers: number[] = [];
@@ -69,6 +98,14 @@ export function NoteStaff({
                 strokeWidth={line}
               />
             ))}
+            {n.acc ? (
+              <path
+                d={n.acc > 0 ? SHARP : FLAT}
+                fill={n.color ?? INK}
+                data-testid="note-accidental"
+                transform={`translate(${x - head / 2 - s * 1.15} ${y(n.step)}) scale(${k} ${-k})`}
+              />
+            ) : null}
             <path
               d={WHOLE}
               fill={n.color ?? INK}

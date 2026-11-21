@@ -4,6 +4,13 @@ import { NoteIcon } from "./icons";
 
 /** traços dos ícones de instrumento (24×24); sax alto e tenor usam o mesmo */
 const PATHS: Record<Instrument, string[]> = {
+  // flauta doce (estudos): bico com a janela, corpo afinando e os orifícios
+  recorder: [
+    "M10.25 2.75h3.5v3h-3.5z",
+    "M11 4.25h2",
+    "M10.75 5.75h2.5l.5 13l1 2.5h-5.5l1-2.5z",
+    "M12 9h.01M12 11.75h.01M12 14.5h.01M12 17.25h.01",
+  ],
   clarinet: [
     "M10.75 2.75h2.5v3.5h-2.5z",
     "M10.5 6.25h3v10.75l1.5 4.25h-6l1.5-4.25z",

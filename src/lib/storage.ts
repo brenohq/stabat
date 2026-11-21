@@ -50,3 +50,9 @@ export const gameSound = {
   get: (): boolean => read<boolean>("games.sound", true),
   set: (on: boolean): void => write("games.sound", on),
 };
+
+/** instrumento escolhido nos estudos (id de STUDY_INSTRUMENTS); sem escolha, vem da "minha parte" */
+export const studyInstrument = {
+  get: (): string | null => read<string | null>("studies.instrument", null),
+  set: (id: string): void => write("studies.instrument", id),
+};

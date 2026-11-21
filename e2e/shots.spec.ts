@@ -25,6 +25,10 @@ const pages: {
   { name: "parte", path: "/apt/trompete-sib-1", loaded: true },
   { name: "parte-seletor", path: "/apt/trompete-sib-1", loaded: true, open: "#switch" },
   { name: "calendario", path: "/calendario", loaded: false },
+  { name: "estudos", path: "/estudos", loaded: false },
+  { name: "estudos-seletor", path: "/estudos", loaded: false, open: "#study-instrument" },
+  { name: "licao", path: "/estudos/escalas-maiores?escala=fa-maior", loaded: false, mine: "sax-alto-mib-1" },
+  { name: "cromatica", path: "/estudos/escala-cromatica", loaded: false, mine: "clarinete-sib-1" },
   { name: "quarteto", path: "/quarteto", loaded: false },
   { name: "menu", path: "/jogos/que-nota", loaded: false, open: "[aria-label=Menu]" },
   { name: "jogo-inicio", path: "/jogos/que-nota", loaded: false },
@@ -34,11 +38,15 @@ const pages: {
 const ready = (path: string) =>
   path === "/calendario"
     ? "evento"
-    : path.startsWith("/jogos")
-      ? "game-stage"
-      : path === "/quarteto" && !quartet.length
-        ? "empty-repertoire"
-        : "arrangement-card";
+    : path === "/estudos"
+      ? "lesson-card"
+      : path.startsWith("/estudos/")
+        ? "study-sheet"
+        : path.startsWith("/jogos")
+          ? "game-stage"
+          : path === "/quarteto" && !quartet.length
+            ? "empty-repertoire"
+            : "arrangement-card";
 const sizes = [
   { name: "desktop", width: 1366, height: 900 },
   { name: "celular", width: 390, height: 844 },

@@ -140,3 +140,10 @@ export const MuteIcon = (p: P) => (
     <path d="M16 9.5l5 5M21 9.5l-5 5" />
   </svg>
 );
+export const BookIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M5 5a2 2 0 0 1 2-2h12v15H7a2 2 0 0 0-2 2z" />
+    <path d="M5 20a2 2 0 0 0 2 2h12v-4" />
+    <path d="M9 7.5h6M9 11h4" />
+  </svg>
+);

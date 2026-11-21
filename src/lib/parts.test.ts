@@ -53,5 +53,6 @@ describe("instrumentOf", () => {
   });
   it("instrumento sem ícone", () => {
     expect(instrumentOf("Flauta 1")).toBeNull();
+    expect(instrumentOf("Flauta doce")).toBe("recorder");
   });
 });

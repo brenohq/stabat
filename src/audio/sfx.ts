@@ -6,7 +6,8 @@ import { ignoreSilentSwitch, releaseSilentSwitch } from "./silentSwitch";
 
 let ctx: AudioContext | null = null;
 
-function audio(): AudioContext | null {
+/** o AudioContext dos sons curtos (nasce no primeiro toque); o piano dos estudos usa o mesmo */
+export function audio(): AudioContext | null {
   try {
     ignoreSilentSwitch(); // iPhone: tocar mesmo com a chave de silencioso (dentro do toque)
     ctx ??= new AudioContext();
@@ -55,6 +56,23 @@ export function fanfare(): void {
 /** toque grave e curto do erro: avisa sem assustar */
 export function thud(): void {
   tone(150, { dur: 0.18, gain: 0.18, type: "sine" });
+}
+
+/** clique do metrônomo dos estudos (o primeiro tempo do compasso mais agudo) */
+export function click(accent = false): void {
+  const a = audio();
+  if (!a) return;
+  const t = a.currentTime;
+  const out = a.createGain();
+  out.gain.setValueAtTime(accent ? 0.32 : 0.22, t);
+  out.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+  out.connect(a.destination);
+  const o = a.createOscillator();
+  o.type = "square";
+  o.frequency.value = accent ? 1760 : 1320;
+  o.connect(out);
+  o.start(t);
+  o.stop(t + 0.06);
 }
 
 /** ao sair do jogo: solta o <audio> mudo do iPhone antigo (some da tela de bloqueio) */
