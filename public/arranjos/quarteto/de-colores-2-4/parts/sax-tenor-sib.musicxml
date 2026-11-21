@@ -8,7 +8,7 @@
     <rights>Banda de Música Nossa Senhora das Dores</rights>
     <encoding>
       <software>MuseScore Studio 4.7.7</software>
-      <encoding-date>2026-11-19</encoding-date>
+      <encoding-date>2026-11-21</encoding-date>
       <supports element="accidental" type="yes" />
       <supports element="beam" type="yes" />
       <supports element="print" attribute="new-page" type="yes" value="yes" />
@@ -1443,6 +1443,9 @@
           <system-distance>150</system-distance>
           </system-layout>
         </print>
+      <barline location="left">
+        <ending number="1" type="start" default-y="54.07">1.</ending>
+        </barline>
       <note default-x="76.92" default-y="-25">
         <pitch>
           <step>A</step>
@@ -1475,6 +1478,7 @@
         </note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
+        <ending number="1" type="stop" />
         <repeat direction="backward" />
         </barline>
       </measure>
