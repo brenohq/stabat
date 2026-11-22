@@ -10,6 +10,10 @@
       "destination": "/jogos/que-nota.html"
     },
     {
+      "source": "/jogos/ritmo",
+      "destination": "/jogos/ritmo.html"
+    },
+    {
       "source": "/((?!arranjos/|vendor/|assets/|og/|audio/).*)",
       "destination": "/index.html"
     }

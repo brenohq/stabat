@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { TopBar } from "../components/TopBar";
 import { usePageView } from "../hooks/usePageView";
 import { NoteStaff } from "../components/games/NoteStaff";
 import { staffGeometry } from "../components/games/staffGeometry";
 import { MuteIcon, SoundIcon } from "../components/icons";
-import { btnClass } from "../components/btnClass";
+import { GameHud, Overlay, PrimaryButton, RoundEnd } from "../components/games/GameCard";
 import { fanfare, stopSfx, thud, tone } from "../audio/sfx";
 import { exposeDebug } from "../debug";
 import {
@@ -299,7 +299,6 @@ export function NoteGamePage() {
   const geo = geometryFor(mem.introduced);
   const note = "note" in phase && phase.kind !== "level" ? phase.note : null;
   const colored = note && (phase.kind === "ok" || phase.kind === "intro");
-  const inSet = game.streak === 0 ? 0 : ((game.streak - 1) % 5) + 1;
   const busy = phase.kind !== "ask" && !(phase.kind === "intro" && !phase.tapped);
 
   return (
@@ -311,55 +310,15 @@ export function NoteGamePage() {
           <span className="text-[13px] text-muted">Toque no nome da nota</span>
         </div>
         <div className="relative overflow-hidden rounded-[20px] border border-line bg-surface p-3 shadow-card sm:p-4">
-          <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2.5 sm:grid-cols-[auto_1fr_auto]">
-            <span className="justify-self-start rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
-              Nível {level} · {LEVEL_NAMES[level]}
-            </span>
-            <div
-              className="order-3 col-span-2 flex gap-1 sm:order-2 sm:col-span-1"
-              aria-label={`${game.results.length} de ${ROUND_SIZE} notas da rodada`}
-            >
-              {Array.from({ length: ROUND_SIZE }, (_, i) => (
-                <i
-                  key={i}
-                  className={`h-2 flex-1 rounded transition-all ${
-                    i < game.results.length
-                      ? game.results[i]
-                        ? "bg-ok"
-                        : "bg-bad"
-                      : i === game.results.length && note
-                        ? "scale-y-150 bg-accent"
-                        : "bg-line"
-                  }`}
-                />
-              ))}
-            </div>
-            <div
-              className="order-2 flex items-center gap-2 justify-self-end sm:order-3"
-              aria-live="polite"
-              data-testid="streak"
-            >
-              <span
-                key={game.streak}
-                className={`min-w-[1.4em] text-right font-display text-[26px] leading-none font-bold tabular-nums ${
-                  game.streak ? "g-bump" : ""
-                }`}
-              >
-                {game.streak}
-              </span>
-              <div>
-                <small className="block text-[11px] leading-tight text-muted">seguidas</small>
-                <div key={banner?.id ?? 0} className={`flex gap-[3px] ${banner ? "g-flash" : ""}`}>
-                  {[0, 1, 2, 3, 4].map((d) => (
-                    <i
-                      key={d}
-                      className={`size-[9px] rounded-full transition-all ${d < inSet ? "scale-110 bg-accent" : "bg-line"}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <GameHud
+            level={`Nível ${level} · ${LEVEL_NAMES[level]}`}
+            results={game.results}
+            total={ROUND_SIZE}
+            active={!!note}
+            streak={game.streak}
+            flashKey={banner?.id}
+            unit="notas"
+          />
 
           <div className="relative mt-3 rounded-[14px] border border-line bg-paper" data-testid="game-stage">
             <NoteStaff
@@ -495,14 +454,7 @@ export function NoteGamePage() {
                   )}
                 </p>
               )}
-              <button
-                type="button"
-                autoFocus
-                onClick={start}
-                className={`${btnClass({ primary: true })} min-h-12 px-6 text-base`}
-              >
-                Começar
-              </button>
+              <PrimaryButton onClick={start}>Começar</PrimaryButton>
             </Overlay>
           )}
 
@@ -514,34 +466,22 @@ export function NoteGamePage() {
               <h2 className="text-[28px]">{LEVEL_NAMES[phase.level]}</h2>
               <LevelPreview level={phase.level} />
               <p className="text-[13px] text-muted">Essas notas chegam aos poucos, uma de cada vez.</p>
-              <button
-                type="button"
-                autoFocus
+              <PrimaryButton
                 onClick={() =>
                   commit({ ...ref.current, phase: { kind: "intro", note: phase.note, tapped: false } })
                 }
-                className={`${btnClass({ primary: true })} min-h-12 px-6 text-base`}
               >
                 Vamos lá
-              </button>
+              </PrimaryButton>
             </Overlay>
           )}
 
-          {phase.kind === "end" && <RoundEnd game={game} onAgain={() => commit(newRound(ref.current, 0))} />}
+          {phase.kind === "end" && (
+            <NoteRoundEnd game={game} onAgain={() => commit(newRound(ref.current, 0))} />
+          )}
         </div>
       </main>
     </>
-  );
-}
-
-function Overlay({ children }: { children: ReactNode }) {
-  return (
-    <div
-      className="g-fade absolute inset-0 z-10 grid place-items-center bg-surface/95 p-5"
-      data-testid="game-overlay"
-    >
-      <div className="grid max-w-[380px] justify-items-center gap-3 text-center">{children}</div>
-    </div>
   );
 }
 
@@ -568,56 +508,26 @@ function LevelPreview({ level }: { level: Level }) {
   );
 }
 
-function RoundEnd({ game, onAgain }: { game: Game; onAgain: () => void }) {
-  const ok = game.results.filter(Boolean).length;
-  const n = stars(ok);
+function NoteRoundEnd({ game, onAgain }: { game: Game; onAgain: () => void }) {
   const conf = topConfusion(game.roundConfusions);
   return (
-    <Overlay>
-      <div className="flex gap-1.5 text-[40px] leading-none" aria-label={`${n} de 3 estrelas`}>
-        {[1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className={i <= n ? "g-star text-accent" : "text-line"}
-            style={{ animationDelay: `${(i - 1) * 0.15}s` }}
-          >
-            ★
-          </span>
-        ))}
-      </div>
-      <h2 className="text-[28px]">
-        {n === 3 ? "Excelente!" : n === 2 ? "Muito bem!" : "Boa! Vamos de novo?"}
-      </h2>
-      <div className="flex justify-center gap-6">
-        <div className="grid">
-          <b className="font-display text-[26px] tabular-nums">
-            {ok}/{game.results.length}
-          </b>
-          <span className="text-xs text-muted">acertos</span>
-        </div>
-        <div className="grid">
-          <b className="font-display text-[26px] tabular-nums">{game.roundBest}</b>
-          <span className="text-xs text-muted">melhor sequência</span>
-        </div>
-      </div>
-      <p className="text-[13px] text-muted">
-        {conf ? (
+    <RoundEnd
+      stars={stars(game.results.filter(Boolean).length)}
+      correct={game.results.filter(Boolean).length}
+      total={game.results.length}
+      best={game.roundBest}
+      unit="acertos"
+      onAgain={onAgain}
+      tip={
+        conf ? (
           <>
             Para treinar: você respondeu <b className="text-ink">{NAMES[conf[1]]}</b> quando era{" "}
             <b className="text-ink">{NAMES[conf[0]]}</b>. Essa vai aparecer mais.
           </>
         ) : (
           "Nenhuma troca nesta rodada."
-        )}
-      </p>
-      <button
-        type="button"
-        autoFocus
-        onClick={onAgain}
-        className={`${btnClass({ primary: true })} min-h-12 px-6 text-base`}
-      >
-        Mais uma rodada
-      </button>
-    </Overlay>
+        )
+      }
+    />
   );
 }

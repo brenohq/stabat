@@ -33,6 +33,8 @@ const pages: {
   { name: "menu", path: "/jogos/que-nota", loaded: false, open: "[aria-label=Menu]" },
   { name: "jogo-inicio", path: "/jogos/que-nota", loaded: false },
   { name: "jogo", path: "/jogos/que-nota", loaded: false, open: "text=Começar" },
+  { name: "ritmo-inicio", path: "/jogos/ritmo", loaded: false },
+  { name: "ritmo", path: "/jogos/ritmo", loaded: false, open: "text=Começar" },
 ];
 /** o que esperar antes da captura, nas páginas sem partitura */
 const ready = (path: string) =>

@@ -350,7 +350,42 @@
     transform: translate(-50%, -6px);
   }
 }
+/* "Bate o ritmo": número da contagem (4, 3, 2, 1), luzes dos tempos e o botão de tocar */
+.g-count {
+  animation: g-count 0.5s ease-out forwards;
+}
+@keyframes g-count {
+  from {
+    opacity: 0.95;
+    transform: scale(1.3);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+.g-beat {
+  transition:
+    background-color 0.06s,
+    border-color 0.06s,
+    transform 0.06s;
+}
+.g-beat[data-on] {
+  background: #1f2a44;
+  border-color: #1f2a44;
+  transform: scale(1.25);
+}
+.g-beat[data-on][data-first] {
+  background: #a8761c;
+  border-color: #a8761c;
+}
+.g-pad-down {
+  transform: translateY(4px) scale(0.99);
+  border-bottom-width: 3px !important;
+  margin-bottom: 3px;
+}
 @media (prefers-reduced-motion: reduce) {
+  .g-count,
   .g-drop,
   .g-shake,
   .g-bump,
@@ -365,5 +400,11 @@
   .g-particle,
   .g-plus {
     display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* sem animação, o número da contagem fica parado na tela até a contagem acabar */
+  .g-count {
+    opacity: 0.9;
   }
 }

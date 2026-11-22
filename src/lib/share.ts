@@ -25,6 +25,14 @@ export const SHARE_PAGES: ShareMeta[] = [
       "Jogo de leitura de partitura: aparece uma nota na pauta e você toca no nome dela. Fácil para crianças e adultos.",
     image: "/og/que-nota.png",
   },
+  {
+    path: "/jogos/ritmo",
+    file: "jogos/ritmo.html",
+    title: "Bate o ritmo · stabat",
+    description:
+      "Jogo de ritmo: o metrônomo conta 4, 3, 2, 1 e você toca no ataque de cada nota. Cinco níveis, das semínimas às semicolcheias.",
+    image: "/og/ritmo.png",
+  },
 ];
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");

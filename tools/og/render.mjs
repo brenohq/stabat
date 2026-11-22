@@ -1,6 +1,6 @@
 /**
  * Gera public/og/que-nota.png (1200×630): a miniatura do link do jogo no WhatsApp e afins.
- * Usa a clave e a semibreve do próprio jogo (NoteStaff.tsx) e as fontes do site.
+ * Usa a clave e a semibreve do próprio jogo (bravura.ts, as do NoteStaff) e as fontes do site.
  * Uso: npm run og
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const staff = readFileSync(resolve(root, "src/components/games/NoteStaff.tsx"), "utf8");
+const staff = readFileSync(resolve(root, "src/components/games/bravura.ts"), "utf8");
 const glyph = (name) => staff.match(new RegExp(`const ${name} =\\s*"([^"]+)"`))[1];
 const CLEF = glyph("CLEF");
 const WHOLE = glyph("WHOLE");

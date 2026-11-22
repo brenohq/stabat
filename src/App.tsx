@@ -8,9 +8,10 @@ import { LessonPage } from "./pages/LessonPage";
 import { NoteGamePage } from "./pages/NoteGamePage";
 import { NotFound } from "./pages/NotFound";
 import { PartPage } from "./pages/PartPage";
+import { RhythmGamePage } from "./pages/RhythmGamePage";
 import { StudiesPage } from "./pages/StudiesPage";
 
-/** Endereços: /  ·  /estudos  ·  /estudos/:licao  ·  /calendario  ·  /jogos/que-nota  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1)
+/** Endereços: /  ·  /estudos  ·  /estudos/:licao  ·  /calendario  ·  /jogos/que-nota  ·  /jogos/ritmo  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1)
  *  ·  /:arranjo/:parte/smells (escondida)
  *  ·  /quarteto (escondida: repertório do quarteto, com as mesmas páginas de arranjo e parte embaixo) */
 export function App() {
@@ -23,6 +24,7 @@ export function App() {
         <Route path="/calendario" element={<CalendarPage />} />
         <Route path="/jogos" element={<Navigate to="/jogos/que-nota" replace />} />
         <Route path="/jogos/que-nota" element={<NoteGamePage />} />
+        <Route path="/jogos/ritmo" element={<RhythmGamePage />} />
         <Route path="/:arranjoId" element={<ArrangementPage />} />
         <Route path="/:arranjoId/:parteId" element={<PartPage />} />
         {/* escondida: só pela URL, para revisar notas fora da extensão */}

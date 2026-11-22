@@ -58,11 +58,12 @@ export function thud(): void {
   tone(150, { dur: 0.18, gain: 0.18, type: "sine" });
 }
 
-/** clique do metrônomo dos estudos (o primeiro tempo do compasso mais agudo) */
-export function click(accent = false): void {
+/** clique do metrônomo (o primeiro tempo do compasso mais agudo); `at` = hora do AudioContext
+ *  (agendado com precisão; padrão: agora). Devolve o oscilador, para poder cancelar. */
+export function click(accent = false, at?: number): OscillatorNode | null {
   const a = audio();
-  if (!a) return;
-  const t = a.currentTime;
+  if (!a) return null;
+  const t = at ?? a.currentTime;
   const out = a.createGain();
   out.gain.setValueAtTime(accent ? 0.32 : 0.22, t);
   out.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
@@ -73,6 +74,30 @@ export function click(accent = false): void {
   o.connect(out);
   o.start(t);
   o.stop(t + 0.06);
+  return o;
+}
+
+/** som do toque no "Bate o ritmo": bloco de madeira curto, mais grave que o metrônomo */
+export function woodblock(): void {
+  const a = audio();
+  if (!a) return;
+  const t = a.currentTime;
+  const out = a.createGain();
+  out.gain.setValueAtTime(0.0001, t);
+  out.gain.exponentialRampToValueAtTime(0.3, t + 0.003);
+  out.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+  out.connect(a.destination);
+  for (const [type, f] of [
+    ["sine", 880],
+    ["triangle", 1760],
+  ] as const) {
+    const o = a.createOscillator();
+    o.type = type;
+    o.frequency.value = f;
+    o.connect(out);
+    o.start(t);
+    o.stop(t + 0.08);
+  }
 }
 
 /** ao sair do jogo: solta o <audio> mudo do iPhone antigo (some da tela de bloqueio) */

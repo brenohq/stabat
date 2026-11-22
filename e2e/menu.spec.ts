@@ -17,7 +17,7 @@ test.describe("menu do topo", () => {
     await expect(games).toHaveAttribute("aria-expanded", "false");
     await expect(menu.getByRole("link", { name: "Que nota é essa?" })).toHaveCount(0);
     await games.click();
-    await expect(menu.getByRole("link", { name: "Que nota é essa?" })).toBeVisible();
+    await expect(menu.locator("#menu-games a")).toHaveText(["Que nota é essa?", "Bate o ritmo"]);
     await page.keyboard.press("Escape");
     await expect(menu).toBeHidden();
   });

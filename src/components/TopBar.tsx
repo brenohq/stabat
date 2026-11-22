@@ -77,6 +77,9 @@ function SiteMenu() {
               <NavLink to="/jogos/que-nota" className={itemClass} onClick={close}>
                 Que nota é essa?
               </NavLink>
+              <NavLink to="/jogos/ritmo" className={itemClass} onClick={close}>
+                Bate o ritmo
+              </NavLink>
             </div>
           )}
         </nav>

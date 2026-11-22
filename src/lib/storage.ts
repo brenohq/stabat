@@ -56,3 +56,18 @@ export const studyInstrument = {
   get: (): string | null => read<string | null>("studies.instrument", null),
   set: (id: string): void => write("studies.instrument", id),
 };
+
+/** "Bate o ritmo": memória (caixas de cada célula; lida com rhythm/scheduler.normalize), andamento
+ *  escolhido (padrão ♩ = 60) e ajuste do atraso do som do aparelho (ms) */
+export const rhythmGame = {
+  get: (): unknown => read<unknown>("games.rhythm", null),
+  set: (v: unknown): void => write("games.rhythm", v),
+};
+export const rhythmBpm = {
+  get: (): number => read<number>("games.rhythmBpm", 60),
+  set: (bpm: number): void => write("games.rhythmBpm", bpm),
+};
+export const rhythmLatency = {
+  get: (): number | null => read<number | null>("games.rhythmLatency", null),
+  set: (ms: number): void => write("games.rhythmLatency", ms),
+};
