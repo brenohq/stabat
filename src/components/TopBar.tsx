@@ -74,6 +74,9 @@ function SiteMenu() {
           </button>
           {gamesOpen && (
             <div id="menu-games" className="ml-[22px] border-l border-line pl-2">
+              <NavLink to="/jogos" end className={itemClass} onClick={close}>
+                Todos os jogos
+              </NavLink>
               <NavLink to="/jogos/que-nota" className={itemClass} onClick={close}>
                 Que nota é essa?
               </NavLink>

@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { TopBar } from "../components/TopBar";
 import { usePageView } from "../hooks/usePageView";
@@ -283,7 +284,7 @@ export function RhythmGamePage() {
       beat,
       bpm: b,
       onsets,
-      windows: windowsFor(onsets),
+      windows: windowsFor(onsets, levelOf(g.mem)),
       lastBeat: -1,
       cursor: levelOf(g.mem) === 1,
     };
@@ -552,11 +553,7 @@ export function RhythmGamePage() {
 
   let hint: ReactNode = null;
   if (phase.kind === "count")
-    hint = waitHint ? (
-      <span>Espere a contagem terminar: toque depois do 1.</span>
-    ) : (
-      <span className="text-muted">Prepare-se…</span>
-    );
+    hint = waitHint ? <span>Espere a contagem terminar: toque depois do 1.</span> : null;
   if (phase.kind === "play") hint = <span className="text-muted">Toque no ataque de cada nota</span>;
   if (result) {
     const j = result.judgement;
@@ -597,7 +594,13 @@ export function RhythmGamePage() {
 
   return (
     <>
-      <TopBar crumbs={<span>Jogos / Bate o ritmo</span>} />
+      <TopBar
+        crumbs={
+          <span>
+            <Link to="/jogos">Jogos</Link> / Bate o ritmo
+          </span>
+        }
+      />
       <main className="mx-auto max-w-[680px] px-3 pt-4 pb-10 sm:px-4 sm:pt-8">
         <div className="mb-3 flex items-baseline justify-between gap-3 px-1">
           <h1 className="text-[22px] sm:text-[28px]">Bate o ritmo</h1>
@@ -654,12 +657,27 @@ export function RhythmGamePage() {
               cursorRef={cursorEl}
               label={`Dois compassos 4/4: ${shown.cells.map((p) => p.cell.name.toLowerCase()).join(", ")}`}
             />
-            <div
-              ref={countEl}
-              aria-hidden
-              className="pointer-events-none absolute inset-0 grid place-items-center font-display text-[88px] font-bold text-[#1f2a44] opacity-0"
-              data-testid="count-in"
-            />
+            {phase.kind === "count" && (
+              // contagem: a tela do jogo escurece (as notas ainda aparecem por baixo, para já ir lendo)
+              <div
+                className="g-fade pointer-events-none absolute inset-0 grid place-items-center content-center gap-1 rounded-[14px] bg-[rgb(31_42_68/0.6)] text-[#f3eee4]"
+                data-testid="count-veil"
+              >
+                <span className="text-[13px] font-bold tracking-[0.18em] text-[#e0aa45] uppercase sm:text-[15px]">
+                  Prepare-se
+                </span>
+                <div
+                  ref={(el) => {
+                    countEl.current = el;
+                    // o "4" já aparece antes do primeiro clique; depois o laço de quadros troca o número
+                    if (el && !el.textContent) el.textContent = "4";
+                  }}
+                  aria-hidden
+                  className="font-display text-[72px] leading-none font-bold sm:text-[96px]"
+                  data-testid="count-in"
+                />
+              </div>
+            )}
             {fx.map((f) => (
               <span
                 key={f.id}

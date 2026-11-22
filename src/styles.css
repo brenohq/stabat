@@ -352,16 +352,12 @@
 }
 /* "Bate o ritmo": número da contagem (4, 3, 2, 1), luzes dos tempos e o botão de tocar */
 .g-count {
-  animation: g-count 0.5s ease-out forwards;
+  animation: g-count 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
 }
 @keyframes g-count {
   from {
-    opacity: 0.95;
-    transform: scale(1.3);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1);
+    opacity: 0.3;
+    transform: scale(1.4);
   }
 }
 .g-beat {
@@ -400,11 +396,5 @@
   .g-particle,
   .g-plus {
     display: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  /* sem animação, o número da contagem fica parado na tela até a contagem acabar */
-  .g-count {
-    opacity: 0.9;
   }
 }

@@ -77,6 +77,14 @@ describe("sorteio", () => {
 });
 
 describe("julgamento", () => {
+  it("nível 1 mais folgado, nível 2 um pouco menos, do 3 em diante ±130 ms", () => {
+    expect(windowsFor([0, 1, 2], 1)).toEqual({ good: 0.22, perfect: 0.11 });
+    expect(windowsFor([0, 1, 2], 2).good).toBeCloseTo(0.17);
+    for (const l of [3, 4, 5] as const) expect(windowsFor([0, 1, 2], l).good).toBeCloseTo(0.13);
+    // nem no nível 1 as janelas de notas vizinhas se encostam (semínimas a 120: 0,5 s)
+    expect(2 * windowsFor([0, 0.5], 1).good).toBeLessThan(0.5);
+  });
+
   it("janela de ±130 ms, menor quando as notas são próximas", () => {
     expect(windowsFor([0, 1, 2]).good).toBeCloseTo(0.13);
     // semicolcheias a 60: 250 ms entre notas → 112,5 ms

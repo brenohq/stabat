@@ -63,9 +63,12 @@ test.describe("Bate o ritmo", () => {
     // nível 1: só semínima, mínima e semibreve; dois compassos 4/4
     for (const c of s.cells) expect(["q", "h", "w"]).toContain(c);
     await expect(page.getByTestId("rhythm-phase")).toHaveText("Contagem");
+    // a tela do jogo escurece com "Prepare-se" e o número da contagem
+    await expect(page.getByTestId("count-veil")).toContainText("Prepare-se");
     await expect(page.getByTestId("count-in")).toHaveText("4");
     await expect(page.getByTestId("count-in")).toHaveText("3");
     await expect(page.getByTestId("rhythm-phase")).toHaveText("Sua vez!", { timeout: 6000 });
+    await expect(page.getByTestId("count-veil")).toHaveCount(0);
     // nível 1: o cursor anda junto
     await expect.poll(() => page.getByTestId("rhythm-cursor").getAttribute("opacity")).toBe("0.8");
   });
@@ -85,7 +88,8 @@ test.describe("Bate o ritmo", () => {
   test("um pouco atrasado ainda vale, com “tarde”; nota que falta e toque a mais não", async ({ page }) => {
     let s = await start(page);
     const [first, ...rest] = s.onsets!;
-    await tapAt(page, first! + 0.1);
+    // nível 1 é folgado: 150 ms depois ainda vale (como "tarde")
+    await tapAt(page, first! + 0.15);
     for (const t of rest) await tapAt(page, t);
     await finish(page);
     await expect(page.getByTestId("game-hint")).toContainText("Certo!");

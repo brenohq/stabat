@@ -12,7 +12,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const src = readFileSync(resolve(root, "src/components/games/bravura.ts"), "utf8");
 const glyph = (name) => src.match(new RegExp(`const ${name} =\\s*"([^"]+)"`))[1];
 const HEAD = glyph("HEAD_BLACK");
-const CLEF = glyph("PERCUSSION_CLEF");
+const CLEF = glyph("CLEF");
 const FOUR = glyph("TIME_SIG_4");
 const REST = glyph("REST_QUARTER");
 
@@ -20,14 +20,16 @@ const INK = "#151515";
 const OK = "#2f8a57";
 const COLORS = ["#d64541", "#e8822a", "#d4a514", "#3f9d4f", "#22a09c", "#3b74cc", "#8a52c4"];
 
-// um compasso: semínima, duas colcheias, quatro semicolcheias, pausa de semínima (posições em semicolcheias)
-const S = 26;
+// pauta de cinco linhas, todas as notas no Lá; um compasso: semínima, duas colcheias, quatro semicolcheias, pausa de semínima (posições em semicolcheias)
+const S = 22;
 const k = S / 250;
 const W = 880;
-const LY = 140;
-const RY = LY + 74;
+const BASE = 176; // 1ª linha
+const y = (step) => BASE - step * (S / 2);
+const LY = y(3); // Lá, 2º espaço
+const RY = BASE + 52;
 const H = RY + 46;
-const X0 = 150;
+const X0 = 170;
 const X1 = 830;
 const x = (on) => X0 + (on / 16) * (X1 - X0);
 const headW = 295 * k;
@@ -37,10 +39,12 @@ const notes = [{ on: 0 }, { on: 4 }, { on: 6 }, { on: 8 }, { on: 9 }, { on: 10 }
 const g = (d, gx, gy, fill = INK) =>
   `<path d="${d}" fill="${fill}" transform="translate(${gx} ${gy}) scale(${k} ${-k})"/>`;
 const stemX = (on) => x(on) + headW / 2;
-let svg = `<line x1="10" x2="${X1 + 30}" y1="${LY}" y2="${LY}" stroke="${INK}" stroke-width="2.4"/>`;
-svg += g(CLEF, 22, LY);
-svg += g(FOUR, 96 - (470 * k) / 2, LY - S) + g(FOUR, 96 - (470 * k) / 2, LY + S);
-svg += `<line x1="${X1 + 20}" x2="${X1 + 20}" y1="${LY - 2 * S}" y2="${LY + 2 * S}" stroke="${INK}" stroke-width="2.4"/><rect x="${X1 + 25}" y="${LY - 2 * S}" width="8" height="${4 * S}" fill="${INK}"/>`;
+let svg = [0, 2, 4, 6, 8]
+  .map((st) => `<line x1="10" x2="${X1 + 30}" y1="${y(st)}" y2="${y(st)}" stroke="${INK}" stroke-width="2"/>`)
+  .join("");
+svg += g(CLEF, 20, y(2));
+svg += g(FOUR, 112 - (470 * k) / 2, y(6)) + g(FOUR, 112 - (470 * k) / 2, y(2));
+svg += `<line x1="${X1 + 20}" x2="${X1 + 20}" y1="${y(8)}" y2="${y(0)}" stroke="${INK}" stroke-width="2"/><rect x="${X1 + 25}" y="${y(8)}" width="8" height="${4 * S}" fill="${INK}"/>`;
 for (const n of notes) {
   svg += g(HEAD, x(n.on) - headW / 2, LY, OK);
   svg += `<rect x="${stemX(n.on) - stemW}" y="${LY - stemH}" width="${stemW}" height="${stemH - 4}" fill="${OK}"/>`;
@@ -48,7 +52,7 @@ for (const n of notes) {
 const beam = (a, b, dy = 0) =>
   `<rect x="${stemX(a) - stemW}" y="${LY - stemH + dy}" width="${stemX(b) - stemX(a) + stemW}" height="${S * 0.5}" fill="${INK}"/>`;
 svg += beam(4, 6) + beam(8, 11) + beam(8, 11, S * 0.75);
-svg += g(REST, x(12) - (282 * k) / 2, LY);
+svg += g(REST, x(12) - (282 * k) / 2, y(4));
 // régua dos tempos com os toques (todos no tempo)
 svg += `<line x1="${X0 - 20}" x2="${X1}" y1="${RY}" y2="${RY}" stroke="#d9d1c2" stroke-width="3"/>`;
 for (let b = 0; b < 4; b++)

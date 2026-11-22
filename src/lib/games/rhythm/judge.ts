@@ -2,26 +2,36 @@
  * Julgamento dos toques do "Bate o ritmo". Tempos em segundos desde o começo do exercício
  * (o 1 do primeiro compasso), já corrigidos pelo atraso do som. Só o ataque conta, não a duração.
  */
-import { MEASURE, SIXTEENTHS_PER_BEAT } from "./cells";
+import { MEASURE, SIXTEENTHS_PER_BEAT, type RhythmLevel } from "./cells";
 import type { Exercise } from "./measure";
 
-/** janela máxima de "bom" (s) e fração da distância até a nota vizinha que ela pode ocupar */
-export const GOOD_MAX = 0.13;
+/** fração da distância até a nota vizinha que a janela de "bom" pode ocupar (nunca se encostam) */
 export const GAP_SHARE = 0.45;
-/** "perfeito" = esta fração da janela de "bom" */
-export const PERFECT_SHARE = 0.45;
+
+/**
+ * Tolerância por nível: janela máxima de "bom" (s) e que fração dela é "perfeito". O nível 1 é o
+ * mais folgado, o 2 um pouco menos; do 3 em diante, o padrão.
+ */
+export const TOLERANCE: Record<RhythmLevel, { goodMax: number; perfectShare: number }> = {
+  1: { goodMax: 0.22, perfectShare: 0.5 },
+  2: { goodMax: 0.17, perfectShare: 0.5 },
+  3: { goodMax: 0.13, perfectShare: 0.45 },
+  4: { goodMax: 0.13, perfectShare: 0.45 },
+  5: { goodMax: 0.13, perfectShare: 0.45 },
+};
 
 export interface Windows {
   good: number;
   perfect: number;
 }
 
-/** janelas para estes ataques: nunca passam de 45% da distância até a nota vizinha */
-export function windowsFor(onsets: number[]): Windows {
+/** janelas para estes ataques, no nível do músico: nunca passam de 45% da distância até a vizinha */
+export function windowsFor(onsets: number[], level: RhythmLevel = 3): Windows {
+  const t = TOLERANCE[level];
   let gap = Infinity;
   for (let i = 1; i < onsets.length; i++) gap = Math.min(gap, onsets[i]! - onsets[i - 1]!);
-  const good = Math.min(GOOD_MAX, GAP_SHARE * gap);
-  return { good, perfect: good * PERFECT_SHARE };
+  const good = Math.min(t.goodMax, GAP_SHARE * gap);
+  return { good, perfect: good * t.perfectShare };
 }
 
 export type Grade = "perfect" | "good" | "miss";

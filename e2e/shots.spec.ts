@@ -33,6 +33,7 @@ const pages: {
   { name: "menu", path: "/jogos/que-nota", loaded: false, open: "[aria-label=Menu]" },
   { name: "jogo-inicio", path: "/jogos/que-nota", loaded: false },
   { name: "jogo", path: "/jogos/que-nota", loaded: false, open: "text=Começar" },
+  { name: "jogos", path: "/jogos", loaded: false },
   { name: "ritmo-inicio", path: "/jogos/ritmo", loaded: false },
   { name: "ritmo", path: "/jogos/ritmo", loaded: false, open: "text=Começar" },
 ];
@@ -44,11 +45,13 @@ const ready = (path: string) =>
       ? "lesson-card"
       : path.startsWith("/estudos/")
         ? "study-sheet"
-        : path.startsWith("/jogos")
-          ? "game-stage"
-          : path === "/quarteto" && !quartet.length
-            ? "empty-repertoire"
-            : "arrangement-card";
+        : path === "/jogos"
+          ? "game-card"
+          : path.startsWith("/jogos")
+            ? "game-stage"
+            : path === "/quarteto" && !quartet.length
+              ? "empty-repertoire"
+              : "arrangement-card";
 const sizes = [
   { name: "desktop", width: 1366, height: 900 },
   { name: "celular", width: 390, height: 844 },

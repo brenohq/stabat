@@ -17,7 +17,11 @@ test.describe("menu do topo", () => {
     await expect(games).toHaveAttribute("aria-expanded", "false");
     await expect(menu.getByRole("link", { name: "Que nota é essa?" })).toHaveCount(0);
     await games.click();
-    await expect(menu.locator("#menu-games a")).toHaveText(["Que nota é essa?", "Bate o ritmo"]);
+    await expect(menu.locator("#menu-games a")).toHaveText([
+      "Todos os jogos",
+      "Que nota é essa?",
+      "Bate o ritmo",
+    ]);
     await page.keyboard.press("Escape");
     await expect(menu).toBeHidden();
   });
@@ -41,8 +45,23 @@ test.describe("menu do topo", () => {
     await expect(page.getByRole("navigation", { name: "Menu" })).toBeHidden();
   });
 
-  test("/jogos leva ao jogo", async ({ page }) => {
+  test("/jogos: vitrine com os dois jogos; o progresso aparece depois de jogar", async ({ page }) => {
     await page.goto("/jogos");
-    await expect(page).toHaveURL(/\/jogos\/que-nota$/);
+    await expect(page.getByRole("heading", { name: "Jogos", level: 1 })).toBeVisible();
+    const cards = page.getByTestId("game-card");
+    await expect(cards).toHaveCount(2);
+    await expect(cards.getByRole("heading")).toHaveText(["Que nota é essa?", "Bate o ritmo"]);
+    await expect(cards.getByTestId("game-progress")).toHaveText(["Novo", "Novo"]);
+    // cartão clicável por inteiro
+    await cards.nth(1).click({ position: { x: 40, y: 60 } }); // na capa, fora do título
+    await expect(page).toHaveURL(/\/jogos\/ritmo$/);
+    // a migalha "Jogos" volta para a vitrine
+    await page.getByRole("navigation", { name: "Navegação" }).getByRole("link", { name: "Jogos" }).click();
+    await expect(page).toHaveURL(/\/jogos$/);
+    await page.evaluate(() =>
+      localStorage.setItem("stabat.games.rhythm", JSON.stringify({ v: 1, introduced: 5, tick: 12 })),
+    );
+    await page.reload();
+    await expect(page.getByTestId("game-progress").nth(1)).toHaveText("Nível 2 · 5 de 13 ritmos");
   });
 });

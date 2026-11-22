@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { TopBar } from "../components/TopBar";
 import { usePageView } from "../hooks/usePageView";
@@ -303,7 +304,13 @@ export function NoteGamePage() {
 
   return (
     <>
-      <TopBar crumbs={<span>Jogos / Que nota é essa?</span>} />
+      <TopBar
+        crumbs={
+          <span>
+            <Link to="/jogos">Jogos</Link> / Que nota é essa?
+          </span>
+        }
+      />
       <main className="mx-auto max-w-[680px] px-3 pt-4 pb-10 sm:px-4 sm:pt-8">
         <div className="mb-3 flex items-baseline justify-between gap-3 px-1">
           <h1 className="text-[22px] sm:text-[28px]">Que nota é essa?</h1>

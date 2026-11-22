@@ -15,8 +15,9 @@ import {
   WIDTH,
   X_END,
   X_START,
-  lineY,
+  noteY,
   rulerY,
+  stepY,
   staffPoint,
   xOf,
 } from "./rhythmStaffLayout";
@@ -28,7 +29,7 @@ import {
   HEAD_BLACK,
   HEAD_HALF,
   HEAD_WIDTH,
-  PERCUSSION_CLEF,
+  CLEF,
   REST_8TH,
   REST_HALF,
   REST_QUARTER,
@@ -41,7 +42,8 @@ import {
 } from "./bravura";
 
 /*
- * Pauta de uma linha (percussão) do "Bate o ritmo", um compasso por linha. As notas ficam
+ * Pauta do "Bate o ritmo": cinco linhas em clave de sol, um compasso por linha, cada um com clave e
+ * 4/4, e todas as notas no Lá (o ritmo é o que conta). As notas ficam
  * espaçadas pelo tempo, então a régua embaixo (tempos 1 a 4) se alinha com elas. Glifos da Bravura;
  * hastes e barras de ligação desenhadas. A pauta é sempre papel claro (cores fixas, como no NoteStaff).
  */
@@ -79,7 +81,7 @@ export function RhythmStaff({
   cursorRef?: Ref<SVGLineElement>;
   label: string;
 }) {
-  const height = lineY(measures - 1) + (ruler ? RULER + 26 : 26);
+  const height = stepY(measures - 1, 0) + (ruler ? RULER + 28 : 22);
   const notes = events.filter((e) => !e.rest);
   const noteIndex = new Map(notes.map((e, i) => [e, i]));
   // barras de ligação: notas menores que a semínima, juntas no mesmo tempo
@@ -94,7 +96,7 @@ export function RhythmStaff({
   }
   const pos = (e: RhythmEvent) => {
     const line = Math.floor(e.on / MEASURE);
-    return { x: xOf(e.on - line * MEASURE), y: lineY(line) };
+    return { x: xOf(e.on - line * MEASURE), y: noteY(line), line };
   };
   const stemX = (e: RhythmEvent) => pos(e).x + (HEAD_WIDTH * K) / 2;
 
@@ -107,38 +109,38 @@ export function RhythmStaff({
       data-testid="rhythm-staff"
     >
       {Array.from({ length: measures }, (_, m) => {
-        const y = lineY(m);
+        const y = (step: number) => stepY(m, step);
         const last = m === measures - 1;
+        const barTop = y(8);
+        const barH = y(0) - y(8);
         return (
           <g key={m}>
-            <line x1={12} x2={X_END + 14} y1={y} y2={y} stroke={INK} strokeWidth={1.3} />
-            {glyph(PERCUSSION_CLEF, 18, y, INK)}
-            {m === 0 && (
-              <>
-                {glyph(TIME_SIG_4, 66 - (TIME_SIG_WIDTH * K) / 2, y - S, INK)}
-                {glyph(TIME_SIG_4, 66 - (TIME_SIG_WIDTH * K) / 2, y + S, INK)}
-              </>
-            )}
+            {[0, 2, 4, 6, 8].map((st) => (
+              <line key={st} x1={8} x2={X_END + 14} y1={y(st)} y2={y(st)} stroke={INK} strokeWidth={1.2} />
+            ))}
+            {glyph(CLEF, 14, y(2), INK)}
+            {glyph(TIME_SIG_4, 74 - (TIME_SIG_WIDTH * K) / 2, y(6), INK)}
+            {glyph(TIME_SIG_4, 74 - (TIME_SIG_WIDTH * K) / 2, y(2), INK)}
             {last ? (
               <>
                 <line
                   x1={X_END + 6}
                   x2={X_END + 6}
-                  y1={y - 2 * S}
-                  y2={y + 2 * S}
+                  y1={barTop}
+                  y2={barTop + barH}
                   stroke={INK}
-                  strokeWidth={1.3}
+                  strokeWidth={1.2}
                 />
-                <rect x={X_END + 9} y={y - 2 * S} width={5} height={4 * S} fill={INK} />
+                <rect x={X_END + 9} y={barTop} width={5} height={barH} fill={INK} />
               </>
             ) : (
               <line
                 x1={X_END + 13}
                 x2={X_END + 13}
-                y1={y - 2 * S}
-                y2={y + 2 * S}
+                y1={barTop}
+                y2={barTop + barH}
                 stroke={INK}
-                strokeWidth={1.3}
+                strokeWidth={1.2}
               />
             )}
             {ruler && (
@@ -215,7 +217,7 @@ export function RhythmStaff({
         })}
 
       {events.map((e, i) => {
-        const { x, y } = pos(e);
+        const { x, y, line } = pos(e);
         const k = noteIndex.get(e);
         const color = (k !== undefined && colors?.[k]) || INK;
         if (e.rest) {
@@ -223,7 +225,8 @@ export function RhythmStaff({
             e.dur === 16 ? REST_WHOLE : e.dur === 8 ? REST_HALF : e.dur === 4 ? REST_QUARTER : REST_8TH;
           return (
             <g key={i} color={INK} data-testid="rest">
-              {glyph(d, x - (REST_WIDTH * K) / 2, y)}
+              {/* semibreve pendurada na 4ª linha; as outras pausas na linha do meio */}
+              {glyph(d, x - (REST_WIDTH * K) / 2, stepY(line, e.dur === 16 ? 6 : 4))}
             </g>
           );
         }
@@ -236,7 +239,7 @@ export function RhythmStaff({
             {e.dur < 16 && (
               <rect x={sx - STEM_W} y={y - STEM} width={STEM_W} height={STEM - 0.2 * S} fill="currentColor" />
             )}
-            {[3, 6, 12].includes(e.dur) && glyph(DOT, sx + 0.45 * S, y - 0.5 * S)}
+            {[3, 6, 12].includes(e.dur) && glyph(DOT, sx + 0.45 * S, y)}
             {e.dur < 4 && !beamed.has(e) && glyph(e.dur === 1 ? FLAG_16TH : FLAG_8TH, sx - STEM_W, y - STEM)}
           </g>
         );

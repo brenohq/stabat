@@ -1,8 +1,9 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router";
 import { CollectionScope } from "./hooks/useCollection";
 import { QUARTETO } from "./lib/collections";
 import { ArrangementPage } from "./pages/ArrangementPage";
 import { CalendarPage } from "./pages/CalendarPage";
+import { GamesPage } from "./pages/GamesPage";
 import { HomePage } from "./pages/HomePage";
 import { LessonPage } from "./pages/LessonPage";
 import { NoteGamePage } from "./pages/NoteGamePage";
@@ -11,7 +12,7 @@ import { PartPage } from "./pages/PartPage";
 import { RhythmGamePage } from "./pages/RhythmGamePage";
 import { StudiesPage } from "./pages/StudiesPage";
 
-/** Endereços: /  ·  /estudos  ·  /estudos/:licao  ·  /calendario  ·  /jogos/que-nota  ·  /jogos/ritmo  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1)
+/** Endereços: /  ·  /estudos  ·  /estudos/:licao  ·  /calendario  ·  /jogos  ·  /jogos/que-nota  ·  /jogos/ritmo  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1)
  *  ·  /:arranjo/:parte/smells (escondida)
  *  ·  /quarteto (escondida: repertório do quarteto, com as mesmas páginas de arranjo e parte embaixo) */
 export function App() {
@@ -22,7 +23,7 @@ export function App() {
         <Route path="/estudos" element={<StudiesPage />} />
         <Route path="/estudos/:licaoId" element={<LessonPage />} />
         <Route path="/calendario" element={<CalendarPage />} />
-        <Route path="/jogos" element={<Navigate to="/jogos/que-nota" replace />} />
+        <Route path="/jogos" element={<GamesPage />} />
         <Route path="/jogos/que-nota" element={<NoteGamePage />} />
         <Route path="/jogos/ritmo" element={<RhythmGamePage />} />
         <Route path="/:arranjoId" element={<ArrangementPage />} />
