@@ -85,6 +85,20 @@
     "cor": [270, 190]
   },
   {
+    "id": "oracao-de-sao-francisco",
+    "arquivo": "Oração de São Francisco - Banda.mscz",
+    "titulo": "Oração de São Francisco",
+    "subtitulo": "Canto religioso",
+    "cor": [60, 250]
+  },
+  {
+    "id": "oracao-pela-familia",
+    "arquivo": "Oração pela Família - Banda.mscz",
+    "titulo": "Oração pela Família",
+    "subtitulo": "Padre Zezinho",
+    "cor": [185, 330]
+  },
+  {
     "id": "so-modao",
     "arquivo": "Só Modão - Banda.mscz",
     "titulo": "Só Modão",

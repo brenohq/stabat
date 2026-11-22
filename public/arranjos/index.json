@@ -180,6 +180,36 @@
   "nparts": 18
  },
  {
+  "id": "oracao-de-sao-francisco",
+  "title": "Oração de São Francisco",
+  "subtitle": "Canto religioso",
+  "hue": [
+   60,
+   250
+  ],
+  "tempo": 81,
+  "time": "4/4",
+  "measures": 38,
+  "duration": 116.333,
+  "version": "3926539390",
+  "nparts": 18
+ },
+ {
+  "id": "oracao-pela-familia",
+  "title": "Oração pela Família",
+  "subtitle": "Padre Zezinho",
+  "hue": [
+   185,
+   330
+  ],
+  "tempo": 90,
+  "time": "6/8",
+  "measures": 55,
+  "duration": 152.998,
+  "version": "b251563227",
+  "nparts": 18
+ },
+ {
   "id": "so-modao",
   "title": "Só Modão",
   "subtitle": "Medley sertanejo",
