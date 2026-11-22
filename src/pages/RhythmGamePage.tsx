@@ -4,7 +4,7 @@ import { TopBar } from "../components/TopBar";
 import { usePageView } from "../hooks/usePageView";
 import { MetronomeIcon, MuteIcon, SoundIcon } from "../components/icons";
 import { Button } from "../components/ui";
-import { GameHud, Overlay, PrimaryButton, RoundEnd } from "../components/games/GameCard";
+import { GameHud, LevelStepper, Overlay, PrimaryButton, RoundEnd } from "../components/games/GameCard";
 import { RhythmStaff, type StaffTap } from "../components/games/RhythmStaff";
 import { STAFF_BAD, STAFF_OK, staffPoint } from "../components/games/rhythmStaffLayout";
 import { fanfare, stopSfx, thud, woodblock } from "../audio/sfx";
@@ -38,6 +38,7 @@ import {
 } from "../lib/games/rhythm/judge";
 import {
   canIntroduce,
+  startAtLevel,
   gradeExercise,
   introduce,
   levelOf,
@@ -52,7 +53,8 @@ import { gameSound, rhythmBpm, rhythmGame, rhythmLatency } from "../lib/storage"
 
 type Phase =
   | { kind: "welcome"; first: boolean; daysAway: number }
-  | { kind: "intro"; cell: Cell; newLevel: RhythmLevel | null }
+  /** chosen = o músico escolheu o nível (não foi liberado agora) */
+  | { kind: "intro"; cell: Cell; newLevel: RhythmLevel | null; chosen?: boolean }
   | { kind: "count" }
   | { kind: "play" }
   | { kind: "result"; judgement: Judgement; issue: Issue }
@@ -186,6 +188,8 @@ export function RhythmGamePage() {
   const [metronome, setMetronome] = useState(true);
   const [latency, setLatency] = useState(rhythmLatency.get);
   const [waitHint, setWaitHint] = useState(false);
+  /** nível escolhido no seletor (null = o atual) */
+  const [pick, setPick] = useState<RhythmLevel | null>(null);
   const [fx, setFx] = useState<Fx[]>([]);
   const [banner, setBanner] = useState<{ id: number; text: string } | null>(null);
 
@@ -240,9 +244,46 @@ export function RhythmGamePage() {
   };
   const advance = () => commit(nextCard(ref.current));
 
+  /** começa a rodada no nível escolhido; outro nível = recomeça no começo dele */
   const start = () => {
-    const ph = ref.current.phase;
-    commit(newRound(ref.current, ph.kind === "welcome" && ph.daysAway > 0 ? WARMUP_CARDS : 0));
+    const g = ref.current;
+    const target = pick ?? levelOf(g.mem);
+    setPick(null);
+    if (target === levelOf(g.mem)) {
+      commit(newRound(g, g.phase.kind === "welcome" && g.phase.daysAway > 0 ? WARMUP_CARDS : 0));
+      return;
+    }
+    const g0: Game = {
+      ...g,
+      mem: startAtLevel(g.mem, target),
+      results: [],
+      roundBest: 0,
+      offsets: [],
+      warmup: 0,
+    };
+    if (target === 1) {
+      commit(nextCard(g0));
+      return;
+    }
+    const { memory, cell } = introduce(g0.mem);
+    commit({ ...g0, mem: memory, phase: { kind: "intro", cell, newLevel: target, chosen: true } });
+  };
+
+  /** para o que estiver tocando (exercício, cliques, próximos passos) */
+  const stopAll = () => {
+    run.current = null;
+    cancelAnimationFrame(raf.current);
+    clock.current!.stop();
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    showBeat(null, null);
+  };
+
+  /** o selo do nível: para a rodada e abre a escolha de nível */
+  const chooseLevel = () => {
+    stopAll();
+    setPick(null);
+    commit({ ...ref.current, phase: { kind: "welcome", first: false, daysAway: 0 } });
   };
 
   /** luzes dos tempos e número da contagem, direto no DOM */
@@ -458,12 +499,7 @@ export function RhythmGamePage() {
 
   /* ---------- ajuste do atraso ---------- */
   const openCalibration = () => {
-    run.current = null;
-    cancelAnimationFrame(raf.current);
-    clock.current!.stop();
-    timers.current.forEach(clearTimeout);
-    timers.current = [];
-    showBeat(null, null);
+    stopAll();
     commit({ ...ref.current, phase: { kind: "calibrate", step: "ready", ms: 0, used: 0 } });
   };
   const runCalibration = () => {
@@ -592,6 +628,21 @@ export function RhythmGamePage() {
     return "Nem correndo, nem atrasando: bom pulso.";
   })();
 
+  const shownLevel = pick ?? level;
+  const levelCells = CELLS.filter((c) => c.level === shownLevel).map((c) => c.name.toLowerCase());
+  const stepper = (
+    <LevelStepper
+      level={shownLevel}
+      max={5}
+      current={level}
+      name={LEVEL_NAMES[shownLevel]}
+      detail={`${levelCells.join(", ").replace(/^./, (c) => c.toUpperCase())}.${
+        shownLevel === level ? "" : " Começa do início deste nível."
+      }`}
+      onChange={(l) => setPick(l as RhythmLevel)}
+    />
+  );
+
   return (
     <>
       <TopBar
@@ -615,6 +666,7 @@ export function RhythmGamePage() {
             streak={game.streak}
             flashKey={banner?.id}
             unit="exercícios"
+            onLevelClick={chooseLevel}
           />
 
           <div
@@ -779,6 +831,7 @@ export function RhythmGamePage() {
                   )}
                 </p>
               )}
+              {stepper}
               <TempoControl bpm={bpm} onChange={changeBpm} />
               <PrimaryButton onClick={start}>Começar</PrimaryButton>
               <button type="button" onClick={openCalibration} className="text-[13px] text-muted underline">
@@ -792,7 +845,9 @@ export function RhythmGamePage() {
           {phase.kind === "intro" && (
             <Overlay>
               <span className="text-xs font-semibold tracking-wider text-accent uppercase">
-                {phase.newLevel ? `Nível ${phase.newLevel} desbloqueado` : "Ritmo novo"}
+                {phase.newLevel
+                  ? `Nível ${phase.newLevel}${phase.chosen ? "" : " desbloqueado"}`
+                  : "Ritmo novo"}
               </span>
               <h2 className="text-[26px]">{phase.cell.name}</h2>
               <div className="w-full max-w-[340px] rounded-[10px] border border-line bg-paper">
@@ -881,8 +936,9 @@ export function RhythmGamePage() {
               best={game.roundBest}
               unit="exercícios certos"
               tip={tip}
-              onAgain={() => commit(newRound(ref.current, 0))}
+              onAgain={start}
             >
+              {stepper}
               <TempoControl bpm={bpm} onChange={changeBpm} />
             </RoundEnd>
           )}

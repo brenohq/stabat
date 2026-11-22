@@ -103,6 +103,23 @@ export function introduce(m: RhythmMemory): { memory: RhythmMemory; cell: Cell }
   };
 }
 
+/**
+ * Escolha manual de nível: recomeça no começo do nível. As células dos níveis de baixo contam como
+ * sabidas (caixa ≥ 3); as do nível escolhido entram uma a uma, a partir da primeira (quem chama
+ * apresenta ela com `introduce`). No nível 1, volta às 3 células iniciais. As estatísticas ficam.
+ */
+export function startAtLevel(m: RhythmMemory, level: RhythmLevel): RhythmMemory {
+  const first = CELLS.findIndex((c) => c.level === level);
+  const introduced = level === 1 ? START_CELLS : first;
+  const cells = { ...m.cells };
+  CELLS.forEach((c, i) => {
+    const s = statOf(m, c.id);
+    if (c.level < level) cells[c.id] = { ...s, box: Math.max(3, s.box) };
+    else if (i < introduced) cells[c.id] = { ...s, box: Math.max(1, s.box) };
+  });
+  return { ...m, cells, introduced, recent: [] };
+}
+
 /** voltou depois de mais de 7 dias: os primeiros exercícios só com células firmes */
 export const needsWarmup = (m: RhythmMemory, now: number): boolean =>
   m.lastPlayed > 0 && now - m.lastPlayed > WARMUP_AFTER_MS;

@@ -13,6 +13,7 @@ import {
   normalize,
   pickNext,
   stars,
+  startAtLevel,
   statOf,
   topConfusion,
   WARMUP_AFTER_MS,
@@ -217,5 +218,27 @@ describe("rodada", () => {
       false,
       true,
     ]);
+  });
+});
+
+describe("escolha manual de nível", () => {
+  it("pular para o nível 3: notas de baixo sabidas, a 1ª do nível 3 é a próxima a entrar", () => {
+    const m = startAtLevel(freshMemory(), 3);
+    const first = NOTES.findIndex((n) => n.level === 3);
+    expect(m.introduced).toBe(first);
+    for (const n of NOTES.filter((x) => x.level < 3)) expect(statOf(m, n.id).box).toBeGreaterThanOrEqual(3);
+    const { memory, note } = introduce(m);
+    expect(note.level).toBe(3);
+    expect(levelOf(memory)).toBe(3);
+  });
+
+  it("voltar ao nível 1: 3 notas, sem perder o que já sabia", () => {
+    let m = startAtLevel(freshMemory(), 3);
+    m = { ...m, notes: { ...m.notes, C6: { box: 5, seen: 9, ok: 9, last: 0 } } };
+    const back = startAtLevel(m, 1);
+    expect(back.introduced).toBe(3);
+    expect(levelOf(back)).toBe(1);
+    expect(statOf(back, "C6").box).toBe(5);
+    expect(normalize(back)).toEqual(back);
   });
 });

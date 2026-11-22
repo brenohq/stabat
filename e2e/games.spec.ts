@@ -108,6 +108,38 @@ test.describe("Que nota é essa?", () => {
     expect(next.introduced).toBe(8);
   });
 
+  test("seletor de nível: pula para o nível 3 e volta ao 1 pelo selo do topo", async ({ page }) => {
+    await page.goto("/jogos/que-nota");
+    const overlay = page.getByTestId("game-overlay");
+    await expect(overlay.getByTestId("level-choice")).toContainText("Nível 1 de 3 · atual");
+    await expect(overlay.getByRole("button", { name: "Nível anterior" })).toBeDisabled();
+    await overlay.getByRole("button", { name: "Próximo nível" }).click();
+    await overlay.getByRole("button", { name: "Próximo nível" }).click();
+    await expect(overlay.getByTestId("level-choice")).toHaveText("Nível 3 de 3");
+    await expect(overlay.getByRole("button", { name: "Próximo nível" })).toBeDisabled();
+    await expect(overlay.getByTestId("level-stepper")).toContainText("Linhas suplementares");
+    await page.getByRole("button", { name: "Começar" }).click();
+    // escolhido, não "desbloqueado"
+    await expect(overlay).toContainText("Nível 3");
+    await expect(overlay).not.toContainText("desbloqueado");
+    await page.getByRole("button", { name: "Vamos lá" }).click();
+    let s = await state(page);
+    expect(s).toMatchObject({ phase: "intro", note: "G3" });
+    // todas as notas dos níveis 1 e 2 já entram no sorteio
+    expect(s.introduced).toBe(15);
+
+    await page.getByTestId("level-badge").click();
+    await expect(overlay.getByTestId("level-choice")).toContainText("Nível 3 de 3 · atual");
+    await overlay.getByRole("button", { name: "Nível anterior" }).click();
+    await overlay.getByRole("button", { name: "Nível anterior" }).click();
+    await expect(overlay.getByTestId("level-stepper")).toContainText("Começa do início deste nível");
+    await page.getByRole("button", { name: "Começar" }).click();
+    s = await waitCard(page, s.seq);
+    expect(s.phase).toBe("ask");
+    expect(s.introduced).toBe(3);
+    expect(["G4", "F4", "A4"]).toContain(s.note);
+  });
+
   test("página cabe na tela, sem rolagem para o lado", async ({ page }) => {
     await start(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(

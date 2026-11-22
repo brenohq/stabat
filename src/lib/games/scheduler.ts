@@ -119,6 +119,24 @@ export function introduce(m: Memory): { memory: Memory; note: GameNote } {
   };
 }
 
+/**
+ * Escolha manual de nível: recomeça no começo do nível. As notas dos níveis de baixo contam como
+ * sabidas (caixa ≥ 3, voltam de vez em quando); as do nível escolhido entram uma a uma, a partir da
+ * primeira (quem chama apresenta ela com `introduce`). No nível 1, volta às 3 notas iniciais.
+ * O que já se sabia de cada nota fica guardado.
+ */
+export function startAtLevel(m: Memory, level: Level): Memory {
+  const first = NOTES.findIndex((n) => n.level === level);
+  const introduced = level === 1 ? START_NOTES : first;
+  const notes = { ...m.notes };
+  NOTES.forEach((n, i) => {
+    const s = statOf(m, n.id);
+    if (n.level < level) notes[n.id] = { ...s, box: Math.max(3, s.box) };
+    else if (i < introduced) notes[n.id] = { ...s, box: Math.max(1, s.box) };
+  });
+  return { ...m, notes, introduced, recent: [] };
+}
+
 /** errou 3 das últimas 5: as notas conhecidas pesam o triplo até firmar de novo */
 export function isCalm(m: Memory): boolean {
   const last = m.recent.slice(-5);

@@ -11,6 +11,7 @@ import {
   nextExercise,
   normalize,
   pool,
+  startAtLevel,
   statOf,
 } from "./scheduler";
 
@@ -217,5 +218,22 @@ describe("progressão", () => {
       const e = nextExercise(m, { warmup: true, random });
       for (const p of e.cells) expect(["q", "h", "ee"]).toContain(p.cell.id);
     }
+  });
+});
+
+describe("escolha manual de nível", () => {
+  it("pular para as semicolcheias: tudo de baixo sabido, o próximo ritmo é o 1º do nível 5", () => {
+    const m = startAtLevel(freshMemory(), 5);
+    for (const c of CELLS.filter((x) => x.level < 5)) expect(statOf(m, c.id).box).toBeGreaterThanOrEqual(3);
+    const { memory, cell } = introduce(m);
+    expect(cell.id).toBe("ssss");
+    expect(levelOf(memory)).toBe(5);
+    expect(nextExercise(memory, { random: seeded(2) }).cells.some((p) => p.cell.id === "ssss")).toBe(true);
+  });
+
+  it("voltar ao nível 1: semínima, mínima e semibreve", () => {
+    const m = startAtLevel(startAtLevel(freshMemory(), 4), 1);
+    expect(pool(m).map((c) => c.id)).toEqual(["q", "h", "w"]);
+    expect(normalize(m)).toEqual(m);
   });
 });

@@ -1,11 +1,11 @@
 import { Link } from "react-router";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { TopBar } from "../components/TopBar";
 import { usePageView } from "../hooks/usePageView";
 import { NoteStaff } from "../components/games/NoteStaff";
 import { staffGeometry } from "../components/games/staffGeometry";
 import { MuteIcon, SoundIcon } from "../components/icons";
-import { GameHud, Overlay, PrimaryButton, RoundEnd } from "../components/games/GameCard";
+import { GameHud, LevelStepper, Overlay, PrimaryButton, RoundEnd } from "../components/games/GameCard";
 import { fanfare, stopSfx, thud, tone } from "../audio/sfx";
 import { exposeDebug } from "../debug";
 import {
@@ -19,6 +19,7 @@ import {
 } from "../lib/games/notes";
 import {
   canIntroduce,
+  startAtLevel,
   grade,
   introduce,
   isMilestone,
@@ -40,7 +41,8 @@ type Phase =
   | { kind: "intro"; note: GameNote; tapped: boolean }
   | { kind: "ok"; note: GameNote; answer: number }
   | { kind: "bad"; note: GameNote; answer: number }
-  | { kind: "level"; level: Level; note: GameNote }
+  /** chosen = o músico escolheu o nível (não foi liberado agora) */
+  | { kind: "level"; level: Level; note: GameNote; chosen?: boolean }
   | { kind: "end" };
 
 interface Game {
@@ -131,6 +133,8 @@ export function NoteGamePage() {
   const [fx, setFx] = useState<Fx[]>([]);
   const [banner, setBanner] = useState<{ id: number; text: string } | null>(null);
   const [shake, setShake] = useState<number | null>(null);
+  /** nível escolhido no seletor (null = o atual) */
+  const [pick, setPick] = useState<Level | null>(null);
   const ref = useRef(game);
   const soundRef = useRef(sound);
   const timers = useRef<number[]>([]);
@@ -163,9 +167,43 @@ export function NoteGamePage() {
   };
   const advance = () => commit(nextCard(ref.current));
 
+  /** começa a rodada no nível escolhido; outro nível = recomeça no começo dele */
   const start = () => {
-    const ph = ref.current.phase;
-    commit(newRound(ref.current, ph.kind === "welcome" && ph.daysAway > 0 ? WARMUP_CARDS : 0));
+    const g = ref.current;
+    const target = pick ?? levelOf(g.mem);
+    setPick(null);
+    if (target === levelOf(g.mem)) {
+      commit(newRound(g, g.phase.kind === "welcome" && g.phase.daysAway > 0 ? WARMUP_CARDS : 0));
+      return;
+    }
+    const g0: Game = {
+      ...g,
+      mem: startAtLevel(g.mem, target),
+      results: [],
+      roundBest: 0,
+      roundConfusions: {},
+      warmup: 0,
+    };
+    if (target === 1) {
+      commit(nextCard(g0));
+      return;
+    }
+    const { memory, note } = introduce(g0.mem);
+    commit({
+      ...g0,
+      mem: memory,
+      seq: g0.seq + 1,
+      prevId: note.id,
+      phase: { kind: "level", level: target, note, chosen: true },
+    });
+  };
+
+  /** o selo do nível: para a rodada e abre a escolha de nível */
+  const chooseLevel = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    setPick(null);
+    commit({ ...ref.current, phase: { kind: "welcome", first: false, daysAway: 0 } });
   };
 
   const celebrate = (note: GameNote) => {
@@ -302,6 +340,21 @@ export function NoteGamePage() {
   const colored = note && (phase.kind === "ok" || phase.kind === "intro");
   const busy = phase.kind !== "ask" && !(phase.kind === "intro" && !phase.tapped);
 
+  const shownLevel = pick ?? level;
+  const levelNotes = NOTES.filter((n) => n.level === shownLevel);
+  const stepper = (
+    <LevelStepper
+      level={shownLevel}
+      max={3}
+      current={level}
+      name={LEVEL_NAMES[shownLevel]}
+      detail={`${levelNotes.length} notas: ${levelNotes.map((n) => n.name).join(", ")}.${
+        shownLevel === level ? "" : " Começa do início deste nível."
+      }`}
+      onChange={(l) => setPick(l as Level)}
+    />
+  );
+
   return (
     <>
       <TopBar
@@ -325,6 +378,7 @@ export function NoteGamePage() {
             streak={game.streak}
             flashKey={banner?.id}
             unit="notas"
+            onLevelClick={chooseLevel}
           />
 
           <div className="relative mt-3 rounded-[14px] border border-line bg-paper" data-testid="game-stage">
@@ -461,6 +515,7 @@ export function NoteGamePage() {
                   )}
                 </p>
               )}
+              {stepper}
               <PrimaryButton onClick={start}>Começar</PrimaryButton>
             </Overlay>
           )}
@@ -468,7 +523,8 @@ export function NoteGamePage() {
           {phase.kind === "level" && (
             <Overlay>
               <span className="text-xs font-semibold tracking-wider text-accent uppercase">
-                Nível {phase.level} desbloqueado
+                Nível {phase.level}
+                {phase.chosen ? "" : " desbloqueado"}
               </span>
               <h2 className="text-[28px]">{LEVEL_NAMES[phase.level]}</h2>
               <LevelPreview level={phase.level} />
@@ -484,7 +540,9 @@ export function NoteGamePage() {
           )}
 
           {phase.kind === "end" && (
-            <NoteRoundEnd game={game} onAgain={() => commit(newRound(ref.current, 0))} />
+            <NoteRoundEnd game={game} onAgain={start}>
+              {stepper}
+            </NoteRoundEnd>
           )}
         </div>
       </main>
@@ -515,7 +573,7 @@ function LevelPreview({ level }: { level: Level }) {
   );
 }
 
-function NoteRoundEnd({ game, onAgain }: { game: Game; onAgain: () => void }) {
+function NoteRoundEnd({ game, onAgain, children }: { game: Game; onAgain: () => void; children: ReactNode }) {
   const conf = topConfusion(game.roundConfusions);
   return (
     <RoundEnd
@@ -535,6 +593,8 @@ function NoteRoundEnd({ game, onAgain }: { game: Game; onAgain: () => void }) {
           "Nenhuma troca nesta rodada."
         )
       }
-    />
+    >
+      {children}
+    </RoundEnd>
   );
 }

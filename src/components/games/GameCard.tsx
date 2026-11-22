@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { btnClass } from "../btnClass";
+import { BackIcon, ChevronDownIcon } from "../icons";
 
 /** peças comuns dos jogos: topo (nível, progresso da rodada, seguidas), tela por cima e fim de rodada */
 
@@ -11,6 +12,7 @@ export function GameHud({
   streak,
   flashKey,
   unit,
+  onLevelClick,
 }: {
   level: string;
   results: boolean[];
@@ -22,13 +24,28 @@ export function GameHud({
   flashKey?: number;
   /** o que a rodada conta: "notas", "exercícios" */
   unit: string;
+  /** o selo do nível vira botão: abre a escolha de nível */
+  onLevelClick?: () => void;
 }) {
   const inSet = streak === 0 ? 0 : ((streak - 1) % 5) + 1;
   return (
     <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2.5 sm:grid-cols-[auto_1fr_auto]">
-      <span className="justify-self-start rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
-        {level}
-      </span>
+      {onLevelClick ? (
+        <button
+          type="button"
+          onClick={onLevelClick}
+          aria-label={`${level}. Trocar de nível`}
+          data-testid="level-badge"
+          className="flex cursor-pointer items-center gap-1 justify-self-start rounded-full bg-accent-soft py-1 pr-2 pl-2.5 text-xs font-semibold text-accent transition hover:brightness-95"
+        >
+          {level}
+          <ChevronDownIcon className="size-3.5" />
+        </button>
+      ) : (
+        <span className="justify-self-start rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
+          {level}
+        </span>
+      )}
       <div
         className="order-3 col-span-2 flex gap-1 sm:order-2 sm:col-span-1"
         aria-label={`${results.length} de ${total} ${unit} da rodada`}
@@ -119,7 +136,7 @@ export function RoundEnd({
   unit: string;
   tip: ReactNode;
   onAgain: () => void;
-  /** algo a mais antes do botão (ex.: o andamento) */
+  /** algo a mais antes do botão (ex.: o andamento, o seletor de nível) */
   children?: ReactNode;
 }) {
   return (
@@ -154,5 +171,70 @@ export function RoundEnd({
       {children}
       <PrimaryButton onClick={onAgain}>Mais uma rodada</PrimaryButton>
     </Overlay>
+  );
+}
+
+/** ‹ Nível 2 · Pausas ›: escolhe em que nível começar (todos liberados) */
+export function LevelStepper({
+  level,
+  max,
+  name,
+  detail,
+  current,
+  onChange,
+}: {
+  level: number;
+  max: number;
+  name: string;
+  /** o que tem no nível (notas, ritmos) */
+  detail: string;
+  /** o nível em que o jogador está agora */
+  current: number;
+  onChange: (level: number) => void;
+}) {
+  const arrow =
+    "grid size-10 flex-none cursor-pointer place-items-center rounded-full border border-line bg-surface text-ink transition hover:border-accent disabled:cursor-default disabled:opacity-35 disabled:hover:border-line [&_svg]:size-4";
+  return (
+    <div
+      className="grid w-full justify-items-center gap-1.5"
+      role="group"
+      aria-label="Nível"
+      data-testid="level-stepper"
+    >
+      <div className="flex w-full max-w-[340px] items-center gap-2">
+        <button
+          type="button"
+          aria-label="Nível anterior"
+          disabled={level <= 1}
+          onClick={() => onChange(level - 1)}
+          className={arrow}
+        >
+          <BackIcon />
+        </button>
+        <div
+          className="min-w-0 flex-1 rounded-[14px] border-2 border-accent bg-accent-soft px-3 py-1.5"
+          aria-live="polite"
+        >
+          <div
+            className="text-[11px] font-semibold tracking-wider text-accent uppercase"
+            data-testid="level-choice"
+          >
+            Nível {level} de {max}
+            {level === current ? " · atual" : ""}
+          </div>
+          <div className="truncate font-display text-[17px] font-semibold text-ink">{name}</div>
+        </div>
+        <button
+          type="button"
+          aria-label="Próximo nível"
+          disabled={level >= max}
+          onClick={() => onChange(level + 1)}
+          className={arrow}
+        >
+          <BackIcon className="rotate-180" />
+        </button>
+      </div>
+      <p className="text-[12.5px] leading-snug text-muted">{detail}</p>
+    </div>
   );
 }

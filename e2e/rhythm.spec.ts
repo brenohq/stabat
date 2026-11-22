@@ -156,6 +156,32 @@ test.describe("Bate o ritmo", () => {
     await expect(page.getByTestId("rhythm-cursor")).toHaveAttribute("opacity", "0");
   });
 
+  test("seletor de nível: começa nas semicolcheias e volta ao 1 pelo selo do topo", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("stabat.games.rhythmLatency", "0"));
+    await page.goto("/jogos/ritmo");
+    const overlay = page.getByTestId("game-overlay");
+    await expect(overlay.getByTestId("level-choice")).toContainText("Nível 1 de 5 · atual");
+    for (let i = 0; i < 4; i++) await overlay.getByRole("button", { name: "Próximo nível" }).click();
+    await expect(overlay.getByTestId("level-choice")).toHaveText("Nível 5 de 5");
+    await expect(overlay.getByTestId("level-stepper")).toContainText("Quatro semicolcheias");
+    await page.getByRole("button", { name: "Começar" }).click();
+    await expect(overlay).toContainText("Nível 5");
+    await expect(overlay).not.toContainText("desbloqueado");
+    await expect(overlay).toContainText("Quatro semicolcheias");
+    await page.getByRole("button", { name: "Vamos lá" }).click();
+    let s = await waitCard(page);
+    expect(s.level).toBe(5);
+    expect(s.cells).toContain("ssss");
+
+    await page.getByTestId("level-badge").click();
+    await expect(overlay.getByTestId("level-choice")).toContainText("Nível 5 de 5 · atual");
+    for (let i = 0; i < 4; i++) await overlay.getByRole("button", { name: "Nível anterior" }).click();
+    await page.getByRole("button", { name: "Começar" }).click();
+    s = await waitCard(page, s.seq);
+    expect(s.level).toBe(1);
+    for (const c of s.cells) expect(["q", "h", "w"]).toContain(c);
+  });
+
   test("ajuste do atraso: tocando junto com os cliques, guarda a correção", async ({ page }) => {
     await page.goto("/jogos/ritmo");
     await page.getByRole("button", { name: /ajustar o atraso do som/ }).click();
