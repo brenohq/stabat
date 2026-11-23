@@ -1,9 +1,11 @@
+import { resolve } from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Projetos:
  *  - fixture: app com o arranjo de teste (e2e/fixtures) — rápido e estável; a maior parte dos testes
  *  - mobile:  mesmos dados, tela de celular
+ *  - tuner:   o Afinador com um microfone falso que toca um Lá de 442 Hz (e2e/fixtures/audio)
  *  - real:    fumaça com os arranjos publicados de verdade (public/arranjos)
  *  - shots:   só com SHOTS=1 — salva capturas de todas as telas em test-results/shots para revisão visual
  */
@@ -44,6 +46,24 @@ export default defineConfig({
       name: "mobile",
       testMatch: /(mobile|games|rhythm|studies)\.spec\.ts/,
       use: { ...devices["Pixel 7"], ...use, baseURL: FIXTURE },
+    },
+    {
+      name: "tuner",
+      testMatch: /tuner\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        ...use,
+        baseURL: FIXTURE,
+        permissions: ["microphone"],
+        launchOptions: {
+          args: [
+            ...use.launchOptions.args,
+            "--use-fake-ui-for-media-stream",
+            "--use-fake-device-for-media-stream",
+            `--use-file-for-fake-audio-capture=${resolve("e2e/fixtures/audio/la-442.wav")}`,
+          ],
+        },
+      },
     },
     {
       name: "real",

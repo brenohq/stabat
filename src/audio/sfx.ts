@@ -100,6 +100,38 @@ export function woodblock(): void {
   }
 }
 
+/** nota de referência do Afinador: som contínuo e suave (fundamental + 2 harmônicos) até chamar a
+ *  função devolvida, que solta devagar */
+export function drone(freq: number): () => void {
+  const a = audio();
+  if (!a) return () => {};
+  const t = a.currentTime;
+  const out = a.createGain();
+  out.gain.setValueAtTime(0.0001, t);
+  out.gain.exponentialRampToValueAtTime(0.2, t + 0.15);
+  out.connect(a.destination);
+  const oscs = [
+    [1, 1],
+    [2, 0.35],
+    [3, 0.12],
+  ].map(([mult, level]) => {
+    const o = a.createOscillator();
+    o.frequency.value = freq * mult!;
+    const g = a.createGain();
+    g.gain.value = level!;
+    o.connect(g).connect(out);
+    o.start(t);
+    return o;
+  });
+  return () => {
+    const now = a.currentTime;
+    out.gain.cancelScheduledValues(now);
+    out.gain.setValueAtTime(out.gain.value, now);
+    out.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+    oscs.forEach((o) => o.stop(now + 0.2));
+  };
+}
+
 /** ao sair do jogo: solta o <audio> mudo do iPhone antigo (some da tela de bloqueio) */
 export function stopSfx(): void {
   releaseSilentSwitch();

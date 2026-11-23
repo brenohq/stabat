@@ -18,6 +18,14 @@ export interface ShareMeta {
 
 export const SHARE_PAGES: ShareMeta[] = [
   {
+    path: "/afinador",
+    file: "afinador.html",
+    title: "Afinador · stabat",
+    description:
+      "Afinador da banda: cada músico toca o Lá de concerto e vê a nota que ele lê, quanto está alto ou baixo e o que mexer no instrumento.",
+    image: "/og/afinador.png",
+  },
+  {
     path: "/jogos/que-nota",
     file: "jogos/que-nota.html",
     title: "Que nota é essa? · stabat",

@@ -71,3 +71,29 @@ export const rhythmLatency = {
   get: (): number | null => read<number | null>("games.rhythmLatency", null),
   set: (ms: number): void => write("games.rhythmLatency", ms),
 };
+
+/** Afinador: modo (afinar um / rodada), instrumento do "Afinar", mostrador e Lá de referência (Hz) */
+export const tunerPrefs = {
+  mode: {
+    get: (): "tune" | "round" => (read<string>("tuner.mode", "tune") === "round" ? "round" : "tune"),
+    set: (m: "tune" | "round"): void => write("tuner.mode", m),
+  },
+  instrument: {
+    get: (): string | null => read<string | null>("tuner.instrument", null),
+    set: (id: string): void => write("tuner.instrument", id),
+  },
+  display: {
+    get: (): "needle" | "bar" | "strobe" => {
+      const v = read<string>("tuner.display", "needle");
+      return v === "bar" || v === "strobe" ? v : "needle";
+    },
+    set: (v: "needle" | "bar" | "strobe"): void => write("tuner.display", v),
+  },
+  a4: {
+    get: (): number => {
+      const v = read<number>("tuner.a4", 440);
+      return typeof v === "number" && v >= 436 && v <= 446 ? Math.round(v) : 440;
+    },
+    set: (hz: number): void => write("tuner.a4", hz),
+  },
+};

@@ -25,6 +25,8 @@ const pages: {
   { name: "parte", path: "/apt/trompete-sib-1", loaded: true },
   { name: "parte-seletor", path: "/apt/trompete-sib-1", loaded: true, open: "#switch" },
   { name: "calendario", path: "/calendario", loaded: false },
+  { name: "afinador", path: "/afinador", loaded: false },
+  { name: "afinador-rodada", path: "/afinador", loaded: false, open: "text=Rodada da banda" },
   { name: "estudos", path: "/estudos", loaded: false },
   { name: "estudos-seletor", path: "/estudos", loaded: false, open: "#study-instrument" },
   { name: "licao", path: "/estudos/escalas-maiores?escala=fa-maior", loaded: false, mine: "sax-alto-mib-1" },
@@ -41,17 +43,19 @@ const pages: {
 const ready = (path: string) =>
   path === "/calendario"
     ? "evento"
-    : path === "/estudos"
-      ? "lesson-card"
-      : path.startsWith("/estudos/")
-        ? "study-sheet"
-        : path === "/jogos"
-          ? "game-card"
-          : path.startsWith("/jogos")
-            ? "game-stage"
-            : path === "/quarteto" && !quartet.length
-              ? "empty-repertoire"
-              : "arrangement-card";
+    : path === "/afinador"
+      ? "tuner"
+      : path === "/estudos"
+        ? "lesson-card"
+        : path.startsWith("/estudos/")
+          ? "study-sheet"
+          : path === "/jogos"
+            ? "game-card"
+            : path.startsWith("/jogos")
+              ? "game-stage"
+              : path === "/quarteto" && !quartet.length
+                ? "empty-repertoire"
+                : "arrangement-card";
 const sizes = [
   { name: "desktop", width: 1366, height: 900 },
   { name: "celular", width: 390, height: 844 },

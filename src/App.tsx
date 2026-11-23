@@ -11,8 +11,9 @@ import { NotFound } from "./pages/NotFound";
 import { PartPage } from "./pages/PartPage";
 import { RhythmGamePage } from "./pages/RhythmGamePage";
 import { StudiesPage } from "./pages/StudiesPage";
+import { TunerPage } from "./pages/TunerPage";
 
-/** Endereços: /  ·  /estudos  ·  /estudos/:licao  ·  /calendario  ·  /jogos  ·  /jogos/que-nota  ·  /jogos/ritmo  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1)
+/** Endereços: /  ·  /estudos  ·  /estudos/:licao  ·  /calendario  ·  /afinador  ·  /jogos  ·  /jogos/que-nota  ·  /jogos/ritmo  ·  /:arranjo  ·  /:arranjo/:parte  (ex.: /apt/trompete-sib-1)
  *  ·  /:arranjo/:parte/smells (escondida)
  *  ·  /quarteto (escondida: repertório do quarteto, com as mesmas páginas de arranjo e parte embaixo) */
 export function App() {
@@ -23,6 +24,7 @@ export function App() {
         <Route path="/estudos" element={<StudiesPage />} />
         <Route path="/estudos/:licaoId" element={<LessonPage />} />
         <Route path="/calendario" element={<CalendarPage />} />
+        <Route path="/afinador" element={<TunerPage />} />
         <Route path="/jogos" element={<GamesPage />} />
         <Route path="/jogos/que-nota" element={<NoteGamePage />} />
         <Route path="/jogos/ritmo" element={<RhythmGamePage />} />

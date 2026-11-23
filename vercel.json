@@ -6,6 +6,10 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/afinador",
+      "destination": "/afinador.html"
+    },
+    {
       "source": "/jogos/que-nota",
       "destination": "/jogos/que-nota.html"
     },

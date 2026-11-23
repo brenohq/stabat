@@ -132,7 +132,25 @@ def main():
              for m in (meta, meta2)]
     (ROOT / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1))
     make_quartet(meta)
+    make_tuner_audio()
     print("ok:", [p["id"] for p in parts])
+
+
+def make_tuner_audio():
+    """Microfone falso do Afinador (Chrome --use-file-for-fake-audio-capture): um Lá de 442 Hz
+    (+8 cents com Lá = 440), com harmônicos de metal, 1 s com ciclos inteiros (repete sem emenda)."""
+    import wave
+    sr, f = 48000, 442.0
+    t = np.arange(sr) / sr
+    sig = sum(a * np.sin(2 * np.pi * f * (h + 1) * t) for h, a in enumerate([0.6, 1, 0.7, 0.4, 0.2]))
+    pcm = (0.25 * sig / np.abs(sig).max() * 32767).astype("<i2").tobytes()
+    out = ROOT.parent / "audio" / "la-442.wav"
+    out.parent.mkdir(exist_ok=True)
+    with wave.open(str(out), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes(pcm)
 
 
 def make_quartet(meta):

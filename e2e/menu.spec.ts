@@ -7,9 +7,10 @@ test.describe("menu do topo", () => {
     await expect(menu).toBeHidden();
     await page.getByRole("button", { name: "Menu" }).click();
     await expect(menu.getByRole("link", { name: "Calendário da Banda" })).toBeVisible();
-    // ordem: Calendário > Estudos > Jogos
+    // ordem: Calendário > Afinador > Estudos > Jogos
     await expect(menu.locator(":scope > a, :scope > button")).toHaveText([
       "Calendário da Banda",
+      "Afinador",
       "Estudos",
       "Jogos",
     ]);

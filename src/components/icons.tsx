@@ -147,3 +147,17 @@ export const BookIcon = (p: P) => (
     <path d="M9 7.5h6M9 11h4" />
   </svg>
 );
+export const TunerIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <path d="M3.5 17a8.5 8.5 0 0 1 17 0" />
+    <path d="M12 17l3.5-5.5" />
+    <circle cx="12" cy="17" r="1.3" fill="currentColor" />
+    <path d="M12 8.5v1.5M6 11l1 1M18 11l-1 1" />
+  </svg>
+);
+export const MicIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" {...stroke} aria-hidden {...p}>
+    <rect x="9" y="3" width="6" height="11" rx="3" />
+    <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7" />
+  </svg>
+);

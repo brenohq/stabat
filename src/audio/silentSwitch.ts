@@ -54,7 +54,8 @@ export function ignoreSilentSwitch(): void {
   const s = session();
   if (s) {
     try {
-      if (s.type !== "playback") s.type = "playback";
+      // o Afinador pede "play-and-record" (microfone): não derrubar
+      if (s.type !== "playback" && s.type !== "play-and-record") s.type = "playback";
     } catch {
       /* navegador recusou: segue sem */
     }
