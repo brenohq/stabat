@@ -14,7 +14,7 @@ test.describe("calendário", () => {
     await expect(eventos.nth(0)).toContainText("Sexta-feira · 19h");
     await expect(eventos.nth(0)).toContainText("faltam 3 dias");
     await expect(eventos.nth(1)).toContainText("Concerto Natalino");
-    await expect(eventos.nth(1)).toContainText("Sábado · 20h");
+    await expect(eventos.nth(1)).toContainText("Terça-feira · 19h");
     await expect(page.getByText("Já aconteceram")).toHaveCount(0);
   });
 

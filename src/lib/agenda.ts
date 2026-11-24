@@ -9,7 +9,7 @@ export type Evento = {
 
 export const AGENDA: Evento[] = [
   { quando: "2026-11-20T19:00", titulo: "Ensaio na Praça" },
-  { quando: "2026-12-05T20:00", titulo: "Concerto Natalino" },
+  { quando: "2026-12-01T19:00", titulo: "Concerto Natalino" },
 ];
 
 const FUSO = "America/Sao_Paulo";
