@@ -15,6 +15,13 @@
     "cor": [340, 20]
   },
   {
+    "id": "ave-maria",
+    "arquivo": "Ave Maria - Banda.mscz",
+    "titulo": "Ave Maria",
+    "subtitulo": "Bach-Gounod",
+    "cor": [205, 45]
+  },
+  {
     "id": "cantico-de-maria",
     "arquivo": "Cântico de Maria (Magnificat) - Banda.mscz",
     "titulo": "Cântico de Maria",

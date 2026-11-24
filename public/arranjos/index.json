@@ -30,6 +30,21 @@
   "nparts": 18
  },
  {
+  "id": "ave-maria",
+  "title": "Ave Maria",
+  "subtitle": "Bach-Gounod",
+  "hue": [
+   205,
+   45
+  ],
+  "tempo": 60,
+  "time": "4/4",
+  "measures": 40,
+  "duration": 167.722,
+  "version": "a787bd829b",
+  "nparts": 18
+ },
+ {
   "id": "cantico-de-maria",
   "title": "Cântico de Maria",
   "subtitle": "Magnificat",
