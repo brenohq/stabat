@@ -56,7 +56,7 @@
   "time": "4/4",
   "measures": 81,
   "duration": 153.856,
-  "version": "a72ece995d",
+  "version": "e3a5ee9287",
   "nparts": 18
  },
  {
@@ -162,6 +162,21 @@
   "measures": 79,
   "duration": 107.347,
   "version": "5d17a39a70",
+  "nparts": 18
+ },
+ {
+  "id": "la-lambada",
+  "title": "La Lambada",
+  "subtitle": "Kaoma",
+  "hue": [
+   15,
+   175
+  ],
+  "tempo": 120,
+  "time": "2/4",
+  "measures": 88,
+  "duration": 108.0,
+  "version": "eff9830f41",
   "nparts": 18
  },
  {

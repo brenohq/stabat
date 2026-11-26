@@ -78,6 +78,13 @@
     "cor": [50, 175]
   },
   {
+    "id": "la-lambada",
+    "arquivo": "La Lambada - Banda.mscz",
+    "titulo": "La Lambada",
+    "subtitulo": "Kaoma",
+    "cor": [15, 175]
+  },
+  {
     "id": "noite-feliz",
     "arquivo": "Noite Feliz - Banda.mscz",
     "titulo": "Noite Feliz",
